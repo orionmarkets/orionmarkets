@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     siteName: "ORIONMARKETS",
     title,
     description,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "ORIONMARKETS: Find your edge." }],
+    images: [{ url: "/og-banner.jpg", width: 1200, height: 630, type: "image/jpeg", alt: "ORIONMARKETS: Find your edge." }],
   },
-  twitter: { card: "summary_large_image", site: "@UseOrionMarkets", title, description, images: ["/og.png"] },
+  twitter: { card: "summary_large_image", site: "@UseOrionMarkets", title, description, images: ["/og-banner.jpg"] },
 };
 
 // Dark is the default theme; ThemeProvider keeps this tag in step when the visitor switches.
