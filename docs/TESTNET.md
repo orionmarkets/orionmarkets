@@ -24,7 +24,7 @@ All 22 addresses have verified source on Blockscout (`pnpm testnet:verify`).
 | OrionRouter | [`0xa451…dc91`](https://explorer.testnet.chain.robinhood.com/address/0xa451de6096bc1929611a6ab7dd2aa5de5567dc91) | [`0x60a3…6607`](https://explorer.testnet.chain.robinhood.com/address/0x60a309d3e8610a726ff8bf8c46ae48005ac06607) |
 | LeverageRouter | [`0xc3a5…ff79`](https://explorer.testnet.chain.robinhood.com/address/0xc3a56930fe93f687e420c9efe365688c055bff79) | [`0xb3c7…ed8e`](https://explorer.testnet.chain.robinhood.com/address/0xb3c7260264fe40b67212734c795332f2708eed8e) |
 | ShortRouter | [`0xb4b4…0560`](https://explorer.testnet.chain.robinhood.com/address/0xb4b45bf18c43120f24e909a1b60093ef8c540560) | [`0x982f…4387`](https://explorer.testnet.chain.robinhood.com/address/0x982fc701618a3b44405742b997284724f4744387) |
-| AutoProtectModule | [`0x28a0…6506`](https://explorer.testnet.chain.robinhood.com/address/0x28a0307be727594340b00048b912feb59d556506) | [`0xa5f3…6977`](https://explorer.testnet.chain.robinhood.com/address/0xa5f3528e79696c2319b5df36a3be34fb4b556977) |
+| AutoProtectModule | [`0x28a0…6506`](https://explorer.testnet.chain.robinhood.com/address/0x28a0307be727594340b00048b912feb59d556506) | [`0x8a4E…32A9`](https://explorer.testnet.chain.robinhood.com/address/0x8a4E9a48567d744fcCe13db690019033cf3632A9) (was `0xa5f3…6977`, see Auto-Protect below) |
 | OrionVault | [`0x9ab7…df29`](https://explorer.testnet.chain.robinhood.com/address/0x9ab7fa06c0b50c8d23127c60ad183fe06ce3df29) | [`0x57c5…fdf0`](https://explorer.testnet.chain.robinhood.com/address/0x57c553b75fc5817e9d708d369e9b7507fe8cfdf0) |
 | RhTestnetReferenceOracle | [`0xda41…4f44`](https://explorer.testnet.chain.robinhood.com/address/0xda41d1bdf4e1c8a01b20de9f0c1ecdf035de4f44) | not a proxy |
 | OrionPair · TSLA long | [`0x945c…f567`](https://explorer.testnet.chain.robinhood.com/address/0x945c89d82dfa799bd57b2ffd48670fc4121df567) | [`0x90e5…ee47`](https://explorer.testnet.chain.robinhood.com/address/0x90e5a19b9a972bbb58f2656d8d95452447fcee47) |
@@ -63,6 +63,29 @@ the opening LTV past 94%, so the largest margin at 10× scales with pool depth (
 The pool is a static Uniswap V2 pair with no arbitrageur: when its price drifts from the oracle, shorts (pool below
 oracle) or longs (pool above) open at a worse LTV. Re-price it with a swap when positions start reverting.
 Caps are unchanged: they bound exposure to the liquidity actually present.
+
+## Auto-Protect (2026-11-03)
+
+Auto-Protect is live on testnet and user-funded: a keeper calls `executeAutoProtect`, and the module pulls the repayment
+from the borrower's own wallet (USDG allowance to the module). The keeper never spends its own funds; there is no
+collateral sale. The rule is set from the Lending page and read from chain by the keeper (`ConfigUpdated` logs).
+
+| Step | Transaction |
+| :--- | :--- |
+| New `AutoProtectModule` implementation `0x8a4E9a48567d744fcCe13db690019033cf3632A9` (verified source) | `0x5202b58e…c0f41` |
+| `upgradeToAndCall` on the proxy `0x28a0…6506` (owner, keeper flag and paused state kept) | `0x43ead6da…cf936d` |
+| `setPaused(false)` | `0x59b73ca4…182372` |
+| Acceptance rule on the TSLA pair (trigger 0.40%, target 0.30%, limit 1 USDG) and 1 USDG allowance | `0x4cc531b5…a7ea92`, `0x97fd741e…c54d3` |
+| Keeper `executeAutoProtect`: debt 2.000000 → 1.224489 USDG (0.775511 repaid from the borrower's wallet, 0.3014% loan ratio), 201,057 gas | `0x2f7b1873…d89c1` |
+| Rule switched off and allowance set back to 0 | two transactions, same wallet |
+
+Limits of this acceptance run: the borrower and the keeper were the same project wallet, so the "keeper pays nothing"
+property is proven by the contract tests (`OrionCore.t.sol`), not on chain. The run used the contract's real price
+oracle; there was no price move, the rule trigger was set just under the current loan ratio.
+
+The keeper runs as `orion-keeper@testnet` (`deploy/orion-keeper@.service`). Its switches live in the git-ignored
+`/opt/orion/testnet/keeper.env` (`TRADING_ENABLED=true`, `AUTO_PROTECT_START_BLOCK=147225000`); the keeper polls every 10 s,
+so protection is not instant.
 
 ## Pipeline
 

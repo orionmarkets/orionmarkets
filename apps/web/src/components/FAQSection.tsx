@@ -5,7 +5,7 @@ import React from "react";
 import { X_URL, HAS_X } from "../lib/social";
 import { useNetworkMode } from "../hooks/useNetworkMode";
 import { marketDeployments } from "../lib/market-deployments";
-import { liveMarketList } from "../lib/release";
+import { AUTOPROTECT_LIVE, liveMarketList } from "../lib/release";
 const LIVE_MARKETS = liveMarketList(marketDeployments.map((m) => m.symbol));
 const MAINNET_ANSWERS: Record<string, string> = {
   "How does borrowing work?":
@@ -32,7 +32,9 @@ const FAQ_ITEMS = [
   {
     question: "What is Auto-Protect?",
     answer:
-      "Auto-Protect is the planned protection layer for leveraged positions: it partially deleverages a position as it nears a risk threshold you define. It is part of the Orion roadmap and rolls out on Robinhood Chain as it is ready.",
+      AUTOPROTECT_LIVE
+        ? "Auto-Protect repays part of your debt from your own wallet's USDG when your loan ratio reaches a trigger you set, until a target ratio is restored. You approve the amount; it does not sell collateral and does nothing if your balance or approval is short."
+        : "Auto-Protect is the planned protection layer for leveraged positions: it partially deleverages a position as it nears a risk threshold you define. It is part of the Orion roadmap and rolls out on Robinhood Chain as it is ready.",
   },
   {
     question: "How does leverage work?",

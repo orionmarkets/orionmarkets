@@ -16,7 +16,7 @@ export interface BreachCandidate {
 // Borrowers with a rule are found from the module's own ConfigUpdated logs, so chain state is the only source of truth.
 const rules = new Map<string, { user: Address; pair: Address }>();
 let nextBlock = BigInt(config.AUTO_PROTECT_START_BLOCK);
-const LOG_RANGE = 10_000n; // shortcut: fixed range keeps getLogs under public RPC limits, raise if the node allows more.
+const LOG_RANGE = 100_000n; // shortcut: fixed range keeps getLogs under public RPC limits, raise if the node allows more.
 
 async function refreshRules() {
   const head = await publicClient.getBlockNumber();
@@ -63,7 +63,14 @@ export async function scanPositions(): Promise<BreachCandidate[]> {
       });
       if (collateralValueUsd === 0n || debtAmount === 0n) continue;
 
-      const currentLtvBps = (debtAmount * 10_000n) / collateralValueUsd;
+      // debtAmount is in debt-token units and collateralValueUsd is 18-decimal USD: price the debt before comparing.
+      const debtValueUsd = await publicClient.readContract({
+        address: pair,
+        abi: OrionPairABI,
+        functionName: 'debtValueUsd',
+        args: [debtAmount],
+      });
+      const currentLtvBps = (debtValueUsd * 10_000n) / collateralValueUsd;
       if (currentLtvBps < triggerLtvBps) continue;
       console.warn(
         `[KEEPER ALERT] ${user} on ${pair}: LTV ${Number(currentLtvBps) / 100}% >= trigger ${Number(triggerLtvBps) / 100}%`,
