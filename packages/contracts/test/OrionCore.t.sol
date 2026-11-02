@@ -184,18 +184,71 @@ contract OrionCoreTest is Test {
         vm.prank(admin);
         oracle.forcePrice(address(nvda), 230e18);
 
-        // Fund keeper with USDG to execute deleverage
-        vm.prank(admin);
-        usdg.transfer(keeper, 500e18);
-
-        // Keeper executes deleverage
-        vm.startPrank(keeper);
+        // Alice holds USDG and lets the module spend it; the keeper holds nothing.
+        uint256 aliceBefore = usdg.balanceOf(alice);
+        vm.prank(alice);
         usdg.approve(address(autoProtect), 500e18);
+
+        vm.prank(keeper);
         autoProtect.executeAutoProtect(address(pair), alice, 500e18);
-        vm.stopPrank();
 
         (, uint256 debtRemaining,,) = pair.getPosition(alice);
         assertEq(debtRemaining, 920e18, "Debt must stop at target 40% of $2300 collateral");
-        assertEq(usdg.balanceOf(keeper), 120e18, "Keeper spends only the $380 needed to reach target");
+        assertEq(usdg.balanceOf(keeper), 0, "Keeper never pays");
+        assertEq(aliceBefore - usdg.balanceOf(alice), 380e18, "Alice pays only the $380 needed to reach target");
+    }
+
+    function _protectedPosition() internal {
+        vm.startPrank(alice);
+        nvda.approve(address(pair), 10e18);
+        pair.depositCollateral(10e18);
+        pair.borrow(1300e18);
+        autoProtect.setConfig(address(pair), true, 5500, 4000, 500e18);
+        vm.stopPrank();
+        vm.prank(admin);
+        oracle.forcePrice(address(nvda), 230e18);
+    }
+
+    function testAutoProtectRevertsWithoutBorrowerAllowance() public {
+        _protectedPosition();
+        vm.prank(keeper);
+        vm.expectRevert();
+        autoProtect.executeAutoProtect(address(pair), alice, 500e18);
+        (, uint256 debt,,) = pair.getPosition(alice);
+        assertEq(debt, 1300e18, "Debt unchanged when the borrower has not approved the module");
+    }
+
+    function testAutoProtectKeeperFundsAreNotUsed() public {
+        _protectedPosition();
+        vm.prank(admin);
+        usdg.transfer(keeper, 500e18);
+        vm.prank(keeper);
+        usdg.approve(address(autoProtect), 500e18);
+        vm.prank(keeper);
+        vm.expectRevert();
+        autoProtect.executeAutoProtect(address(pair), alice, 500e18);
+        assertEq(usdg.balanceOf(keeper), 500e18, "Keeper balance untouched");
+    }
+
+    function testAutoProtectOnlyAuthorizedKeeperCanExecute() public {
+        _protectedPosition();
+        vm.prank(alice);
+        usdg.approve(address(autoProtect), 500e18);
+        vm.prank(makeAddr("stranger"));
+        vm.expectRevert("AutoProtect: Caller is not an authorized keeper");
+        autoProtect.executeAutoProtect(address(pair), alice, 500e18);
+    }
+
+    function testAutoProtectBelowTriggerReverts() public {
+        vm.startPrank(alice);
+        nvda.approve(address(pair), 10e18);
+        pair.depositCollateral(10e18);
+        pair.borrow(1000e18);
+        autoProtect.setConfig(address(pair), true, 5500, 4000, 500e18);
+        usdg.approve(address(autoProtect), 500e18);
+        vm.stopPrank();
+        vm.prank(keeper);
+        vm.expectRevert("AutoProtect: Current LTV below trigger threshold");
+        autoProtect.executeAutoProtect(address(pair), alice, 500e18);
     }
 }

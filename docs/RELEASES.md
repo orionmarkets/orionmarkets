@@ -57,11 +57,14 @@ Prerequisites, all rehearsed on testnet first:
 - 10x needs the `OrionPair` upgrade (liquidation bonus setter, risk tiers 94% / 97%) on each mainnet pair, and pool depth
   that fits the largest margin (see the price-impact note in `TESTNET.md`).
 - Keeper and price publisher run unattended and funded.
-- Auto-Protect is **built but not live** today: the module is deployed on testnet and the keeper (`apps/keeper`) is
-  written, but the keeper runs in standby (`TRADING_ENABLED` off), there is no systemd unit for it on the VPS, the app
-  has no rule screen (`useAutoProtect` is unused), and `packages/contracts/test` has no AutoProtect test. All four are
-  needed before v2.0 opens it. Set `AUTOPROTECT_LIVE = true` in `apps/web/src/lib/release.ts` when it is live; until then
-  landing and docs say "in validation".
+- Auto-Protect is **user-funded**: the keeper makes the module pull the repayment from the borrower's wallet (allowance
+  to the module); it never spends its own funds and does not sell collateral. The module, the rule screen
+  (`AutoProtectPanel`, on the Lending page), the keeper (reads rule logs from chain, no database) and its systemd unit
+  (`deploy/orion-keeper@.service`) are written and tested in the repo. It is **not live** until, on each network: the new
+  module implementation is deployed and the proxy upgraded, the module is unpaused, the keeper address is authorized
+  (`setKeeper`) and funded with gas, `AUTO_PROTECT_START_BLOCK` is set and the keeper service runs with
+  `TRADING_ENABLED=true`, and `AUTOPROTECT_LIVE` is set to `true` in `apps/web/src/lib/release.ts`. Until then landing
+  and docs say "in validation" and the rule screen stays hidden.
 
 ## v3.0: Pons surfaces and expansion
 

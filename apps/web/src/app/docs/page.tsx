@@ -164,10 +164,12 @@ export default function DocsPage() {
             <h3>Auto-Protect status</h3>
             <p>
               Auto-Protect is an automated defense that partially deleverages a position as it nears a threshold you
-              set. It is <strong>built but not live</strong>: the onchain module is deployed on testnet and the keeper
-              is written, but the keeper stays in standby until testnet validation finishes, and the app has no screen
-              to set a rule yet. Until it opens, nothing protects a position automatically. Watch your own loan ratio
-              and repay or add collateral before a liquidation line is reached.
+              set. It is <strong>built but not live</strong>: the module and the keeper are written and tested, but the
+              keeper is not running on this deployment yet. When it opens, you set a trigger and a target loan ratio
+              and a repayment limit, and a keeper repays part of your debt from your own wallet&apos;s USDG (you approve
+              the amount). It does not sell collateral, and if your wallet balance or approval is short it does nothing.
+              Until it opens, nothing protects a position automatically. Watch your own loan ratio and repay or add
+              collateral before a liquidation line is reached.
             </p>
           </section>
 

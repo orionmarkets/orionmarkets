@@ -1,6 +1,5 @@
 import { createPublicClient, createWalletClient, http, defineChain } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { createClient } from '@supabase/supabase-js';
 import { config } from './config.js';
 
 // Define target chain
@@ -32,12 +31,6 @@ export const walletClient = createWalletClient({
   chain: targetChain,
   transport: http(config.RPC_URL),
 });
-
-// Supabase Client
-export const supabase = createClient(
-  config.SUPABASE_URL,
-  config.SUPABASE_SERVICE_ROLE_KEY ?? config.SUPABASE_ANON_KEY,
-);
 
 // ABIs
 export const AutoProtectABI = [
@@ -80,6 +73,20 @@ export const AutoProtectABI = [
       { name: 'maxDeleverage', type: 'uint256' },
     ],
     stateMutability: 'view',
+  },
+] as const;
+
+export const AutoProtectEvents = [
+  {
+    type: 'event',
+    name: 'ConfigUpdated',
+    inputs: [
+      { name: 'user', type: 'address', indexed: true },
+      { name: 'pair', type: 'address', indexed: true },
+      { name: 'isEnabled', type: 'bool', indexed: false },
+      { name: 'triggerLtv', type: 'uint256', indexed: false },
+      { name: 'targetLtv', type: 'uint256', indexed: false },
+    ],
   },
 ] as const;
 

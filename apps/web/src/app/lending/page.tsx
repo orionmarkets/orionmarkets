@@ -13,6 +13,8 @@ import { formatUnits, type Hex } from "viem";
 import { AppPage, DataState } from "../../components/AppPage";
 import { WorkspaceSkeleton } from "../../components/LoadingSkeleton";
 import { LendingHistory } from "../../components/LendingHistory";
+import { AutoProtectPanel } from "../../components/AutoProtectPanel";
+import { AUTOPROTECT_LIVE, AUTOPROTECT_VISIBLE } from "../../lib/release";
 import { TransactionResultModal } from "../../components/TransactionResultModal";
 import { WalletFunds, useWalletGas } from "../../components/WalletFunds";
 import {
@@ -513,6 +515,9 @@ function LendingWorkspace({
             </p>
           </section>
         </div>
+      )}
+      {AUTOPROTECT_VISIBLE && AUTOPROTECT_LIVE && market && address && chainId === env.CHAIN_ID && (
+        <AutoProtectPanel market={market} />
       )}
       <LendingHistory
         account={address}
