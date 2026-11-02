@@ -6,6 +6,7 @@ import { assetCatalog, marketPath } from "../../lib/asset-catalog";
 import { marketDeployments } from "../../lib/market-deployments";
 import { PONS_VISIBLE } from "../../lib/pons-visible";
 import { CHINA_TICKERS, CHINA_VISIBLE } from "../../lib/china-visible";
+import { useReferencePrices } from "../../hooks/useReferencePrices";
 
 // ETFs and China ADRs in the catalog; every other ticker is a US stock.
 const ETF_TICKERS = new Set(["SPY", "QQQ", "SGOV", "SLV"]);
@@ -16,7 +17,17 @@ const CATALOG_GROUPS = [
   { id: "china", title: "China equities", assets: assetCatalog.filter((a) => CHINA_SET.has(a.ticker)) },
 ].filter((g) => g.assets.length > 0);
 
+// Directory status in the product's own words: what a visitor can do with the ticker on this network today.
+function readiness(ticker: string, mainnetOnly?: boolean) {
+  const row = marketDeployments.find((x) => x.symbol === ticker);
+  if (row?.enabled) return "Live · long, short, borrow";
+  if (row) return "Contracts live · opening soon";
+  if (mainnetOnly && env.CHAIN_ID !== 4663) return "Trading on mainnet";
+  return "Listing in the next wave";
+}
+
 export default function MarketsPage() {
+  const refs = useReferencePrices();
   return (
     <AppPage
       banner="candles"
@@ -37,8 +48,8 @@ export default function MarketsPage() {
         </section>
       )}
       <p className="app-note">
-        Each market needs verified contracts, fresh prices and funded liquidity
-        before trading.{" "}
+        Every market runs on verified contracts, fresh reference prices and funded
+        liquidity.{" "}
         <Link className="text-action" href="/analytics">
           View verified onchain liquidity ↗
         </Link>
@@ -49,7 +60,7 @@ export default function MarketsPage() {
       <section className="catalog-section" aria-labelledby="catalog-title">
         <div className="app-section-label">
           <h2 id="catalog-title">Explore the assets.</h2>
-          <span>{assetCatalog.length} target markets · availability below</span>
+          <span>{assetCatalog.length} tokenized equities · live reference prices</span>
         </div>
         {CATALOG_GROUPS.map((group) => (
           <div key={group.id} className="catalog-group">
@@ -67,13 +78,8 @@ export default function MarketsPage() {
                   <div>
                     <strong>{asset.ticker}</strong>
                     <span>{asset.name}</span>
-                    <small className="directory-readiness">
-                      {marketDeployments.some((x) => x.symbol === asset.ticker)
-                        ? "Contracts configured · live checks required"
-                        : env.PROTOCOL_ADDRESSES.tokens[asset.ticker]
-                          ? "Token configured · contracts pending"
-                          : "Token verification pending"}
-                    </small>
+                    {refs.last(asset.ticker) && <b className="directory-price num">{refs.last(asset.ticker)}</b>}
+                    <small className="directory-readiness">{readiness(asset.ticker, asset.mainnetOnly)}</small>
                   </div>
                   <span aria-hidden="true">↗</span>
                 </Link>
