@@ -34,10 +34,8 @@ const configSchema = z.object({
       /^0x[a-fA-F0-9]{40}$/,
       "MARKET_REGISTRY_ADDRESS must be a valid EVM address",
     ),
-  SUPABASE_URL: z.string().url(),
-  SUPABASE_ANON_KEY: z.string().min(1),
-  // Server-side writes; table write policies are limited to the service role.
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+  // First block to read ConfigUpdated logs from: the AutoProtectModule proxy deployment block.
+  AUTO_PROTECT_START_BLOCK: z.coerce.number().int().nonnegative(),
   POLL_INTERVAL_MS: z.coerce.number().int().positive(),
   MAX_GAS_PRICE_GWEI: z.coerce.number().positive(),
 }).refine(
@@ -54,9 +52,7 @@ const _parsed = configSchema.safeParse({
   AUTO_PROTECT_ADDRESS: process.env.AUTO_PROTECT_ADDRESS,
   ORACLE_ADDRESS: process.env.ORACLE_ADDRESS,
   MARKET_REGISTRY_ADDRESS: process.env.MARKET_REGISTRY_ADDRESS,
-  SUPABASE_URL: process.env.SUPABASE_URL,
-  SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || undefined,
+  AUTO_PROTECT_START_BLOCK: process.env.AUTO_PROTECT_START_BLOCK,
   POLL_INTERVAL_MS: process.env.POLL_INTERVAL_MS,
   MAX_GAS_PRICE_GWEI: process.env.MAX_GAS_PRICE_GWEI,
 });

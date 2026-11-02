@@ -211,38 +211,3 @@ export const OrionVaultABI = [
     stateMutability: 'view',
   },
 ] as const;
-
-export const AutoProtectModuleABI = [
-  {
-    type: 'function',
-    name: 'setProtectionRule',
-    inputs: [
-      { name: 'pair', type: 'address' },
-      { name: 'triggerLtv', type: 'uint256' },
-      { name: 'targetLtv', type: 'uint256' },
-      { name: 'maxDeleverage', type: 'uint256' },
-    ],
-    outputs: [],
-    stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'getUserRule',
-    inputs: [
-      { name: 'user', type: 'address' },
-      { name: 'pair', type: 'address' },
-    ],
-    outputs: [
-      {
-        components: [
-          { name: 'triggerLtv', type: 'uint256' },
-          { name: 'targetLtv', type: 'uint256' },
-          { name: 'maxDeleverage', type: 'uint256' },
-          { name: 'isActive', type: 'bool' },
-        ],
-        type: 'tuple',
-      },
-    ],
-    stateMutability: 'view',
-  },
-] as const;

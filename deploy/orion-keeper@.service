@@ -1,0 +1,18 @@
+# Auto-Protect keeper (%i = testnet). Reads rules from the AutoProtectModule logs and calls executeAutoProtect when a
+# borrower's loan ratio reaches their trigger; the repayment comes from the borrower's wallet, never from the keeper.
+# Reads KEEPER_PRIVATE_KEY, AUTO_PROTECT_ADDRESS, AUTO_PROTECT_START_BLOCK and TRADING_ENABLED from the git-ignored
+# .env.testnet. With TRADING_ENABLED=false it stays in standby and sends nothing.
+[Unit]
+Description=ORIONMARKETS Auto-Protect keeper (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/opt/orion/%i/repo/apps/keeper
+ExecStart=/usr/bin/env pnpm exec tsx src/index.ts
+Restart=always
+RestartSec=30
+User=orion
+
+[Install]
+WantedBy=multi-user.target

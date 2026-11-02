@@ -11,7 +11,9 @@ import "../core/OrionPair.sol";
 
 /**
  * @title AutoProtectModule
- * @notice Keeper-funded repayment foundation; collateral-swap deleveraging is not implemented.
+ * @notice User-funded repayment: when a configured position reaches its trigger LTV, an authorized keeper makes this
+ *         module pull the repayment from the borrower's own wallet (needs a debt-token allowance to this module).
+ *         Collateral-swap deleveraging is not implemented.
  */
 /// @dev Deployed behind an ERC1967 UUPS proxy.
 contract AutoProtectModule is Initializable, OwnableUpgradeable, ReentrancyGuardTransient, UUPSUpgradeable {
@@ -119,8 +121,8 @@ contract AutoProtectModule is Initializable, OwnableUpgradeable, ReentrancyGuard
         if (amountToRepay > needed) amountToRepay = needed;
         require(amountToRepay > 0, "AutoProtect: No repayment required");
 
-        // Keeper-funded repayment; swap-based deleveraging is a separate, not-yet-enabled flow.
-        IERC20(pair.debtToken()).safeTransferFrom(msg.sender, address(this), amountToRepay);
+        // The borrower pays: the keeper never spends its own funds. Reverts if the borrower's allowance or balance is short.
+        IERC20(pair.debtToken()).safeTransferFrom(borrower, address(this), amountToRepay);
         IERC20(pair.debtToken()).forceApprove(pairAddress, amountToRepay);
         pair.repayFor(borrower, amountToRepay);
 
