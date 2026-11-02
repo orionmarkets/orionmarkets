@@ -61,7 +61,7 @@ Prerequisites, all rehearsed on testnet first:
   to the module); it never spends its own funds and does not sell collateral. It is **live on testnet** (2026-11-03,
   see [`TESTNET.md`](TESTNET.md)): module upgraded and unpaused, rule screen on the Lending page, keeper running as
   `orion-keeper@testnet`, acceptance run passed. For mainnet, repeat per network: deploy the new module implementation and
-  upgrade the proxy, unpause, authorize and fund the keeper (`setKeeper`), put `TRADING_ENABLED=true` and
+  upgrade the proxy, unpause, authorize and fund a keeper wallet that is not the publisher's (`setKeeper`; testnet already uses a separate one), put `TRADING_ENABLED=true` and
   `AUTO_PROTECT_START_BLOCK` in `/opt/orion/mainnet/keeper.env`, start `orion-keeper@mainnet`, run the same acceptance
   with a borrower that is not the keeper, and then change `AUTOPROTECT_LIVE` in `apps/web/src/lib/release.ts` so mainnet
   counts as live. Until then mainnet landing and docs say "in validation" and the rule screen stays hidden.

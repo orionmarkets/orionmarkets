@@ -4,6 +4,7 @@ import { scanPositions } from "./services/positionMonitor.js";
 import { executeCandidateProtection } from "./services/executionService.js";
 
 let isRunning = true;
+let lastBreaches = 0; // log a breach count only when it changes
 
 async function runKeeperLoop() {
   if (!config.TRADING_ENABLED) {
@@ -35,9 +36,10 @@ async function runKeeperLoop() {
       const elapsed = Date.now() - startTime;
 
       if (candidates.length > 0) {
-        console.warn(
-          `[CYCLE #${cycle}] Found ${candidates.length} positions breaching safety thresholds!`,
-        );
+        if (candidates.length !== lastBreaches)
+          console.warn(
+            `[CYCLE #${cycle}] Found ${candidates.length} positions breaching safety thresholds!`,
+          );
 
         for (const candidate of candidates) {
           await executeCandidateProtection(candidate);
@@ -48,6 +50,7 @@ async function runKeeperLoop() {
         );
       }
 
+      lastBreaches = candidates.length;
       cycle++;
     } catch (err) {
       console.error(

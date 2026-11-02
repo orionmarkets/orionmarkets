@@ -3,7 +3,6 @@ import {
   MarketConfig,
   VaultConfig,
   Position,
-  AutoProtectConfig,
   LiquidationHeatmapData,
   ProtocolRiskStats,
   NetworkMode,
@@ -166,52 +165,7 @@ export async function closePosition(
 }
 
 // ---------------------------------------------------------------------------
-// 4. Auto-Protect API
-// ---------------------------------------------------------------------------
-export interface SaveAutoProtectPayload {
-  network: NetworkMode;
-  userAddress: string;
-  positionId?: string;
-  isEnabled: boolean;
-  triggerLtv: number;
-  targetLtv: number;
-  maxDeleverage: number;
-}
-
-export async function fetchAutoProtectConfig(
-  address: string,
-  network: NetworkMode = "TESTNET",
-): Promise<AutoProtectConfig | null> {
-  const result = await fetchJson<{ success: boolean; data: any[] }>(
-    `${API_BASE}/auto-protect/${address.toLowerCase()}?network=${network}`,
-  );
-
-  const configs = result.data || [];
-  if (configs.length === 0) return null;
-
-  const rule = configs[0];
-  return {
-    isEnabled: Boolean(rule.is_enabled),
-    triggerLtvPercent: Number(rule.trigger_ltv),
-    targetLtvPercent: Number(rule.target_ltv),
-    maxDeleverageUsd: Number(rule.max_deleverage),
-  };
-}
-
-export async function saveAutoProtectConfig(
-  payload: SaveAutoProtectPayload,
-): Promise<any> {
-  return fetchJson<{ success: boolean; message: string }>(
-    `${API_BASE}/auto-protect`,
-    {
-      method: "POST",
-      body: JSON.stringify(payload),
-    },
-  );
-}
-
-// ---------------------------------------------------------------------------
-// 5. Liquidations API
+// 4. Liquidations API
 // ---------------------------------------------------------------------------
 export async function fetchLiquidationHeatmap(
   asset: string,

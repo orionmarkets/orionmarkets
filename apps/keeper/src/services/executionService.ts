@@ -10,6 +10,10 @@ import { config } from "../config.js";
 import { BreachCandidate } from "./positionMonitor.js";
 import { formatGwei, formatUnits, parseUnits, Address } from "viem";
 
+// One warning per borrower and pair every ten minutes, so a borrower without balance or allowance does not fill the log.
+const lastWarned = new Map<string, number>();
+const WARN_EVERY_MS = 10 * 60 * 1000;
+
 export async function executeCandidateProtection(
   candidate: BreachCandidate,
 ): Promise<boolean> {
@@ -111,9 +115,13 @@ export async function executeCandidateProtection(
     const payable = balance < allowance ? balance : allowance;
     if (payable < repayAmount) repayAmount = payable;
     if (repayAmount <= 0n) {
-      console.warn(
-        `[KEEPER] ${candidate.userAddress} has no approved ${candidate.pairAddress} debt token to repay with; skipping.`,
-      );
+      const key = `${candidate.userAddress}:${candidate.pairAddress}`.toLowerCase();
+      if (Date.now() - (lastWarned.get(key) ?? 0) >= WARN_EVERY_MS) {
+        lastWarned.set(key, Date.now());
+        console.warn(
+          `[KEEPER] ${candidate.userAddress} has no balance or allowance to repay ${candidate.pairAddress} with; skipping (next notice in 10 min).`,
+        );
+      }
       return false;
     }
 

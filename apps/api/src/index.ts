@@ -6,7 +6,6 @@ import { vaultsRouter } from "./routes/vaults.js";
 import { positionsRouter } from "./routes/positions.js";
 import { portfolioRouter } from "./routes/portfolio.js";
 import { activityRouter } from "./routes/activity.js";
-import { autoProtectRouter } from "./routes/autoProtect.js";
 import { liquidationsRouter } from "./routes/liquidations.js";
 import { isLiveSupabase, supabase } from "./supabase.js";
 
@@ -71,7 +70,6 @@ app.use("/api/v1/vaults", vaultsRouter);
 app.use("/api/v1/positions", positionsRouter);
 app.use("/api/v1/portfolio", portfolioRouter);
 app.use("/api/v1/activity", activityRouter);
-app.use("/api/v1/auto-protect", autoProtectRouter);
 app.use("/api/v1/liquidations", liquidationsRouter);
 
 // 404 handler

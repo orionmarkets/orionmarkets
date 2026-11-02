@@ -65,5 +65,16 @@ export function useAutoProtect(market: MarketDeployment) {
     }
   }
 
-  return { rule: rule.data, allowance: allowance.data, loading: rule.isPending, busy, save };
+  /** Restores the allowance to the rule's limit after the keeper has used it up. */
+  async function topUp(limit: bigint) {
+    setBusy(true);
+    try {
+      await wait(await writeContractAsync({ address: debt, abi: erc20Abi, functionName: "approve", args: [MODULE, limit] }));
+      await allowance.refetch();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return { rule: rule.data, allowance: allowance.data, loading: rule.isPending, busy, save, topUp };
 }
