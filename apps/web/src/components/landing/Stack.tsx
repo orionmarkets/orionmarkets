@@ -3,13 +3,13 @@
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { env } from '../../env.mjs';
-import { AUTOPROTECT_VISIBLE } from '../../lib/release';
+import { AUTOPROTECT_LIVE, AUTOPROTECT_VISIBLE } from '../../lib/release';
 import { ContractGroupCard, useContractDirectory } from '../ContractDirectory';
 
 const LAYERS = [
   { name: 'Execution', items: ['OrionRouter', 'LeverageRouter', 'ShortRouter', 'MarginRouter'], note: 'Atomic borrow · swap · post' },
   { name: 'Markets', items: ['OrionPair · long', 'OrionPair · short'], note: 'One isolated pair per side, per equity' },
-  { name: 'Risk', items: ['OrionMarketRegistry', 'Reference oracle', ...(AUTOPROTECT_VISIBLE ? ['AutoProtectModule'] : [])], note: AUTOPROTECT_VISIBLE ? 'Tiers, caps, freshness, keeper' : 'Tiers, caps, freshness' },
+  { name: 'Risk', items: ['OrionMarketRegistry', 'Reference oracle', ...(AUTOPROTECT_VISIBLE ? ['AutoProtectModule'] : [])], note: AUTOPROTECT_VISIBLE && AUTOPROTECT_LIVE ? 'Tiers, caps, freshness, keeper' : 'Tiers, caps, freshness' },
   { name: 'Vault', items: ['OrionVault · ERC-4626'], note: 'USDG custody layer for credit' },
 ];
 
