@@ -169,8 +169,10 @@ export default function DocsPage() {
                 a trigger and a target loan ratio and a repayment limit, and approve that amount of USDG to the module. When
                 your loan ratio reaches the trigger, a keeper repays part of your debt from your own wallet&apos;s USDG until
                 the target is restored. It does not sell collateral, it never uses anyone else&apos;s funds, and if your wallet
-                balance or approval is short it does nothing, so the position can still be liquidated. It runs about every
-                ten seconds, not instantly.
+                balance or approval is short it does nothing, so the position can still be liquidated. Each repayment
+                spends the approval, so re-approve from the same panel when it runs low. It covers your loan on that
+                market only, not margin short positions, and it runs about every ten seconds, not instantly. While the
+                price feed is paused or stale it cannot act.
               </p>
             ) : (
               <p>

@@ -16,6 +16,8 @@ export interface BreachCandidate {
 // Borrowers with a rule are found from the module's own ConfigUpdated logs, so chain state is the only source of truth.
 const rules = new Map<string, { user: Address; pair: Address }>();
 let nextBlock = BigInt(config.AUTO_PROTECT_START_BLOCK);
+const lastAlert = new Map<string, number>();
+const ALERT_EVERY_MS = 10 * 60 * 1000; // a breach that cannot be repaid is logged every ten minutes, not every cycle
 const LOG_RANGE = 100_000n; // shortcut: fixed range keeps getLogs under public RPC limits, raise if the node allows more.
 
 async function refreshRules() {
@@ -72,9 +74,13 @@ export async function scanPositions(): Promise<BreachCandidate[]> {
       });
       const currentLtvBps = (debtValueUsd * 10_000n) / collateralValueUsd;
       if (currentLtvBps < triggerLtvBps) continue;
-      console.warn(
-        `[KEEPER ALERT] ${user} on ${pair}: LTV ${Number(currentLtvBps) / 100}% >= trigger ${Number(triggerLtvBps) / 100}%`,
-      );
+      const key = `${user}:${pair}`.toLowerCase();
+      if (Date.now() - (lastAlert.get(key) ?? 0) >= ALERT_EVERY_MS) {
+        lastAlert.set(key, Date.now());
+        console.warn(
+          `[KEEPER ALERT] ${user} on ${pair}: LTV ${Number(currentLtvBps) / 100}% >= trigger ${Number(triggerLtvBps) / 100}%`,
+        );
+      }
       candidates.push({
         userAddress: user,
         pairAddress: pair,

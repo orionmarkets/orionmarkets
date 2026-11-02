@@ -117,3 +117,6 @@ supabase/.temp/
 # Hosting CLI link state
 .vercel
 .railway
+
+# graphify knowledge graph output
+graphify-out/

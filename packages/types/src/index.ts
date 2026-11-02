@@ -85,13 +85,6 @@ export interface PortfolioSummary {
   pnl24hUsd: number;
 }
 
-export interface AutoProtectConfig {
-  isEnabled: boolean;
-  triggerLtvPercent: number;
-  targetLtvPercent: number;
-  maxDeleverageUsd: number;
-}
-
 export interface User {
   id: string;
   network: NetworkMode;

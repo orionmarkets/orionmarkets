@@ -84,6 +84,15 @@ Limits of this acceptance run: the borrower and the keeper were the same project
 property is proven by the contract tests (`OrionCore.t.sol`), not on chain. The run used the contract's real price
 oracle; there was no price move, the rule trigger was set just under the current loan ratio.
 
+The keeper signs with its own wallet `0x9302Fe1261A54aB675dAcD8032527cA413c4A797` (key only in the root-owned
+`/opt/orion/testnet/keeper.env`), separate from the project wallet that the price publisher uses, so their nonces cannot
+collide. It was funded with 0.002 ETH (`0xbdbc75a2…91f8`) and authorized with `setKeeper` (`0x7c1c37b2…93d54`).
+
+Price feed dependency: the publisher fails safe. After three failed upstream reads or at its run limit it pauses the
+market and `run-publisher-loop.sh` restarts it (observed once on 2026-11-02: about 2.5 minutes from failure to the next
+publication). While the feed is paused or stale the pair cannot price debt, so Auto-Protect cannot act; the keeper
+keeps polling and resumes by itself.
+
 The keeper runs as `orion-keeper@testnet` (`deploy/orion-keeper@.service`). Its switches live in the git-ignored
 `/opt/orion/testnet/keeper.env` (`TRADING_ENABLED=true`, `AUTO_PROTECT_START_BLOCK=147225000`); the keeper polls every 10 s,
 so protection is not instant.
