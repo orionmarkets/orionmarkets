@@ -1,0 +1,416 @@
+{
+  "capturedAt": "2026-11-02T13:38:33.428Z",
+  "chainId": 46630,
+  "coreDeploymentComplete": true,
+  "fundedLendingAcceptancePassed": true,
+  "browserWalletAcceptancePassed": false,
+  "applicationEnabled": false,
+  "contracts": [
+    {
+      "role": "registry",
+      "contract": "OrionMarketRegistry",
+      "address": "0xa9e6ad391f357c6d55f87c39a4def6f6b5e4d1af",
+      "codeHash": "0x1e661bfaf6614532f0f38eef3037b7366051c1e075d8c30488b2fafbd39b7589",
+      "transactionHash": "0x3e3cd92e57bd3b90519f47557d1f4fe59e3b3dc2e158ce5b613c6bbb627ffa28",
+      "blockNumber": "147072217"
+    },
+    {
+      "role": "router",
+      "contract": "OrionRouter",
+      "address": "0xa451de6096bc1929611a6ab7dd2aa5de5567dc91",
+      "codeHash": "0xfdd2e9a07dd5fb2b101d6a2fbfa1f646ffd31c1b5be40bfeb99c987877e2d61a",
+      "transactionHash": "0x7f0c88a857947d301a428132b173487a17470f211e35f13f05bbed2af83209c5",
+      "blockNumber": "147072297"
+    },
+    {
+      "role": "leverageRouter",
+      "contract": "LeverageRouter",
+      "address": "0xc3a56930fe93f687e420c9efe365688c055bff79",
+      "codeHash": "0xa02639471c4fbae65d18441998f59151a2497f4a65e4314d3e3d126cb5b9bfb3",
+      "transactionHash": "0x0d6c26fed93652be226bd825b2d4070dcf2624348015ea899b99d52ee80ef574",
+      "blockNumber": "147072862"
+    },
+    {
+      "role": "shortRouter",
+      "contract": "ShortRouter",
+      "address": "0xb4b45bf18c43120f24e909a1b60093ef8c540560",
+      "codeHash": "0x9f95f9de2118ae6be92d6a748aafe7867ad5ad4aef16d903916c54b748f1384c",
+      "transactionHash": "0xc7efd47dd32fd67e4da088920bfb9d7f00be0de450a6b00890ab55840f76dac8",
+      "blockNumber": "147072943"
+    },
+    {
+      "role": "autoProtect",
+      "contract": "AutoProtectModule",
+      "address": "0x28a0307be727594340b00048b912feb59d556506",
+      "codeHash": "0x0a5e37be99e787aa1097aa8d1e44d6cb04ce126ff7780dec9474328918cee432",
+      "transactionHash": "0x1bc3ec8c33582440f94aed9861c1470cbd0f5bf51bd084bcf2126e48898243c5",
+      "blockNumber": "147073023"
+    },
+    {
+      "role": "orionVault",
+      "contract": "OrionVault",
+      "address": "0x9ab7fa06c0b50c8d23127c60ad183fe06ce3df29",
+      "codeHash": "0xd564af03dfdd9a9f61794bb8bdc6854b64b4c23c3ee174849c90e8b765d2ea9f",
+      "transactionHash": "0x5599aeefad546120b16526a1198db99611016d73fc6850c62aa2b69e7f4776cd",
+      "blockNumber": "147073099"
+    },
+    {
+      "role": "oracle",
+      "contract": "RhTestnetReferenceOracle",
+      "address": "0xda41d1bdf4e1c8a01b20de9f0c1ecdf035de4f44",
+      "codeHash": "0xb7d193a1d66fa4b3a008de3b38f49c470e0b4f2468be0e02f123a232507d6c23",
+      "transactionHash": "0xf7f136a6fa54d0bfd49a2bb9370e2d535380f5c94226b35f7f804db8ace28d56",
+      "blockNumber": "147072506"
+    },
+    {
+      "role": "pair",
+      "contract": "OrionPair",
+      "address": "0x945c89d82dfa799bd57b2ffd48670fc4121df567",
+      "codeHash": "0x06ceef2a4ffbf92cf2e72428a78d142936643aa06a9f693dd3890106a69d63b5",
+      "transactionHash": "0xb42b06074528387c11f94d310c0e2729f6efc71a4a7ea239fa7d0cc7409ae7ee",
+      "blockNumber": "147072620"
+    }
+  ],
+  "transactions": [
+    {
+      "operation": "deploy-registry-implementation",
+      "hash": "0x6beefcf7374d6f000c57546b86a1ab160dfbf8008055abb74e5b5edb13ea7977",
+      "blockNumber": "147072174",
+      "status": "success",
+      "gasFeeEth": "0.00001576694",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-registry",
+      "hash": "0x3e3cd92e57bd3b90519f47557d1f4fe59e3b3dc2e158ce5b613c6bbb627ffa28",
+      "blockNumber": "147072217",
+      "status": "success",
+      "gasFeeEth": "0.0000016692",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-router-implementation",
+      "hash": "0x5face98867fa1b142a371f321c7d102d3b02955405e26837be741ee0a79df8c6",
+      "blockNumber": "147072261",
+      "status": "success",
+      "gasFeeEth": "0.0000087363",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-router",
+      "hash": "0x7f0c88a857947d301a428132b173487a17470f211e35f13f05bbed2af83209c5",
+      "blockNumber": "147072297",
+      "status": "success",
+      "gasFeeEth": "0.00000166818",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "authorize-router",
+      "hash": "0x12016075dd06a0b66c8ba43dea16b537bf3c7cc0417dfb5d6471184c911dde4a",
+      "blockNumber": "147072337",
+      "status": "success",
+      "gasFeeEth": "0.00000055305",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-oracle",
+      "hash": "0xf7f136a6fa54d0bfd49a2bb9370e2d535380f5c94226b35f7f804db8ace28d56",
+      "blockNumber": "147072506",
+      "status": "success",
+      "gasFeeEth": "0.00000743235",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "publish-1793626517-1793626522",
+      "hash": "0x0e76375849dee6a7c3b27c19dea0f40ddd90bc66b681716984be7a5bbe59e98a",
+      "blockNumber": "147072546",
+      "status": "success",
+      "gasFeeEth": "0.00000137821",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-pair-implementation",
+      "hash": "0x6aff738b3e9e9ce40f7febbe5f80cdc2ea96a70a787eee34d3847080abc26000",
+      "blockNumber": "147072582",
+      "status": "success",
+      "gasFeeEth": "0.00002237657",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-pair",
+      "hash": "0xb42b06074528387c11f94d310c0e2729f6efc71a4a7ea239fa7d0cc7409ae7ee",
+      "blockNumber": "147072620",
+      "status": "success",
+      "gasFeeEth": "0.00000372049",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "register-market",
+      "hash": "0xf353683956974bd314817a096537d39ec45e7184dd51bb30ba3db7321033a77a",
+      "blockNumber": "147072662",
+      "status": "success",
+      "gasFeeEth": "0.00000332947",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "pause-market",
+      "hash": "0xe3c92112f8c36391e11c14254a3655334644857d77194761824698f66d96cdfb",
+      "blockNumber": "147072700",
+      "status": "success",
+      "gasFeeEth": "0.00000037759",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "configure-risk",
+      "hash": "0x97188f31f393a2ad7d40011119bf3f55b95d5b63cb1d4d0c7cf4d45423d3f2c9",
+      "blockNumber": "147072736",
+      "status": "success",
+      "gasFeeEth": "0.00000063113",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-leverageRouter-implementation",
+      "hash": "0x757424baee7f5b6029dca5aaf9e2e324be604237f7d94f6e9490aaffef989159",
+      "blockNumber": "147072825",
+      "status": "success",
+      "gasFeeEth": "0.00000806184",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-leverageRouter",
+      "hash": "0x0d6c26fed93652be226bd825b2d4070dcf2624348015ea899b99d52ee80ef574",
+      "blockNumber": "147072862",
+      "status": "success",
+      "gasFeeEth": "0.00000188959",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-shortRouter-implementation",
+      "hash": "0xb5491a2eb9e20482144908af5a071c87ec40594a544099bccdcbd79403b90fc3",
+      "blockNumber": "147072904",
+      "status": "success",
+      "gasFeeEth": "0.00000780302",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-shortRouter",
+      "hash": "0xc7efd47dd32fd67e4da088920bfb9d7f00be0de450a6b00890ab55840f76dac8",
+      "blockNumber": "147072943",
+      "status": "success",
+      "gasFeeEth": "0.00000188996",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-autoProtect-implementation",
+      "hash": "0x5890e862b0ba554802aa57358eba1497d8a790a71a127f32df18104964188eee",
+      "blockNumber": "147072988",
+      "status": "success",
+      "gasFeeEth": "0.00001377514",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-autoProtect",
+      "hash": "0x1bc3ec8c33582440f94aed9861c1470cbd0f5bf51bd084bcf2126e48898243c5",
+      "blockNumber": "147073023",
+      "status": "success",
+      "gasFeeEth": "0.00000211192",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-orionVault-implementation",
+      "hash": "0x92e036898c2168c17d5004391685cfbfef5d1947a9928f7b70504cc5eda9a53a",
+      "blockNumber": "147073064",
+      "status": "success",
+      "gasFeeEth": "0.00002134967",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "deploy-orionVault",
+      "hash": "0x5599aeefad546120b16526a1198db99611016d73fc6850c62aa2b69e7f4776cd",
+      "blockNumber": "147073099",
+      "status": "success",
+      "gasFeeEth": "0.00000315341",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "publish-1793626621-1793626619",
+      "hash": "0x00f6ba0490915ab29f2d390de5a4378cdcdd603bd89735824e93bde61476ed91",
+      "blockNumber": "147073273",
+      "status": "success",
+      "gasFeeEth": "0.00000050066",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "seed-liquidity",
+      "hash": "0xd374dacc564731751eba6e09d8a87badadea40167bb4451b043357bb82f16be2",
+      "blockNumber": "147073313",
+      "status": "success",
+      "gasFeeEth": "0.00000065366",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "activate-market",
+      "hash": "0xba79f2469adb4ed61bd623cd509d4890435ab97ee9394c84172184173a3583b7",
+      "blockNumber": "147073346",
+      "status": "success",
+      "gasFeeEth": "0.00000037747",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "acceptance-approve-deposit",
+      "hash": "0x69eca1d92c9f8ba8bcdcdd9ea656535cdba89c91349f7e84f191b2b103d0e549",
+      "blockNumber": "147073388",
+      "status": "success",
+      "gasFeeEth": "0.00000060576",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "acceptance-deposit",
+      "hash": "0x8cd8a9706b5090cc0082e0e7946d6713f5450c9d0a815850380a3587adf152e5",
+      "blockNumber": "147073419",
+      "status": "success",
+      "gasFeeEth": "0.00000179755",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "publish-1793626651-1793626649",
+      "hash": "0xa89718fc0b7354cb9853fc2dc7625117d7baa4da9cb77fd5749ae2480359d4a2",
+      "blockNumber": "147073466",
+      "status": "success",
+      "gasFeeEth": "0.00000050066",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "acceptance-borrow",
+      "hash": "0x8aa265c2654a69915c4b22282db220f525c096f08d006645475ac1ec9ae53933",
+      "blockNumber": "147073501",
+      "status": "success",
+      "gasFeeEth": "0.00000175116",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "acceptance-approve-repay",
+      "hash": "0xef6626980640ea7961e3d9c10c84398d636766c0c9e24116326e335466f89daf",
+      "blockNumber": "147073538",
+      "status": "success",
+      "gasFeeEth": "0.00000057976",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "acceptance-repay",
+      "hash": "0x4ec86a2cc4ea27136351031c74c7c047d072c63a05c84b01404811427dd7facf",
+      "blockNumber": "147073578",
+      "status": "success",
+      "gasFeeEth": "0.00000064819",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "acceptance-withdraw",
+      "hash": "0x2b1bbb791f5f4d59b6e7a1be6bcf72dbc1fdafcc7c339a1bb124e4ffac4d2459",
+      "blockNumber": "147073615",
+      "status": "success",
+      "gasFeeEth": "0.0000007021",
+      "signerRole": "deployer"
+    },
+    {
+      "operation": "pause-after-acceptance",
+      "hash": "0xe5310fe2297fc71005ca5de42847ced2bf5cb875ce08e60ca55bcf86c2778c98",
+      "blockNumber": "147073666",
+      "status": "success",
+      "gasFeeEth": "0.00000037759",
+      "signerRole": "deployer"
+    }
+  ],
+  "transactionCount": 31,
+  "continuationTransactionCount": 24,
+  "totalRecordedGasFeeEth": "0.00013616859",
+  "continuationGasFeeEth": "0.00012323328",
+  "market": {
+    "marketId": "0x5f1c8f54170bee18d0d958454c78106f1271a5c6db6a2d607316e05f2ffc5d9d",
+    "slug": "tsla-usdg-testnet",
+    "collateralToken": "0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E",
+    "debtToken": "0x7E955252E15c84f5768B83c41a71F9eba181802F",
+    "pairAddress": "0x945C89D82dfA799bd57B2FfD48670Fc4121df567",
+    "oracle": "0xda41d1BDf4E1C8A01B20dE9f0C1eCdF035dE4f44",
+    "riskTier": 3,
+    "status": 2,
+    "maxLtvBps": "5000",
+    "liquidationLtvBps": "6500",
+    "maxLeverageBps": "10000",
+    "supplyCap": "2000000000000000000",
+    "borrowCap": "10000000"
+  },
+  "finalDeployerPosition": {
+    "limits": {
+      "depositMax": "0",
+      "repayMax": "0",
+      "borrowMax": "0",
+      "withdrawMax": "0",
+      "collateralUsd": "0",
+      "debtUsd": "0",
+      "healthFactorBps": null,
+      "maxLtvBps": "5000",
+      "liquidationLtvBps": "6500"
+    },
+    "oracleAvailable": true,
+    "blockNumber": "147073866",
+    "collateral": "0",
+    "debt": "0",
+    "collateralBalance": "14000000000000000000",
+    "debtBalance": "26684935",
+    "liquidity": "5000000",
+    "status": 2
+  },
+  "testerSnapshot": {
+    "limits": {
+      "depositMax": "0",
+      "repayMax": "0",
+      "borrowMax": "0",
+      "withdrawMax": "0",
+      "collateralUsd": "0",
+      "debtUsd": "0",
+      "healthFactorBps": null,
+      "maxLtvBps": "5000",
+      "liquidationLtvBps": "6500"
+    },
+    "oracleAvailable": true,
+    "blockNumber": "147073873",
+    "collateral": "0",
+    "debt": "0",
+    "collateralBalance": "14000000000000000000",
+    "debtBalance": "26684935",
+    "liquidity": "5000000",
+    "status": 2
+  },
+  "finalAllowances": {
+    "collateral": "0",
+    "debt": "0"
+  },
+  "oracle": {
+    "mode": "RH_TESTNET_REAL_REFERENCE",
+    "nativeFeedVerified": false,
+    "stockSource": "https://api.robinhood.com/rhj/",
+    "debtSource": "wss://ws.kraken.com/v2",
+    "sourceTimestampPolicy": "Exchange snapshot timestamp and CRC32; Robinhood quote timestamp; never local retrieval time",
+    "maxStockAgeSeconds": 90,
+    "maxDebtAgeSeconds": 600,
+    "pricesAtBorrow": {
+      "collateral": "404430000000000000000",
+      "debt": "1000100000000000000"
+    },
+    "borrowBlockTimestamp": "1793626659",
+    "continuousPublisherRunning": false
+  },
+  "exportedProfiles": [
+    ".env.testnet",
+    ".env",
+    "apps/web/.env"
+  ],
+  "mainnetActions": 0,
+  "databaseMutations": 0,
+  "limitations": [
+    "Market paused after acceptance; production UI execution disabled",
+    "Publisher ran for verified reports, not as a continuous service",
+    "Long/Short swaps and closing, vault allocation/interest and collateral-funded deleveraging remain incomplete"
+  ]
+}

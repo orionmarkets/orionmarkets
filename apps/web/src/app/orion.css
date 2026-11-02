@@ -1363,3 +1363,14 @@
     padding: 12px 18px;
   }
 }
+
+/* Markets directory: live reference price on each card. */
+.directory-price {
+  display: block;
+  margin-top: 6px;
+  font-size: 18px;
+  color: var(--text);
+}
+.directory-card .directory-readiness {
+  color: var(--accent);
+}

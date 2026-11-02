@@ -3,10 +3,25 @@ import { X509Certificate } from "node:crypto";
 import postgres from "postgres";
 
 export function connectIndexerDatabase(env) {
-  const u = new URL(env.DATABASE_URL),
-    project = new URL(env.SUPABASE_URL).hostname.split(".")[0];
+  const u = new URL(env.DATABASE_URL);
   if (u.protocol !== "postgresql:" && u.protocol !== "postgres:")
     throw Error("DATABASE_PROTOCOL_INVALID");
+  // Self-hosted stack (docs/HOSTING.md): Postgres on the same host, reached over loopback only, so no TLS.
+  if (u.hostname === "127.0.0.1" || u.hostname === "localhost")
+    return postgres({
+      host: u.hostname,
+      port: Number(u.port),
+      username: decodeURIComponent(u.username),
+      password: decodeURIComponent(u.password),
+      database: decodeURIComponent(u.pathname.slice(1)),
+      max: 1,
+      prepare: false,
+      fetch_types: false,
+      connect_timeout: 10,
+      connection: { statement_timeout: 30000 },
+      onnotice() {},
+    });
+  const project = new URL(env.SUPABASE_URL).hostname.split(".")[0];
   const matches =
     u.hostname === `db.${project}.supabase.co` ||
     (/^aws-[a-z0-9-]+\.pooler\.supabase\.com$/.test(u.hostname) &&

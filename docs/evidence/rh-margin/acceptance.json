@@ -1,0 +1,64 @@
+{
+  "capturedAt": "2026-11-02T13:45:16.833Z",
+  "chainId": 46630,
+  "account": "0xd09D9c87ECfe008B4D6D3cEbeAd25103c16d9a7C",
+  "router": "0x7cfe40aca7d4c20cf04063960e757ecc23654f5b",
+  "pool": "0x4b6CdC36732889d5688B30C83e40c41443E4D9E3",
+  "longPair": "0x945c89d82dfa799bd57b2ffd48670fc4121df567",
+  "shortPair": "0xc0db4c227f88bc00c623e7edabd2cf875b7295f7",
+  "method": "Signed real testnet transactions with canonical receipt, event, account, balance and allowance checks. No browser wallet signing claimed.",
+  "sides": [
+    {
+      "side": "long",
+      "openHash": "0x9e40db4379c933f3e87b0508afde5371e25a4778d3d960bd516ed737f4e8a5a1",
+      "openBlock": "147076485",
+      "closeHash": "0x6091015a25f085f36f5724d3e0ff596693c35dc33416acf435839e7f7c5a5ee9",
+      "closeBlock": "147076527",
+      "opened": {
+        "user": "0xd09D9c87ECfe008B4D6D3cEbeAd25103c16d9a7C",
+        "isShort": false,
+        "margin": "1000000",
+        "collateral": "3270306951836336",
+        "debt": "500000"
+      },
+      "closed": {
+        "user": "0xd09D9c87ECfe008B4D6D3cEbeAd25103c16d9a7C",
+        "isShort": false,
+        "collateral": "3270306951836336",
+        "debt": "500000",
+        "stableReturned": "991926"
+      },
+      "stockBalanceUnchanged": true,
+      "finalCollateral": "0",
+      "finalDebt": "0",
+      "routerDust": "0",
+      "stableCostRaw": "8074"
+    },
+    {
+      "side": "short",
+      "openHash": "0x71e67120817cd1ed02ce8cb34e2f9712e1d93b5776bf70ab2dd93c40b4491ab4",
+      "openBlock": "147076750",
+      "closeHash": "0x0c9919b65e618c43b708ea6fdcd423d9d3bbe724a4c7cabc1b489556b69a7d2e",
+      "closeBlock": "147076790",
+      "opened": {
+        "user": "0xd09D9c87ECfe008B4D6D3cEbeAd25103c16d9a7C",
+        "isShort": true,
+        "margin": "1000000",
+        "collateral": "1910054",
+        "debt": "2439869151793683"
+      },
+      "closed": {
+        "user": "0xd09D9c87ECfe008B4D6D3cEbeAd25103c16d9a7C",
+        "isShort": true,
+        "collateral": "1910054",
+        "debt": "2439869151793683",
+        "stableReturned": "994513"
+      },
+      "stockBalanceUnchanged": true,
+      "finalCollateral": "0",
+      "finalDebt": "0",
+      "routerDust": "0",
+      "stableCostRaw": "5487"
+    }
+  ]
+}

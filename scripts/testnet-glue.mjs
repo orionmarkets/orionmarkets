@@ -3,6 +3,7 @@
 //   node scripts/testnet-glue.mjs base-manifest   after `rh-live --deploy-base`: write registry/router into PROTOCOL_ADDRESSES
 //   node scripts/testnet-glue.mjs modules-config  before `rh-live --deploy-modules`: assemble RH_MODULES_CONFIG_JSON
 //   node scripts/testnet-glue.mjs margin-plan     before `deploy-rh-margin`: write RH_MARGIN_PLAN_JSON (sized to the deployer's USDG)
+//   node scripts/testnet-glue.mjs indexer-config  after margin acceptance: INDEXER_MARKETS_JSON (long + short pair) and INDEXER_POLICY_JSON
 // Reads the journaled deployment state in .secrets/rh-live/state.json; edits only `.env.testnet` (mode 0600).
 import fs from "node:fs";
 import { createRequire } from "node:module";
@@ -16,8 +17,8 @@ function fail(message) {
   console.error(message);
   process.exit(1);
 }
-if (!["base-manifest", "modules-config", "margin-plan"].includes(cmd)) {
-  fail("Usage: node scripts/testnet-glue.mjs <base-manifest|modules-config|margin-plan>");
+if (!["base-manifest", "modules-config", "margin-plan", "indexer-config"].includes(cmd)) {
+  fail("Usage: node scripts/testnet-glue.mjs <base-manifest|modules-config|margin-plan|indexer-config>");
 }
 if ((fs.statSync(PROFILE).mode & 0o077) !== 0) fail(`${PROFILE} must be mode 0600`);
 if (!fs.existsSync(STATE)) fail(`No deployment state at ${STATE}. Run the earlier pipeline stage first.`);
@@ -87,7 +88,8 @@ if (cmd === "margin-plan") {
     seedStableRaw: String(seed),
     maxSeedStockRaw: "500000000000000000",
     shortLiquidityRaw: "1000000000000000000",
-    acceptanceMarginRaw: "5000000",
+    // A tenth of the pool keeps acceptance price impact inside the 50% max LTV at 1.5x (1 to 5 USDG).
+    acceptanceMarginRaw: String(seed / 10n > 5_000_000n ? 5_000_000n : seed / 10n < 1_000_000n ? 1_000_000n : seed / 10n),
     shortSupplyCapRaw: "1000000000000000000000",
     shortBorrowCapRaw: "2000000000000000000",
     shortMaxLtvBps: 6000,
@@ -105,4 +107,24 @@ if (cmd === "margin-plan") {
   };
   setVar("RH_MARGIN_PLAN_JSON", JSON.stringify(plan));
   console.log(`RH_MARGIN_PLAN_JSON written: pool seed ${Number(seed) / 1e6} USDG (deployer holds ${Number(balance) / 1e6})`);
+}
+
+if (cmd === "indexer-config") {
+  // Each pair is indexed from its own proxy deployment block, read from the journaled receipts.
+  const blockOf = (operation) => String(BigInt(state.operations[operation]?.receipt?.blockNumber ?? 0));
+  const longStart = blockOf("deploy-pair");
+  const shortStart = blockOf("margin-v1-deploy-shortPair");
+  if (!env.LENDING_DEPLOYMENT_JSON || !env.MARGIN_DEPLOYMENT_JSON || longStart === "0" || shortStart === "0")
+    fail("Lending and margin deployments must be finalized first");
+  const long = JSON.parse(env.LENDING_DEPLOYMENT_JSON);
+  const margin = JSON.parse(env.MARGIN_DEPLOYMENT_JSON);
+  setVar(
+    "INDEXER_MARKETS_JSON",
+    JSON.stringify([
+      { symbol: long.collateralSymbol, side: "long", startBlock: longStart, deployment: long },
+      { symbol: margin.short.debtSymbol, side: "short", startBlock: shortStart, deployment: margin.short },
+    ]),
+  );
+  setVar("INDEXER_POLICY_JSON", JSON.stringify({ confirmations: 2, batchBlocks: 1000, maxBatches: 20, pollIntervalMs: 15000 }));
+  console.log(`INDEXER_MARKETS_JSON written (${long.collateralSymbol} long from ${longStart}, short from ${shortStart})`);
 }
