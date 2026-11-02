@@ -6,7 +6,7 @@ import { useReferencePrices } from '../../hooks/useReferencePrices';
 import { assetCatalog, marketPath } from '../../lib/asset-catalog';
 import { MAX_LEVERAGE_LABEL as MAX_LEVERAGE } from '../../lib/leverage';
 
-const LOOP_TICKERS = ['AMZN', 'TSLA', 'AMD', 'NVDA', 'PLTR'];
+const LOOP_TICKERS = ['AMZN', 'SPY', 'TSLA', 'BABA', 'AMD', 'QQQ', 'NVDA', 'PLTR'];
 const assets = LOOP_TICKERS.flatMap((t) => assetCatalog.filter((a) => a.ticker === t));
 
 /**
@@ -103,7 +103,7 @@ export function CardLoop() {
               </span>
               <span className="loop-card-top">
                 <b>{asset.ticker}</b>
-                <span>{asset.category === 'ETFs' ? 'ETF' : 'EQUITY'}</span>
+                <span>{asset.category === 'ETFs' ? 'ETF' : asset.category === 'China' ? 'CHINA' : 'EQUITY'}</span>
               </span>
               <img src={asset.image} alt="" draggable={false} />
               <span className="loop-card-bottom">
