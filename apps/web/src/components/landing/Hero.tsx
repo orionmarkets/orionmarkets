@@ -8,13 +8,13 @@ import { useReferencePrices } from '../../hooks/useReferencePrices';
 import { assetCatalog } from '../../lib/asset-catalog';
 import { MAX_LEVERAGE_LABEL } from '../../lib/leverage';
 import { env } from '../../env.mjs';
-import { AUTOPROTECT_VISIBLE } from '../../lib/release';
+import { AUTOPROTECT_LIVE, AUTOPROTECT_VISIBLE } from '../../lib/release';
 
 // WebGL only on the client, after the copy has painted.
 const OrionSky = dynamic(() => import('../orion/OrionSky').then((m) => m.OrionSky), { ssr: false });
 
 const FACTS = [
-  ...(AUTOPROTECT_VISIBLE ? ['Auto-Protect keeper'] : []),
+  ...(AUTOPROTECT_VISIBLE ? [AUTOPROTECT_LIVE ? 'Auto-Protect keeper' : 'Auto-Protect · in validation'] : []),
   'Isolated pair per equity',
   'USDG debt · ERC-4626 vault',
   'UUPS proxies · ERC-1967',

@@ -159,8 +159,15 @@ export default function DocsPage() {
             <h2>Roadmap</h2>
             <p>
               ORIONMARKETS is actively maintained and keeps shipping. Next on the roadmap: more tokenized stock and ETF
-              markets, Earn vaults for stablecoin lenders, and Auto-Protect, an automated defense that partially
-              deleverages a position as it nears the threshold you set.
+              markets, Earn vaults for stablecoin lenders, and Auto-Protect.
+            </p>
+            <h3>Auto-Protect status</h3>
+            <p>
+              Auto-Protect is an automated defense that partially deleverages a position as it nears a threshold you
+              set. It is <strong>built but not live</strong>: the onchain module is deployed on testnet and the keeper
+              is written, but the keeper stays in standby until testnet validation finishes, and the app has no screen
+              to set a rule yet. Until it opens, nothing protects a position automatically. Watch your own loan ratio
+              and repay or add collateral before a liquidation line is reached.
             </p>
           </section>
 

@@ -57,6 +57,11 @@ Prerequisites, all rehearsed on testnet first:
 - 10x needs the `OrionPair` upgrade (liquidation bonus setter, risk tiers 94% / 97%) on each mainnet pair, and pool depth
   that fits the largest margin (see the price-impact note in `TESTNET.md`).
 - Keeper and price publisher run unattended and funded.
+- Auto-Protect is **built but not live** today: the module is deployed on testnet and the keeper (`apps/keeper`) is
+  written, but the keeper runs in standby (`TRADING_ENABLED` off), there is no systemd unit for it on the VPS, the app
+  has no rule screen (`useAutoProtect` is unused), and `packages/contracts/test` has no AutoProtect test. All four are
+  needed before v2.0 opens it. Set `AUTOPROTECT_LIVE = true` in `apps/web/src/lib/release.ts` when it is live; until then
+  landing and docs say "in validation".
 
 ## v3.0: Pons surfaces and expansion
 
