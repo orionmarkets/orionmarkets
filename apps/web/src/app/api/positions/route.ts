@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { formatUnits } from "viem";
 import { publicClient } from "@/lib/viem";
+import { env } from "@/env.mjs";
 import { 
-  CONTRACT_ADDRESSES, 
+  CONTRACT_ADDRESSES,
+  LOCALNET_CHAIN_ID,
   LeveragePositionManagerABI,
   PonsOracleRouterABI,
   PonsLeverageRegistryABI,
@@ -40,6 +42,9 @@ export async function GET(request: Request) {
   const activePositions: PositionData[] = [];
 
   try {
+    // addresses.json is the localnet (anvil) deployment; on any other chain there are no positions to read.
+    if (env.CHAIN_ID !== LOCALNET_CHAIN_ID) return NextResponse.json({ positions: [] });
+
     // Get all registered assets dynamically from the registry
     const registeredAssets = await publicClient.readContract({
       address: registryAddress as `0x${string}`,

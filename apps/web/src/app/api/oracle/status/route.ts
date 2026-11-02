@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { formatUnits } from "viem";
 import { publicClient } from "@/lib/viem";
+import { env } from "@/env.mjs";
+import { LOCALNET_CHAIN_ID } from "@/lib/contracts";
 import { 
   CONTRACT_ADDRESSES, 
   PonsOracleRouterABI,
@@ -15,6 +17,13 @@ export async function GET(request: Request) {
   const oracleAddress = CONTRACT_ADDRESSES.PonsOracleRouter;
 
   try {
+    // addresses.json is the localnet (anvil) deployment. On any other chain those addresses are unrelated third-party
+    // contracts, so report no oracle instead of reading them.
+    if (env.CHAIN_ID !== LOCALNET_CHAIN_ID) {
+      return assetSymbol
+        ? NextResponse.json({ error: "Oracle router not deployed on this network" }, { status: 404 })
+        : NextResponse.json({ statuses: [] });
+    }
     if (assetSymbol) {
       // Find asset address from our deployment list
       const assetAddress = (CONTRACT_ADDRESSES as Record<string, string>)[assetSymbol];
