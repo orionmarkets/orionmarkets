@@ -55,8 +55,8 @@
     "longPair": {
       "contract": "OrionPair",
       "proxy": "0x945c89d82dfa799bd57b2ffd48670fc4121df567",
-      "implementation": "0x90e5a19b9a972bbb58f2656d8d95452447fcee47",
-      "implementationCodeHash": "0x06ceef2a4ffbf92cf2e72428a78d142936643aa06a9f693dd3890106a69d63b5",
+      "implementation": "0x1bf242d05515efbca6317e24a4cdd6145a68975e",
+      "implementationCodeHash": "0xb13f1c8922c2be92e0be174fbd601d82db6ab49cefe7ca51f508aa2300bd903c",
       "marketId": "0x5f1c8f54170bee18d0d958454c78106f1271a5c6db6a2d607316e05f2ffc5d9d"
     }
   },
@@ -77,7 +77,7 @@
     "shortPair": {
       "contract": "OrionPair",
       "proxy": "0xc0db4c227f88bc00c623e7edabd2cf875b7295f7",
-      "implementation": "0xd418a0775af944abe91decfe99d9ce3bb6e12867",
+      "implementation": "0x1bf242d05515efbca6317e24a4cdd6145a68975e",
       "runtimeCodeHash": "0x64eff212c99f8e752c66c0dbdc4c8bda90965700ea4721143577e5e7f7d7bd59"
     },
     "router": {

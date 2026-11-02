@@ -36,6 +36,34 @@ All 22 addresses have verified source on Blockscout (`pnpm testnet:verify`).
 
 Machine-readable record: `packages/contracts/deployments/testnet-46630.json`; pipeline evidence in `docs/evidence/`.
 
+## High leverage: 2×, 5× and 10× (2026-11-03)
+
+TSLA long and short run up to 10× on testnet. Nothing in the margin router caps leverage; the limit is the pair's LTV, so
+10× needed new risk parameters, a liquidation bonus that fits them, and a pool deep enough for the swap.
+
+| Parameter | Before | Now |
+| :--- | :--- | :--- |
+| Max LTV (long and short pair) | 50% / 60% | 94% |
+| Liquidation LTV | 65% / 80% | 97% |
+| Liquidation bonus | 5% (fixed) | 1% (`OrionPair.setLiquidationBonus`, 0.5% to 10%, must fit `liqLTV × (1 + bonus) ≤ 100%`) |
+| Web policy (`longLeveragesBps`, `shortExposureBps`) | 1.25×, 1.5× / 1.0×, 1.25× | 2×, 5×, 10× both sides; `maxMarginRaw` 1 USDG |
+
+A 10× position opens at about 90% LTV and is liquidated after a 7% adverse move; liquidations stop covering their debt at
+99% LTV (a 1% bonus), so the gap between "liquidatable" and "vault loses money" is about 2% of price. Keep the price
+publisher and a liquidator running. Opening reverts with `Pair: Borrow exceeds Max LTV limit` when swap price impact pushes
+the opening LTV past 94%, so the largest margin at 10× scales with pool depth (about 0.06 USDG at 26 USDG of liquidity).
+
+| Step | Transaction |
+| :--- | :--- |
+| New `OrionPair` implementation `0x1bf242D05515EFBcA6317e24A4CdD6145a68975e` (verified source) | `0x84f984d9…a052ec` |
+| `updateRiskTier` long, then short (94% / 97%, max leverage 10×) | `0x410868fa…0d409`, `0x7272bdea…485b5` |
+| `upgradeToAndCall` short pair, then long pair, with `setLiquidationBonus(100)` | `0x4a83c9cf…1d0d`, `0xbf075293…95239` |
+| Pool re-priced to the oracle ($411.17, it had drifted to $345) and deepened to 25.57 USDG / 0.0622 TSLA | `0xf0dede11…f79659`, `0x9c6ff404…70093e`, `0x55d7ebf7…e3b8`, `0xebfc8646…408eaf`, `0x11f8c035…0f72210` |
+
+The pool is a static Uniswap V2 pair with no arbitrageur: when its price drifts from the oracle, shorts (pool below
+oracle) or longs (pool above) open at a worse LTV. Re-price it with a swap when positions start reverting.
+Caps are unchanged: they bound exposure to the liquidity actually present.
+
 ## Pipeline
 
 Run from the repository root with `.env.testnet` (git-ignored, mode 0600; `bash scripts/ops/load-deployer-key.sh` loads the

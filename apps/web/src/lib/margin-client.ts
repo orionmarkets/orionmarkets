@@ -180,6 +180,7 @@ function marginPreflightError(error: unknown): never {
     "Margin: Insufficient equity": "CLOSE_UNAVAILABLE",
     "Margin: Insufficient liquidity": "BORROW_LIQUIDITY_UNAVAILABLE",
     "Margin: No liquidity": "POOL_UNAVAILABLE",
+    "Pair: Borrow exceeds Max LTV limit": "POSITION_TOO_LARGE",
   };
   const seen = new Set<unknown>();
   let current = error;

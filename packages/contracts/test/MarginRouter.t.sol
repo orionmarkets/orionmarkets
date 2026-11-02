@@ -51,4 +51,24 @@ contract MarginRouterTest is Test {
  function testCannotOpenOnExistingLendingPositionOrStealAnotherWallet() public {openPosition(false);vm.prank(alice);vm.expectRevert("Margin: Existing position");router.open(false,10e6,5e6,1,block.timestamp+60);vm.prank(bob);vm.expectRevert("Margin: No position");router.close(false,1,block.timestamp+60);}
  function testDebtFreeCloseAfterManualRepayment() public {openPosition(false);vm.startPrank(alice);stable.approve(address(longPair),5e6);longPair.repay(5e6);router.close(false,14e6,block.timestamp+60);vm.stopPrank();(uint256 c,uint256 d)=longPair.accounts(alice);assertEq(c+d,0);}
  function testFuzzRoundTripDoesNotCreateValueOrLeaveDust(uint256 amount,bool isShort) public {amount=bound(amount,1e6,100e6);uint256 before_=stable.balanceOf(alice);uint256 borrowed=isShort?amount*1e12/250:amount/2;vm.startPrank(alice);router.open(isShort,amount,borrowed,1,block.timestamp+60);router.close(isShort,amount*95/100,block.timestamp+60);vm.stopPrank();assertLe(stable.balanceOf(alice),before_);assertEq(stock.balanceOf(address(router))+stable.balanceOf(address(router)),0);}
+ function raiseTo10x() internal {
+  bytes32 longId=longPair.marketId();bytes32 shortId=shortPair.marketId();
+  registry.updateRiskTier(longId,OrionMarketRegistry.RiskTier.Experimental,9400,9700,100000);
+  registry.updateRiskTier(shortId,OrionMarketRegistry.RiskTier.Experimental,9400,9700,100000);
+  longPair.setLiquidationBonus(100);shortPair.setLiquidationBonus(100);
+ }
+ function testTenXIsRejectedUnderLaunchRiskParameters() public {vm.prank(alice);vm.expectRevert("Pair: Borrow exceeds Max LTV limit");router.open(false,10e6,90e6,1,block.timestamp+60);}
+ function testTenXLongAndShortOpenAndCloseOnTheRealPool() public {
+  raiseTo10x();
+  for(uint256 i;i<2;i++){
+   bool isShort=i==1;uint256 before_=stable.balanceOf(alice);
+   vm.prank(alice);router.open(isShort,10e6,isShort?0.39e18:90e6,1,block.timestamp+60);
+   OrionPair pair=isShort?shortPair:longPair;(uint256 coll,uint256 debt)=pair.accounts(alice);assertGt(coll,0);assertGt(debt,0);
+   (,,,uint256 health)=pair.getPosition(alice);assertGt(health,10000,"opens healthy");
+   vm.prank(alice);router.close(isShort,1,block.timestamp+60);
+   (coll,debt)=pair.accounts(alice);assertEq(coll+debt,0);
+   assertLe(stable.balanceOf(alice),before_);assertGt(stable.balanceOf(alice),before_-3e6,"round trip costs fees and impact only");
+   assertEq(stock.balanceOf(address(router))+stable.balanceOf(address(router)),0);
+  }
+ }
 }

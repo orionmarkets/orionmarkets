@@ -33,18 +33,20 @@
       "pool": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
     },
     "policy": {
-      "maxMarginRaw": "10000000",
+      "maxMarginRaw": "1000000",
       "slippageBps": 50,
       "deadlineSeconds": 120,
       "gasBufferBps": 13000,
       "maxGasLimit": "1500000",
       "longLeveragesBps": [
-        12500,
-        15000
+        20000,
+        50000,
+        100000
       ],
       "shortExposureBps": [
-        10000,
-        12500
+        20000,
+        50000,
+        100000
       ]
     }
   },

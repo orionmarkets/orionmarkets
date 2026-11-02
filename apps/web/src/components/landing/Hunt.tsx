@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
 import { useReferencePrices } from '../../hooks/useReferencePrices';
 import { assetCatalog } from '../../lib/asset-catalog';
-import { entryLtv, liquidationRatio, LIQ_LTV } from '../../lib/position-math';
+import { entryLtv, liquidationRatio, LEVERAGES, LIQ_LTV } from '../../lib/position-math';
 
 const FEATURED = assetCatalog.filter((a) => a.featured);
 
@@ -25,13 +25,13 @@ function ObserveVisual() {
 }
 
 function AimVisual() {
-  const [lev, setLev] = useState(1.5);
+  const [lev, setLev] = useState(LEVERAGES.long[LEVERAGES.long.length - 1]);
   const ltv = entryLtv('long', lev) * 100;
   const move = (1 - liquidationRatio('long', lev)) * 100;
   return (
     <div className="hunt-aim">
       <div className="hunt-aim-chips" role="radiogroup" aria-label="Long leverage">
-        {[1.25, 1.5].map((x) => (
+        {LEVERAGES.long.map((x) => (
           <button key={x} type="button" role="radio" aria-checked={lev === x} onClick={() => setLev(x)} className="chip">
             {x}× long
           </button>
@@ -95,7 +95,7 @@ const STEPS = [
     title: 'Aim',
     line: 'Pick your line.',
     body: 'Choose a direction and size. Longs multiply exposure with borrowed USDG; shorts borrow the stock and sell it. Entry LTV and the liquidation price are on screen before you sign.',
-    specs: ['1.25× · 1.5× long', '1.0× · 1.25× short'],
+    specs: [`${LEVERAGES.long.join('× · ')}× long`, `${LEVERAGES.short.join('× · ')}× short`],
   },
   {
     n: '03',

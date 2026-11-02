@@ -77,7 +77,7 @@ Domain and TLS attached; every page smoke-tested on chain 4663; no testnet addre
 4. Unpause vault deposits and AutoProtect; confirm the keeper acts.
 5. Open the remaining markets one at a time, each with a supervised test.
 
-Mainnet markets launch capped at 1.5× leverage.
+Mainnet markets launch capped at 1.5× leverage. Higher leverage needs the same changes as the testnet 10× update (see [`TESTNET.md`](TESTNET.md)): a new `OrionPair` implementation with the liquidation bonus setter, `updateRiskTier`, and swap liquidity sized for it. None of that is applied on mainnet.
 
 #### Launch gate (all features at once)
 
