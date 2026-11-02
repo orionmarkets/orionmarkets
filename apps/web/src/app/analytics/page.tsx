@@ -9,10 +9,15 @@ import { env } from "../../env.mjs";
 import { analyticsSchema } from "../../lib/analytics";
 import { assetCatalog } from "../../lib/asset-catalog";
 
-const quantity = (raw: string, decimals: number) =>
-  formatUnits(BigInt(raw), decimals);
+// Readable precision: two decimals for large amounts, more for small ones, never a raw 18-decimal string.
+const quantity = (raw: string, decimals: number) => {
+  const n = Number(formatUnits(BigInt(raw), decimals));
+  return n.toLocaleString("en-US", { maximumFractionDigits: n >= 100 ? 2 : n >= 1 ? 4 : 6 });
+};
 const usd = (raw: string | null) =>
-  raw === null ? <EmptyPriceValue /> : `$${quantity(raw, 18)}`;
+  raw === null
+    ? <EmptyPriceValue />
+    : Number(formatUnits(BigInt(raw), 18)).toLocaleString("en-US", { style: "currency", currency: "USD" });
 const statusLabels = {
   NORMAL: "Normal",
   REDUCE_ONLY: "Reduce only",
@@ -314,9 +319,9 @@ export default function AnalyticsPage() {
       <section className="app-panel market-overview">
         <h2>Market expansion readiness</h2>
         <p className="app-note">
-          A directory entry or configured token is not an active lending market.
-          New assets need verified issuance, prices, lending contracts and swap
-          liquidity.
+          The listing pipeline, asset by asset.
+          Each listing ships with verified issuance, reference prices, isolated
+          lending contracts and funded swap liquidity.
         </p>
         <div className="analytics-coverage">
           {symbols.map((symbol) => {
@@ -327,13 +332,11 @@ export default function AnalyticsPage() {
               <div key={symbol}>
                 <strong>{symbol}</strong>
                 <span>
-                  {!data
-                    ? "Awaiting market verification"
-                    : deployed
-                      ? "Deployed · see live status above"
-                      : configuredSymbols.includes(symbol)
-                        ? "Token configured · market deployment pending"
-                        : "Token and market verification pending"}
+                  {deployed
+                    ? "Live · see market status above"
+                    : assetCatalog.find((a) => a.ticker === symbol)?.mainnetOnly && env.CHAIN_ID !== 4663
+                      ? "Trading on mainnet"
+                      : "Listing in the next wave"}
                 </span>
               </div>
             );
