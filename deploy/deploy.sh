@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
-# Runs ON the VPS as the orion user: pull a branch, build, restart. Usage: deploy.sh testnet|mainnet
-# Env files live outside the repo in /opt/orion/<network>/ and are copied in before the build.
+# Runs ON the VPS as root: pull the network's branch, build, restart. Usage: deploy.sh testnet|mainnet
+# The env profiles (.env, .env.<network>, apps/web/.env) are git-ignored files inside the checkout; the deployment
+# pipeline writes real addresses into them, and `git reset --hard` leaves them alone.
 set -euo pipefail
 NET="${1:?testnet or mainnet}"
-BASE="/opt/orion/$NET"
-cd "$BASE/repo"
-git fetch --quiet origin "$NET"
-git reset --quiet --hard "origin/$NET"
-install -m 600 "$BASE/root.env" .env
-install -m 600 "$BASE/root.env" ".env.$NET"
-install -m 600 "$BASE/web.env" apps/web/.env
-pnpm install --frozen-lockfile --prefer-offline
-NEXT_TELEMETRY_DISABLED=1 pnpm build
-sudo systemctl restart "orion-api@$NET" "orion-web@$NET"
+cd "/opt/orion/$NET/repo"
+sudo -u orion git fetch --quiet origin "$NET"
+sudo -u orion git reset --quiet --hard "origin/$NET"
+sudo -u orion pnpm install --frozen-lockfile --prefer-offline
+sudo -u orion env NEXT_TELEMETRY_DISABLED=1 pnpm build
+systemctl restart "orion-api@$NET" "orion-web@$NET"
 echo "deployed $NET at $(git rev-parse --short HEAD)"
