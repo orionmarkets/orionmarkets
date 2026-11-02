@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowUpDown, ArrowUpRight, CandlestickChart, Landmark } from 'lucide-react';
 import { assetCatalog } from '../../lib/asset-catalog';
-import { MAX_LEVERAGE_LABEL } from '../../lib/leverage';
+import { MAX_LEVERAGE_LABEL, MAX_SHORT_LABEL } from '../../lib/leverage';
 
 const EQUITIES = assetCatalog.filter((a) => a.category !== 'China');
 
@@ -20,7 +20,7 @@ const PILLARS = [
     Icon: ArrowUpDown,
     tag: 'Pillar II · Directional conviction',
     title: 'Leveraged long / short',
-    body: `Long up to ${MAX_LEVERAGE_LABEL}, short up to 1.25×, opened and closed atomically through the margin router.`,
+    body: `Long up to ${MAX_LEVERAGE_LABEL}, short up to ${MAX_SHORT_LABEL}, opened and closed atomically through the margin router.`,
   },
   {
     href: '/lending',

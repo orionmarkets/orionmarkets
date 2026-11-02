@@ -96,6 +96,8 @@ export function MarginTradePanel({ market }: { market: MarketDeployment }) {
       "The lending pool has insufficient tokens for this order.",
     ORACLE_UNAVAILABLE: "Fresh oracle prices are unavailable.",
     POOL_UNAVAILABLE: "Swap liquidity is unavailable.",
+    POSITION_TOO_LARGE:
+      "Too large for the pool's depth at this leverage: swap price impact would put the position over the maximum LTV. Lower the margin or the leverage.",
     WALLET_CHANGED: "Your wallet account or network changed.",
     EXECUTION_DISABLED: "Margin trading has not been activated.",
     AMOUNT_TOO_SMALL: "This amount is too small after token rounding.",

@@ -57,11 +57,11 @@ const marginSchema = z
           .regex(/^[1-9]\d{0,6}$/)
           .refine((v) => BigInt(v) >= 21000n && BigInt(v) <= 2000000n),
         longLeveragesBps: z
-          .array(z.number().int().min(10001).max(17500))
+          .array(z.number().int().min(10001).max(100000))
           .min(1)
           .max(4),
         shortExposureBps: z
-          .array(z.number().int().min(1).max(12500))
+          .array(z.number().int().min(1).max(100000))
           .min(1)
           .max(4),
       })

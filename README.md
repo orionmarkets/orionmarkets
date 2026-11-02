@@ -15,7 +15,7 @@ ORIONMARKETS takes its name from the hunter constellation and the sequence it st
 | Pillar | What it does |
 | :--- | :--- |
 | Tokenized equities | Stock tokens on Robinhood Chain, each listed in its own isolated pair |
-| Leveraged long / short | 1.25× and 1.5× long, 1.0× and 1.25× short, opened and closed atomically by the margin router |
+| Leveraged long / short | Up to 10× (testnet: 2×, 5×, 10×; mainnet launches at 1.25× and 1.5×), opened and closed atomically by the margin router |
 | Borrowing & credit | Post stock as collateral and borrow USDG; lenders supply USDG to an ERC-4626 vault |
 
 ## Architecture
