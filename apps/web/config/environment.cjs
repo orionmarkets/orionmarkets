@@ -115,6 +115,8 @@ const clientSchema = z
         }
       })
       .pipe(ponsSchema.nullable()),
+    // Mainnet release plan (docs/RELEASES.md): 1, 2 or 3. Ignored off mainnet, where every feature is shown.
+    RELEASE_VERSION: z.enum(["1", "2", "3"]).default("1").transform(Number),
     // ORION token contract address shown in the hero; empty until launch. A malformed value fails the build.
     TOKEN_CA: z.union([z.literal(""), address]).optional(),
     NEXT_PUBLIC_TOKEN_CA: z.union([z.literal(""), address]).optional(),

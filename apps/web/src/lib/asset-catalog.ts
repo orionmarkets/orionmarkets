@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { marketVisible } from "./release";
 import catalog from "../../../../data/asset-catalog.json";
 export const assetCatalog = z
   .array(
@@ -13,7 +14,8 @@ export const assetCatalog = z
       mainnetOnly: z.boolean().optional(),
     }),
   )
-  .parse(catalog);
+  .parse(catalog)
+  .filter((asset) => marketVisible(asset.ticker));
 export function marketPath(symbol: string) {
   return `/markets/${encodeURIComponent(symbol.toLowerCase())}`;
 }

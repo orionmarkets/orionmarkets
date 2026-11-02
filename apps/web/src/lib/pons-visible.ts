@@ -1,3 +1,4 @@
 import { env } from "../env.mjs";
+import { releaseAtLeast } from "./release";
 // Pons surfaces (menu, links, /markets/pons) appear only on a network with a configured Pons deployment.
-export const PONS_VISIBLE = env.PONS_DEPLOYMENT_JSON !== null;
+export const PONS_VISIBLE = env.PONS_DEPLOYMENT_JSON !== null && releaseAtLeast(3);
