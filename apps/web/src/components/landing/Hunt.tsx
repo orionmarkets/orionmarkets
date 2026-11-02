@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
 import { useReferencePrices } from '../../hooks/useReferencePrices';
+import { AUTOPROTECT_VISIBLE } from '../../lib/release';
 import { assetCatalog } from '../../lib/asset-catalog';
 import { entryLtv, liquidationRatio, LEVERAGES, LIQ_LTV } from '../../lib/position-math';
 
@@ -101,8 +102,8 @@ const STEPS = [
     n: '03',
     title: 'Take position',
     line: 'Commit in one transaction.',
-    body: 'The router borrows, swaps and posts collateral atomically inside an isolated pair. Auto-Protect watches health and trims exposure before a liquidation line is reached.',
-    specs: ['Atomic router call', 'Keeper-driven Auto-Protect'],
+    body: 'The router borrows, swaps and posts collateral atomically inside an isolated pair.' + (AUTOPROTECT_VISIBLE ? ' Auto-Protect watches health and trims exposure before a liquidation line is reached.' : ''),
+    specs: ['Atomic router call', AUTOPROTECT_VISIBLE ? 'Keeper-driven Auto-Protect' : 'Isolated pair per equity'],
   },
 ];
 

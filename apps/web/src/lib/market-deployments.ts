@@ -1,4 +1,5 @@
 import { env } from "../env.mjs";
+import { marketVisible } from "./release";
 import type { LendingDeployment } from "./lending-client";
 import type { MarginDeployment } from "./margin-client";
 export type MarketDeployment = {
@@ -7,5 +8,6 @@ export type MarketDeployment = {
   long: LendingDeployment;
   margin: MarginDeployment;
 };
-export const marketDeployments =
-  env.MARKET_DEPLOYMENTS_JSON as MarketDeployment[];
+export const marketDeployments = (
+  env.MARKET_DEPLOYMENTS_JSON as MarketDeployment[]
+).filter((row) => marketVisible(row.symbol));

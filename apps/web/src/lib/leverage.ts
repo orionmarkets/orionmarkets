@@ -1,9 +1,9 @@
 import { env } from '../env.mjs';
-import type { MarketDeployment } from './market-deployments';
+import { marketDeployments } from './market-deployments';
 
 /** Highest multiple (bps, 10000 = 1x) the network's margin policy offers; the policy is the source of truth. */
 function maxBps(side: 'longLeveragesBps' | 'shortExposureBps'): number {
-  const policies = [env.MARGIN_DEPLOYMENT_JSON, ...(env.MARKET_DEPLOYMENTS_JSON as MarketDeployment[]).map((m) => m.margin)].map((m) => m?.policy);
+  const policies = [env.MARGIN_DEPLOYMENT_JSON, ...marketDeployments.map((m) => m.margin)].map((m) => m?.policy);
   return Math.max(0, ...policies.flatMap((p) => p?.[side] ?? []));
 }
 const label = (bps: number) => `${bps / 10000}×`;

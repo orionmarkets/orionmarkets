@@ -21,5 +21,6 @@ export const env = environment.validate(environment.clientSchema, {
   UI_POLL_INTERVAL_MS: process.env.UI_POLL_INTERVAL_MS,
   PONS_TRADING_ENABLED: process.env.PONS_TRADING_ENABLED || undefined,
   PONS_DEPLOYMENT_JSON: process.env.PONS_DEPLOYMENT_JSON || undefined,
+  RELEASE_VERSION: process.env.RELEASE_VERSION || undefined,
   TOKEN_CA: process.env.NEXT_PUBLIC_TOKEN_CA || process.env.TOKEN_CA || "",
 });

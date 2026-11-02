@@ -4,11 +4,14 @@ import React from "react";
 
 import { X_URL, HAS_X } from "../lib/social";
 import { useNetworkMode } from "../hooks/useNetworkMode";
+import { marketDeployments } from "../lib/market-deployments";
+import { liveMarketList } from "../lib/release";
+const LIVE_MARKETS = liveMarketList(marketDeployments.map((m) => m.symbol));
 const MAINNET_ANSWERS: Record<string, string> = {
   "How does borrowing work?":
-    "Deposit collateral into an enabled lending market, then borrow USDG within its LTV limits. TSLA, AMZN, PLTR, AMD, QQQ, SGOV and SLV markets are live on Robinhood Chain mainnet, each with its own isolated pair and onchain price feed.",
+    `Deposit collateral into an enabled lending market, then borrow USDG within its LTV limits. ${LIVE_MARKETS} markets are live on Robinhood Chain mainnet, each with its own isolated pair and onchain price feed.`,
   "Can I trade right now?":
-    "Yes. Lending and Long/Short are live on TSLA, AMZN, PLTR, AMD, QQQ, SGOV and SLV on Robinhood Chain mainnet. Want to practice first? Switch to testnet from the header. More markets, Earn vaults and Auto-Protect are on the Orion roadmap, and the team keeps shipping.",
+    `Yes. Lending and Long/Short are live on ${LIVE_MARKETS} on Robinhood Chain mainnet. Want to practice first? Switch to testnet from the header. More markets, Earn vaults and Auto-Protect are on the Orion roadmap, and the team keeps shipping.`,
 };
 const FAQ_ITEMS = [
   {
