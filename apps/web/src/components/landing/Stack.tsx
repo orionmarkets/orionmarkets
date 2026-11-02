@@ -9,7 +9,7 @@ const LAYERS = [
   { name: 'Execution', items: ['OrionRouter', 'LeverageRouter', 'ShortRouter', 'MarginRouter'], note: 'Atomic borrow · swap · post' },
   { name: 'Markets', items: ['OrionPair · long', 'OrionPair · short'], note: 'One isolated pair per side, per equity' },
   { name: 'Risk', items: ['OrionMarketRegistry', 'Reference oracle', 'AutoProtectModule'], note: 'Tiers, caps, freshness, keeper' },
-  { name: 'Yield', items: ['OrionVault · ERC-4626'], note: 'USDG supply, borrow-side yield' },
+  { name: 'Vault', items: ['OrionVault · ERC-4626'], note: 'USDG custody layer for credit' },
 ];
 
 const SPECS = ['Solidity 0.8.24 · via-IR', 'UUPS upgradeable', 'ERC-1967 proxies', 'ERC-4626 vault', '152 Foundry tests', 'Verified on Blockscout'];

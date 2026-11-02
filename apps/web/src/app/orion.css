@@ -1374,3 +1374,24 @@
 .directory-card .directory-readiness {
   color: var(--accent);
 }
+:root[data-theme="dark"] .directory-card img {
+  filter: brightness(0) invert(0.92);
+}
+.price-sync {
+  display: inline-block;
+  vertical-align: middle;
+}
+.price-sync > span {
+  display: inline-block;
+  width: 4.5em;
+  height: 0.9em;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--panel-hover), var(--accent-muted), var(--panel-hover));
+  background-size: 200% 100%;
+  animation: price-sync 1.4s linear infinite;
+}
+@keyframes price-sync {
+  to {
+    background-position: -200% 0;
+  }
+}

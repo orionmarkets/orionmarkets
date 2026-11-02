@@ -75,7 +75,7 @@ export function Pillars() {
         <Link href="/lending" className="bento-tile bento-credit fx-card">
           <span className="bento-tag">Pillar III</span>
           <h3>Borrowing &amp; credit</h3>
-          <p>Post stock, draw USDG at up to 50% LTV, stay invested. Lenders supply USDG and earn the borrow side.</p>
+          <p>Post your stock, draw USDG at up to 50% LTV and stay invested. Repay and withdraw whenever you choose.</p>
           <div className="bento-gauge" aria-hidden="true">
             <span style={{ ['--v' as string]: '50%' }} />
             <i style={{ ['--v' as string]: '65%' }} />
