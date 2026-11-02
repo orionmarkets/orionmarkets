@@ -1,0 +1,15 @@
+# Next.js site for one network (%i = testnet | mainnet). Port and env come from /opt/orion/%i/web.env.
+[Unit]
+Description=ORIONMARKETS web (%i)
+After=network-online.target orion-api@%i.service
+
+[Service]
+WorkingDirectory=/opt/orion/%i/repo/apps/web
+EnvironmentFile=/opt/orion/%i/web.env
+ExecStart=/usr/bin/env pnpm exec next start -H 127.0.0.1 -p ${WEB_PORT}
+Restart=always
+RestartSec=5
+User=orion
+
+[Install]
+WantedBy=multi-user.target
