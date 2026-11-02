@@ -6,6 +6,9 @@ import { useReferencePrices } from '../../hooks/useReferencePrices';
 import { assetCatalog, marketPath } from '../../lib/asset-catalog';
 import { MAX_LEVERAGE_LABEL as MAX_LEVERAGE } from '../../lib/leverage';
 
+const LOOP_TICKERS = ['AMZN', 'TSLA', 'AMD', 'NVDA', 'PLTR'];
+const assets = LOOP_TICKERS.flatMap((t) => assetCatalog.filter((a) => a.ticker === t));
+
 /**
  * The hero's looping 3D card ring (the original hero, carried over): one card per tokenized equity, orbiting
  * on a CSS 3D ring, nudged by the pointer. Each card opens its market. Transform-only animation, paused off screen.
@@ -14,7 +17,6 @@ export function CardLoop() {
   const references = useReferencePrices();
   const sceneRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-  const assets = assetCatalog.filter((a) => a.category !== 'China');
 
   useEffect(() => {
     const scene = sceneRef.current;
@@ -77,7 +79,7 @@ export function CardLoop() {
       scene.removeEventListener('pointerleave', onLeave);
       window.removeEventListener('resize', draw);
     };
-  }, [assets.length]);
+  }, []);
 
   return (
     <div ref={sceneRef} className="loop-scene" aria-label="Tokenized equities on ORIONMARKETS">

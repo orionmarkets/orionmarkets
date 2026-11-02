@@ -263,9 +263,10 @@
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: calc(100svh - var(--header-h));
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   padding: 20px 0 0;
   margin-top: calc(var(--header-h) * -1);
   padding-top: calc(var(--header-h) + 20px);
@@ -1262,6 +1263,17 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────────────────────────────────────────────── */
+/* Desktop: the card ring absorbs the hero's leftover height, so the hero is one screen (it grows, never clips, on short ones). */
+@media (min-width: 1100px) {
+  .hero .loop-scene {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 280px;
+  }
+  .hero .display-xl {
+    font-size: clamp(44px, min(8.4vw, 13svh), 132px);
+  }
+}
 @media (max-width: 1099px) {
   .sf-split {
     grid-template-columns: 1fr;
