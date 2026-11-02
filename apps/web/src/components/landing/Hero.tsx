@@ -27,13 +27,14 @@ function Tape() {
   const items = [
     ...assetCatalog
       .filter((a) => a.category !== 'China')
-      .map((a) => ({ key: a.ticker, label: a.ticker, value: refs.last(a.ticker) ?? a.name })),
-    ...FACTS.map((f) => ({ key: f, label: '◆', value: f })),
+      .map((a) => ({ key: a.ticker, label: a.ticker, value: refs.last(a.ticker) ?? a.name, logo: a.image })),
+    ...FACTS.map((f) => ({ key: f, label: '◆', value: f, logo: undefined })),
   ];
   const row = (hidden: boolean) => (
     <div className="tape-row" aria-hidden={hidden || undefined}>
       {items.map((item) => (
         <span className="tape-item" key={item.key}>
+          {item.logo && <img className="tape-logo" src={item.logo} alt="" draggable={false} />}
           <b>{item.label}</b>
           <span>{item.value}</span>
         </span>

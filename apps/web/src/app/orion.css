@@ -541,8 +541,19 @@
 .loop-card.slv {
   --card-bg: #cfd6dd;
 }
+.loop-card.baba {
+  --card-bg: #ff9a5c;
+}
 
 /* Tape */
+.tape-logo {
+  width: 22px;
+  height: 22px;
+  padding: 3px;
+  border-radius: 6px;
+  background: #e9ece4;
+  object-fit: contain;
+}
 .tape {
   position: relative;
   border-top: 1px solid var(--line);
