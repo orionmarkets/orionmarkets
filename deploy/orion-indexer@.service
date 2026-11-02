@@ -1,0 +1,14 @@
+# Onchain event indexer for one network (%i = testnet): lending and margin events of each pair into Postgres.
+[Unit]
+Description=ORIONMARKETS indexer (%i)
+After=network-online.target docker.service
+
+[Service]
+WorkingDirectory=/opt/orion/%i/repo
+ExecStart=/usr/bin/env node --import tsx scripts/run-rh-indexer.mjs --serve .env.%i
+Restart=always
+RestartSec=30
+User=orion
+
+[Install]
+WantedBy=multi-user.target

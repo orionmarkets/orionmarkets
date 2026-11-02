@@ -1,0 +1,19 @@
+# Testnet reference-price publisher (%i = testnet). Keeps the oracle fresh; it activates the markets while prices are
+# fresh and pauses them when it stops. Signs with the project wallet from the git-ignored .env.testnet.
+[Unit]
+Description=ORIONMARKETS price publisher (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/opt/orion/%i/repo
+Environment=PUBLISHER_RESTART_DELAY=90
+ExecStart=/bin/bash scripts/run-publisher-loop.sh
+KillSignal=SIGTERM
+TimeoutStopSec=180
+Restart=always
+RestartSec=30
+User=orion
+
+[Install]
+WantedBy=multi-user.target

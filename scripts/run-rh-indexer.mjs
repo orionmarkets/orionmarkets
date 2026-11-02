@@ -190,7 +190,10 @@ if (
   process.argv[1] &&
   resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 )
-  main(process.argv.slice(2)).catch(() => {
+  main(process.argv.slice(2)).catch((error) => {
+    // Operator opt-in, same sanitizing as safeFailure in lib/rh-live.mjs.
+    if (process.env.ORION_DEBUG === "1")
+      console.error(String(`${error?.shortMessage ?? error?.message} | ${error?.details ?? ""}`).split("\n")[0].replace(/0x[0-9a-fA-F]{64,}/g, "0x<redacted>").replace(/\/\/[^@\s]+@/g, "//<redacted>@").slice(0, 300));
     console.error(
       "RH indexer stopped: configuration, RPC or database verification failed. No provider details are logged; reconcile the checkpoint before retrying.",
     );

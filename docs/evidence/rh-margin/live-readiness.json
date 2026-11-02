@@ -1,0 +1,42 @@
+{
+  "capturedAt": "2026-11-02T13:45:41.365Z",
+  "chainId": 46630,
+  "routerPaused": false,
+  "sides": [
+    {
+      "side": "long",
+      "marketStatus": 2,
+      "oracleAvailable": true,
+      "collateralRaw": "0",
+      "debtRaw": "0",
+      "liquidityRaw": "5000000",
+      "canQuoteMaxMargin": false
+    },
+    {
+      "side": "short",
+      "marketStatus": 2,
+      "oracleAvailable": true,
+      "collateralRaw": "0",
+      "debtRaw": "0",
+      "liquidityRaw": "1000000000000000000",
+      "canQuoteMaxMargin": false
+    }
+  ],
+  "pool": {
+    "tsla": "0.028822513011519202",
+    "usdg": "11.698496"
+  },
+  "tester": {
+    "usdg": "14.986439",
+    "gasEth": "0.01785497083"
+  },
+  "publisher": {
+    "status": "not-started",
+    "processAlive": false,
+    "heartbeatFresh": false,
+    "expiresAt": null
+  },
+  "webGateConfigured": false,
+  "readyForSupervisedBrowserTest": false,
+  "note": "Read-only onchain readiness; does not prove browser wallet signing or guarantee later availability."
+}
