@@ -6,10 +6,11 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-export const COMPOSE = path.join(ROOT, "docker/localnet/compose.yml");
-// Throwaway, local-only. Must match PGRST_JWT_SECRET in docker/localnet/compose.yml.
-export const JWT_SECRET = "orion-local-jwt-secret-not-for-production-0123456789";
-export const SUPABASE_URL = "http://127.0.0.1:55621";
+export const COMPOSE = process.env.ORION_COMPOSE || path.join(ROOT, "docker/localnet/compose.yml");
+// Local defaults (throwaway, must match docker/localnet/compose.yml). The VPS sets ORION_JWT_SECRET and
+// ORION_SUPABASE_URL to its own stack (docs/HOSTING.md).
+export const JWT_SECRET = process.env.ORION_JWT_SECRET || "orion-local-jwt-secret-not-for-production-0123456789";
+export const SUPABASE_URL = process.env.ORION_SUPABASE_URL || "http://127.0.0.1:55621";
 
 const b64 = (value) => Buffer.from(typeof value === "string" ? value : JSON.stringify(value)).toString("base64url");
 
