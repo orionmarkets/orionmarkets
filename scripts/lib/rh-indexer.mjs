@@ -70,7 +70,7 @@ export async function verifyIndexerIdentity(client, d, start) {
     )
       throw Error("INDEXER_START_NOT_DEPLOYMENT");
   } catch (error) {
-    if (!/historical state .* not available/.test(String(error?.details))) throw error;
+    if (!/historical state .* not available|missing trie node/.test(String(error?.details))) throw error;
     // Pruned node: logs outlive state. An ERC1967 proxy emits Upgraded in its creation transaction, so the start
     // block must hold the pair's Upgraded log.
     const upgraded = await client.getLogs({
