@@ -181,16 +181,6 @@ function PonsTradeWorkspace() {
     );
   }
 
-  const activeOracleStatus = oracleStatus || {
-    asset: market.symbol,
-    primaryPrice: market.price,
-    twapPrice: market.price,
-    isSafe: true,
-    deviationBps: 0,
-    lastUpdate: Date.now(),
-    status: "HEALTHY",
-  };
-
   return (
     <div className="trade-page">
       <div className="app-banner app-banner-compact" aria-hidden="true">
@@ -237,7 +227,7 @@ function PonsTradeWorkspace() {
               </div>
             </div>
           </div>
-          <OracleHealthIndicator status={activeOracleStatus as any} />
+          <OracleHealthIndicator status={oracleStatus} />
         </div>
       </div>
 
