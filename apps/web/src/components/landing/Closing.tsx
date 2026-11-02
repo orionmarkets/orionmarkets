@@ -1,23 +1,25 @@
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import { Constellation } from '../orion/Constellation';
 import { HAS_X, X_URL, X_HANDLE } from '../../lib/social';
+import { BrandMark } from '../navigation';
 
 export function Closing() {
   return (
-    <section className="closing theme-inverse" aria-labelledby="closing-title">
-      <Constellation seed="orion-closing" className="closing-stars" stars={12} dense={140} />
-      <div className="closing-inner">
-        <span className="kicker">Your move</span>
-        <h2 id="closing-title" className="display-xl">
-          The sky is mapped. <span className="hl">Take the shot.</span>
+    <section className="sf-section sf-closing-wrap" aria-labelledby="closing-title">
+      <div className="sf-card sf-closing sf-tone-lime">
+        <span className="sf-mark-tile" aria-hidden="true">
+          <BrandMark size={44} />
+        </span>
+        <h2 id="closing-title" className="display-lg">
+          The sky is mapped. Take the shot.
         </h2>
-        <div className="hero-cta">
-          <Link href="/markets" className="landing-btn btn-lg">
-            Launch app <ArrowUpRight size={18} aria-hidden="true" />
+        <p>Tokenized equities, leverage and credit on Robinhood Chain.</p>
+        <div className="sf-actions">
+          <Link href="/markets" className="sf-btn">
+            Launch app <ArrowUpRight size={16} aria-hidden="true" />
           </Link>
           {HAS_X && (
-            <a href={X_URL} className="landing-btn landing-btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
+            <a href={X_URL} className="sf-btn sf-btn-outline" target="_blank" rel="noopener noreferrer">
               Follow @{X_HANDLE}
             </a>
           )}

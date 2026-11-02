@@ -50,9 +50,9 @@ export function Simulator() {
   };
 
   return (
-    <section id="simulator" className="landing-section" aria-labelledby="sim-title">
-      <header className="section-head section-head-split">
-        <span className="kicker">Position simulator</span>
+    <section id="simulator" className="sf-section" aria-labelledby="sim-title">
+      <header className="sf-intro">
+        <span className="sf-eyebrow">Position simulator</span>
         <h2 id="sim-title" className="display-lg">
           Line up <span className="hl">the shot.</span>
         </h2>
@@ -60,28 +60,10 @@ export function Simulator() {
           Same mechanics as the live markets: the leverage tiers, the liquidation LTVs and the reference price feed.
           Drag across the curve to read your position at any price.
         </p>
-        <dl className="head-specs">
-          <div>
-            <dt>Long tiers</dt>
-            <dd>1.25× · 1.5×</dd>
-          </div>
-          <div>
-            <dt>Short tiers</dt>
-            <dd>1.0× · 1.25×</dd>
-          </div>
-          <div>
-            <dt>Long liquidation</dt>
-            <dd>65% LTV</dd>
-          </div>
-          <div>
-            <dt>Short liquidation</dt>
-            <dd>80% LTV</dd>
-          </div>
-        </dl>
       </header>
 
       <div className="sim">
-        <div className="sim-controls">
+        <div className="sim-controls sf-card theme-light">
           <div className="sim-field">
             <span className="sim-label">Equity</span>
             <div className="sim-assets">
@@ -152,7 +134,8 @@ export function Simulator() {
           </Link>
         </div>
 
-        <div className="sim-chart">
+        <div className="sf-card sf-visual sf-tone-blue">
+        <div className="sim-chart sf-device theme-inverse">
           <div className="sim-chart-head">
             <span>
               <b>{ticker}</b> {entry ? `entry ${usd(entry)}` : 'reference feed'}
@@ -206,6 +189,7 @@ export function Simulator() {
             <span>↑ 30%</span>
             <span>↑ 60%</span>
           </div>
+        </div>
         </div>
       </div>
     </section>
