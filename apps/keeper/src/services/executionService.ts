@@ -67,12 +67,19 @@ export async function executeCandidateProtection(
       functionName: "debtToken",
     });
 
-    // 4. Calculate exact repayment amount to restore to targetLtv
-    const targetLtvBps = BigInt(Math.round(candidate.targetLtvPercent * 100));
-    const targetDebt = (candidate.collateralValueUsd * targetLtvBps) / 10_000n;
+    const decimals = await publicClient.readContract({
+      address: debtTokenAddress,
+      abi: ERC20ABI,
+      functionName: "decimals",
+    });
+
+    // 4. Debt scales linearly with the loan ratio, so repaying (current - target) / current of it restores the target.
+    //    Rounded up; the module caps the repayment at what the target needs.
+    const currentBps = BigInt(Math.round(candidate.currentLtvPercent * 100));
+    const targetBps = BigInt(Math.round(candidate.targetLtvPercent * 100));
     let repayAmount =
-      candidate.debtAmount > targetDebt
-        ? candidate.debtAmount - targetDebt
+      currentBps > targetBps
+        ? (candidate.debtAmount * (currentBps - targetBps) + currentBps - 1n) / currentBps
         : 0n;
 
     if (repayAmount > candidate.maxDeleverage && candidate.maxDeleverage > 0n) {
@@ -113,7 +120,7 @@ export async function executeCandidateProtection(
     // 6. Submit executeAutoProtect on-chain
     console.log(
       `[KEEPER EXECUTE] Deleveraging ${candidate.userAddress} on ${candidate.pairAddress}: ` +
-        `Repaying ${formatUnits(repayAmount, 18)} USDG...`,
+        `Repaying ${formatUnits(repayAmount, decimals)} USDG...`,
     );
 
     const txHash = await walletClient.writeContract({

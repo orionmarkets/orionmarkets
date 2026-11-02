@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { MaxLeverage, NetworkStatus } from "../../components/docs/NetworkText";
 import { PONS_VISIBLE } from "../../lib/pons-visible";
+import { AUTOPROTECT_LIVE } from "../../lib/release";
 import { EARN_VISIBLE } from "../../lib/earn-visible";
 import { CHINA_VISIBLE } from "../../lib/china-visible";
 
@@ -162,15 +163,23 @@ export default function DocsPage() {
               markets, Earn vaults for stablecoin lenders, and Auto-Protect.
             </p>
             <h3>Auto-Protect status</h3>
-            <p>
-              Auto-Protect is an automated defense that partially deleverages a position as it nears a threshold you
-              set. It is <strong>built but not live</strong>: the module and the keeper are written and tested, but the
-              keeper is not running on this deployment yet. When it opens, you set a trigger and a target loan ratio
-              and a repayment limit, and a keeper repays part of your debt from your own wallet&apos;s USDG (you approve
-              the amount). It does not sell collateral, and if your wallet balance or approval is short it does nothing.
-              Until it opens, nothing protects a position automatically. Watch your own loan ratio and repay or add
-              collateral before a liquidation line is reached.
-            </p>
+            {AUTOPROTECT_LIVE ? (
+              <p>
+                Auto-Protect is <strong>live on this network</strong>. On the <Link href="/lending">Lending</Link> page you set
+                a trigger and a target loan ratio and a repayment limit, and approve that amount of USDG to the module. When
+                your loan ratio reaches the trigger, a keeper repays part of your debt from your own wallet&apos;s USDG until
+                the target is restored. It does not sell collateral, it never uses anyone else&apos;s funds, and if your wallet
+                balance or approval is short it does nothing, so the position can still be liquidated. It runs about every
+                ten seconds, not instantly.
+              </p>
+            ) : (
+              <p>
+                Auto-Protect is an automated defense that repays part of your debt from your own wallet as your loan ratio
+                nears a threshold you set. It is <strong>built but not live</strong> on this network. Until it opens, nothing
+                protects a position automatically. Watch your own loan ratio and repay or add collateral before a
+                liquidation line is reached.
+              </p>
+            )}
           </section>
 
           <section id="risks">

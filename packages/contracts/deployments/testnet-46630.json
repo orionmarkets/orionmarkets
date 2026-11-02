@@ -38,8 +38,14 @@
     "autoProtect": {
       "contract": "AutoProtectModule",
       "proxy": "0x28a0307be727594340b00048b912feb59d556506",
-      "implementation": "0xa5f3528e79696c2319b5df36a3be34fb4b556977",
-      "implementationCodeHash": "0x0a5e37be99e787aa1097aa8d1e44d6cb04ce126ff7780dec9474328918cee432"
+      "implementation": "0x8a4E9a48567d744fcCe13db690019033cf3632A9",
+      "implementationCodeHash": "0xd9158fef9c11917bcb0b467653204f8b5a103af74debddfd1217e22c608a6dde",
+      "previousImplementation": "0xa5f3528e79696c2319b5df36a3be34fb4b556977",
+      "upgradedAt": {
+        "block": 147225325,
+        "tx": "0x43ead6da5210d7f6800264134242b4bc9bc7252ee83e0d30c052d76902cf936d",
+        "note": "User-funded repayment (borrower pays); unpaused in 0x59b73ca4ce8f856130ddbd9ab77f602438d1e25604b35ae99bf1249ca8182372"
+      }
     },
     "vault": {
       "contract": "OrionVault",

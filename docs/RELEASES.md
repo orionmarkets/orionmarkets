@@ -58,13 +58,13 @@ Prerequisites, all rehearsed on testnet first:
   that fits the largest margin (see the price-impact note in `TESTNET.md`).
 - Keeper and price publisher run unattended and funded.
 - Auto-Protect is **user-funded**: the keeper makes the module pull the repayment from the borrower's wallet (allowance
-  to the module); it never spends its own funds and does not sell collateral. The module, the rule screen
-  (`AutoProtectPanel`, on the Lending page), the keeper (reads rule logs from chain, no database) and its systemd unit
-  (`deploy/orion-keeper@.service`) are written and tested in the repo. It is **not live** until, on each network: the new
-  module implementation is deployed and the proxy upgraded, the module is unpaused, the keeper address is authorized
-  (`setKeeper`) and funded with gas, `AUTO_PROTECT_START_BLOCK` is set and the keeper service runs with
-  `TRADING_ENABLED=true`, and `AUTOPROTECT_LIVE` is set to `true` in `apps/web/src/lib/release.ts`. Until then landing
-  and docs say "in validation" and the rule screen stays hidden.
+  to the module); it never spends its own funds and does not sell collateral. It is **live on testnet** (2026-11-03,
+  see [`TESTNET.md`](TESTNET.md)): module upgraded and unpaused, rule screen on the Lending page, keeper running as
+  `orion-keeper@testnet`, acceptance run passed. For mainnet, repeat per network: deploy the new module implementation and
+  upgrade the proxy, unpause, authorize and fund the keeper (`setKeeper`), put `TRADING_ENABLED=true` and
+  `AUTO_PROTECT_START_BLOCK` in `/opt/orion/mainnet/keeper.env`, start `orion-keeper@mainnet`, run the same acceptance
+  with a borrower that is not the keeper, and then change `AUTOPROTECT_LIVE` in `apps/web/src/lib/release.ts` so mainnet
+  counts as live. Until then mainnet landing and docs say "in validation" and the rule screen stays hidden.
 
 ## v3.0: Pons surfaces and expansion
 

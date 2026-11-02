@@ -8,6 +8,8 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
+# Per-network switches kept out of git: TRADING_ENABLED=true and AUTO_PROTECT_START_BLOCK=<block before the first rule>.
+EnvironmentFile=-/opt/orion/%i/keeper.env
 WorkingDirectory=/opt/orion/%i/repo/apps/keeper
 ExecStart=/usr/bin/env pnpm exec tsx src/index.ts
 Restart=always

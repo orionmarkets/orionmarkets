@@ -6,8 +6,8 @@ const MARKET_RELEASE: Record<string, number> = { SPY: 2, QQQ: 2, SGOV: 2, SLV: 2
 /** A market is listed from its release on; markets not named above are v1.0. */
 export const marketVisible = (symbol: string) => releaseAtLeast(MARKET_RELEASE[symbol.toUpperCase()] ?? 1);
 export const AUTOPROTECT_VISIBLE = releaseAtLeast(2);
-/** Auto-Protect is built and deployed but its keeper is in standby and the app has no rule UI. Flip when it is live. */
-export const AUTOPROTECT_LIVE = false;
+/** Auto-Protect runs on testnet (upgraded module, unpaused, keeper running). Mainnet stays off until its own activation (docs/RELEASES.md). */
+export const AUTOPROTECT_LIVE = env.NETWORK_MODE !== "MAINNET";
 /** "TSLA, AMZN and PLTR": the markets live on this network, for marketing copy. */
 export function liveMarketList(symbols: string[]) {
   const list = symbols.filter(marketVisible);

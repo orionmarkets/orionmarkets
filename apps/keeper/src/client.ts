@@ -105,6 +105,13 @@ export const OrionPairABI = [
   },
   {
     type: 'function',
+    name: 'debtValueUsd',
+    inputs: [{ name: 'amount', type: 'uint256' }],
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'debtToken',
     inputs: [],
     outputs: [{ name: '', type: 'address' }],
@@ -113,6 +120,13 @@ export const OrionPairABI = [
 ] as const;
 
 export const ERC20ABI = [
+  {
+    type: 'function',
+    name: 'decimals',
+    inputs: [],
+    outputs: [{ name: '', type: 'uint8' }],
+    stateMutability: 'view',
+  },
   {
     type: 'function',
     name: 'balanceOf',
