@@ -1,0 +1,52 @@
+# Local stand-in for Supabase: Postgres + PostgREST. Everything binds to 127.0.0.1 only.
+# The "Supabase" URL that apps/api talks to is the small proxy in scripts/localnet/supabase-proxy.mjs,
+# which maps /rest/v1/* onto PostgREST. Credentials here are throwaway and local-only.
+name: orion-localnet
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: orion_local_only
+      POSTGRES_DB: orion
+    ports:
+      - "127.0.0.1:55622:5432"
+    volumes:
+      - orion_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d orion"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  rest:
+    image: postgrest/postgrest:v12.2.3
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI: postgres://authenticator:orion_local_only@db:5432/orion
+      PGRST_DB_SCHEMAS: public
+      PGRST_DB_ANON_ROLE: anon
+      # Must match scripts/localnet/lib.mjs (JWT_SECRET). Local-only value.
+      PGRST_JWT_SECRET: orion-local-jwt-secret-not-for-production-0123456789
+      PGRST_SERVER_PORT: "3000"
+    ports:
+      - "127.0.0.1:55623:3000"
+
+  # apps/api talks to "Supabase" at /rest/v1; PostgREST serves from /. This proxy bridges the two.
+  gateway:
+    image: node:22-alpine
+    depends_on:
+      - rest
+    environment:
+      TARGET: http://rest:3000
+      PORT: "8000"
+    volumes:
+      - ../../scripts/localnet/supabase-proxy.mjs:/app/proxy.mjs:ro
+    command: ["node", "/app/proxy.mjs"]
+    ports:
+      - "127.0.0.1:55621:8000"
+
+volumes:
+  orion_pgdata:

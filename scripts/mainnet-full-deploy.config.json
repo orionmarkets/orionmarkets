@@ -1,0 +1,295 @@
+{
+  "version": 1,
+  "chainId": 4663,
+  "note": "Robinhood Chain mainnet full deployment (all non-Pons contracts). Token and feed addresses verified on-chain 2026-10-01 against https://api.robinhood.com/rhj/assets and https://reference-data-directory.vercel.app/feeds-robinhood-mainnet.json. Every market is registered PAUSED; margin routers stay paused and unauthorized until their pools are seeded. v2: every Orion contract sits behind an ERC1967 UUPS proxy; caps start at the micro launch size.",
+  "oracle": {
+    "sequencer": "0x0000000000000000000000000000000000000000",
+    "sequencerGracePeriod": 0,
+    "stable": {
+      "symbol": "USDG",
+      "token": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
+      "decimals": 6,
+      "feed": "0x61B7e5650328764B076A108EFF5fa7282a1B9aD2",
+      "feedDescription": "USDG / USD",
+      "maxAge": 93600,
+      "minPrice18": "950000000000000000",
+      "maxPrice18": "1050000000000000000",
+      "checkTokenPause": false
+    }
+  },
+  "lendingRouterAuthorized": true,
+  "markets": [
+    {
+      "symbol": "TSLA",
+      "token": "0x322F0929c4625eD5bAd873c95208D54E1c003b2d",
+      "decimals": 18,
+      "feed": "0x4A1166a659A55625345e9515b32adECea5547C38",
+      "feedDescription": "RHTSLA / USD",
+      "maxAge": 93600,
+      "minPrice18": "35000000000000000000",
+      "maxPrice18": "3600000000000000000000",
+      "long": {
+        "slug": "orion-tsla-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-tsla-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      }
+    },
+    {
+      "symbol": "AMZN",
+      "token": "0x12f190a9F9d7D37a250758b26824B97CE941bF54",
+      "decimals": 18,
+      "feed": "0xD5a1508ceD74c084eBf3cBe853e2C968fB2a651C",
+      "feedDescription": "Robinhood AMZN / USD",
+      "maxAge": 93600,
+      "minPrice18": "25000000000000000000",
+      "maxPrice18": "2500000000000000000000",
+      "long": {
+        "slug": "orion-amzn-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-amzn-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      }
+    },
+    {
+      "symbol": "PLTR",
+      "token": "0x894E1EC2D74FFE5AEF8Dc8A9e84686acCB964F2A",
+      "decimals": 18,
+      "feed": "0x820ABedFF239034956B7A9d2F0a331f9F075eB4c",
+      "feedDescription": "Robinhood PLTR / USD",
+      "maxAge": 93600,
+      "minPrice18": "18000000000000000000",
+      "maxPrice18": "1900000000000000000000",
+      "long": {
+        "slug": "orion-pltr-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-pltr-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      }
+    },
+    {
+      "symbol": "AMD",
+      "token": "0x86923f96303D656E4aa86D9d42D1e57ad2023fdC",
+      "decimals": 18,
+      "feed": "0x943A29E7ae51A4798823ca9eEd2ed533B2A22C72",
+      "feedDescription": "RHAMD / USD",
+      "maxAge": 93600,
+      "minPrice18": "60000000000000000000",
+      "maxPrice18": "6200000000000000000000",
+      "long": {
+        "slug": "orion-amd-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-amd-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      }
+    },
+    {
+      "symbol": "NVDA",
+      "token": "0xd0601CE157Db5bdC3162BbaC2a2C8aF5320D9EEC",
+      "decimals": 18,
+      "feed": "0x379EC4f7C378F34a1B47E4F3cbeBCbAC3E8E9F15",
+      "feedDescription": "RHNVDA / USD",
+      "maxAge": 93600,
+      "minPrice18": "23000000000000000000",
+      "maxPrice18": "2400000000000000000000",
+      "addedAfterLaunch": true,
+      "long": {
+        "slug": "orion-nvda-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-nvda-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      }
+    },
+    {
+      "symbol": "SPY",
+      "token": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+      "decimals": 18,
+      "feed": "0x319724394D3A0e3669269846abE664Cd621f9f6A",
+      "feedDescription": "RHSPY / USD",
+      "maxAge": 93600,
+      "minPrice18": "90000000000000000000",
+      "maxPrice18": "9000000000000000000000",
+      "addedAfterLaunch": true,
+      "category": "ETFs",
+      "long": {
+        "slug": "orion-spy-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-spy-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      },
+      "webEnabled": false
+    },
+    {
+      "symbol": "QQQ",
+      "token": "0xD5f3879160bc7c32ebb4dC785F8a4F505888de68",
+      "decimals": 18,
+      "feed": "0x80901d846d5D7B030F26B480776EE3b29374C2ae",
+      "feedDescription": "Robinhood QQQ / USD",
+      "maxAge": 93600,
+      "minPrice18": "85000000000000000000",
+      "maxPrice18": "8500000000000000000000",
+      "addedAfterLaunch": true,
+      "category": "ETFs",
+      "long": {
+        "slug": "orion-qqq-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-qqq-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      }
+    },
+    {
+      "symbol": "SGOV",
+      "token": "0x92FD66527192E3e61d4DDd13322Aa222DE86F9B5",
+      "decimals": 18,
+      "feed": "0xa0DF4ee0fFf975306345875E3548Fcc519577A11",
+      "feedDescription": "Robinhood SGOV-USD",
+      "maxAge": 93600,
+      "minPrice18": "50000000000000000000",
+      "maxPrice18": "200000000000000000000",
+      "addedAfterLaunch": true,
+      "category": "ETFs",
+      "long": {
+        "slug": "orion-sgov-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-sgov-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      }
+    },
+    {
+      "symbol": "SLV",
+      "token": "0x411eFb0E7f985935DAec3D4C3ebaEa0d0AD7D89f",
+      "decimals": 18,
+      "feed": "0x209b73908e92Ae021826eD79609845451Ecba2ce",
+      "feedDescription": "Robinhood SLV / USD",
+      "maxAge": 93600,
+      "minPrice18": "6000000000000000000",
+      "maxPrice18": "600000000000000000000",
+      "addedAfterLaunch": true,
+      "category": "ETFs",
+      "long": {
+        "slug": "orion-slv-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-slv-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      }
+    },
+    {
+      "symbol": "BABA",
+      "token": "0xad25Ac6C84D497db898fa1E8387bf6Af3532a1c4",
+      "decimals": 18,
+      "feed": "0x62Cc8F9b5f56a33c9C8A60c8B92779f523c4E984",
+      "feedDescription": "Robinhood BABA / USD",
+      "maxAge": 93600,
+      "minPrice18": "25000000000000000000",
+      "maxPrice18": "500000000000000000000",
+      "addedAfterLaunch": true,
+      "category": "China",
+      "long": {
+        "slug": "orion-baba-usdg-mainnet",
+        "maxLtvBps": 5000,
+        "liquidationLtvBps": 6500,
+        "maxLeverageBps": 15000,
+        "supplyCapRaw": "10000000000000000",
+        "borrowCapRaw": "250000"
+      },
+      "short": {
+        "slug": "orion-baba-usdg-short-mainnet",
+        "maxLtvBps": 4000,
+        "liquidationLtvBps": 6000,
+        "maxLeverageBps": 12500,
+        "supplyCapRaw": "5000000",
+        "borrowCapRaw": "1000000000000000"
+      }
+    }
+  ]
+}

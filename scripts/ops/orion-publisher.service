@@ -1,0 +1,22 @@
+# systemd user unit that keeps the Orion testnet price publisher running on this machine.
+# The publisher needs the private journal in .secrets/rh-live, so it must run where that disk lives.
+# Install:  bash scripts/ops/install-publisher-service.sh
+[Unit]
+Description=OrionMarkets testnet price publisher
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/Documents/secondary-brain/1-work/wealthy-people-id/projects/orionmarkets
+Environment=PATH=%h/.nvm/versions/node/v24.16.0/bin:%h/.config/.foundry/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PUBLISHER_RESTART_DELAY=90
+ExecStart=/bin/bash scripts/run-publisher-loop.sh
+# SIGTERM lets the publisher pause the markets on its way out.
+KillSignal=SIGTERM
+TimeoutStopSec=180
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=default.target

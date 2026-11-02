@@ -1,0 +1,92 @@
+[
+  {
+    "ticker": "TSLA",
+    "name": "Tesla",
+    "image": "/assets/tesla.svg",
+    "className": "tesla",
+    "indexStr": "01 / 05",
+    "featured": true
+  },
+  {
+    "ticker": "AMZN",
+    "name": "Amazon",
+    "image": "/assets/amazon.svg",
+    "className": "amazon",
+    "indexStr": "02 / 05",
+    "featured": true
+  },
+  {
+    "ticker": "PLTR",
+    "name": "Palantir",
+    "image": "/assets/palantir.svg",
+    "className": "palantir",
+    "indexStr": "03 / 05",
+    "featured": true
+  },
+  {
+    "ticker": "NVDA",
+    "name": "NVIDIA",
+    "image": "/assets/nvidia.svg",
+    "className": "nvidia",
+    "indexStr": "04 / 05",
+    "featured": true
+  },
+  {
+    "ticker": "AMD",
+    "name": "Advanced Micro Devices",
+    "image": "/assets/amd.svg",
+    "className": "amd",
+    "indexStr": "05 / 05",
+    "featured": true
+  },
+  {
+    "ticker": "SPY",
+    "name": "SPDR S&P 500 ETF",
+    "image": "/assets/spy.svg",
+    "className": "spy",
+    "indexStr": "06 / 09",
+    "featured": false,
+    "category": "ETFs",
+    "mainnetOnly": true
+  },
+  {
+    "ticker": "QQQ",
+    "name": "Invesco QQQ",
+    "image": "/assets/qqq.svg",
+    "className": "qqq",
+    "indexStr": "07 / 09",
+    "featured": false,
+    "category": "ETFs",
+    "mainnetOnly": true
+  },
+  {
+    "ticker": "SGOV",
+    "name": "iShares 0-3 Month Treasury Bond",
+    "image": "/assets/sgov.svg",
+    "className": "sgov",
+    "indexStr": "08 / 09",
+    "featured": false,
+    "category": "ETFs",
+    "mainnetOnly": true
+  },
+  {
+    "ticker": "SLV",
+    "name": "iShares Silver Trust",
+    "image": "/assets/slv.svg",
+    "className": "slv",
+    "indexStr": "09 / 09",
+    "featured": false,
+    "category": "ETFs",
+    "mainnetOnly": true
+  },
+  {
+    "ticker": "BABA",
+    "name": "Alibaba Group",
+    "image": "/assets/baba.svg",
+    "className": "baba",
+    "indexStr": "10 / 10",
+    "featured": false,
+    "category": "China",
+    "mainnetOnly": true
+  }
+]

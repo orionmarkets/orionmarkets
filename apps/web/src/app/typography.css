@@ -1,0 +1,60 @@
+/* Typography, loaded after globals.css. Archivo carries the brand: wide and heavy for display, normal width for the
+   interface. Headings use sentence case; uppercase is reserved for small kickers and labels. */
+h1,
+h2 {
+  font-family: var(--display) !important;
+  font-stretch: 112%;
+  letter-spacing: -0.035em !important;
+  text-transform: none !important;
+}
+h1 {
+  font-weight: 800 !important;
+}
+h2 {
+  font-weight: 750 !important;
+}
+h3 {
+  font-family: var(--display);
+  font-stretch: 105%;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav-link,
+.mobile-nav > a,
+.mobile-menu,
+.btn-action,
+.btn-ghost,
+.landing-btn,
+.app-button,
+.launch,
+.cta-band-button,
+.btn-silver {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-transform: none;
+}
+.nav-link,
+.mobile-nav > a,
+.mobile-menu {
+  font-size: 14px;
+}
+.btn-action,
+.btn-ghost {
+  font-size: 14px;
+}
+.btn-action-sm {
+  font-size: 13px;
+}
+.landing-btn {
+  font-size: 15px;
+}
+
+/* Every computed number reads in mono with tabular figures. */
+.num,
+.font-mono,
+code {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}

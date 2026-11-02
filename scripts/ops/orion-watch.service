@@ -1,0 +1,20 @@
+# systemd user unit that keeps the Orion mainnet watcher running on this machine.
+# It reads the chain only (no key) unless ~/.config/orion-watch.env sets LIQUIDATOR_PRIVATE_KEY and the unit
+# is switched to --liquidate (see docs/MAINNET.md, Phase 7).
+# Install:  bash scripts/ops/install-watch-service.sh
+[Unit]
+Description=OrionMarkets mainnet watcher
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/Documents/secondary-brain/1-work/wealthy-people-id/projects/orionmarkets
+Environment=PATH=%h/.nvm/versions/node/v24.16.0/bin:/usr/local/bin:/usr/bin:/bin
+EnvironmentFile=-%h/.config/orion-watch.env
+ExecStart=/usr/bin/env node scripts/mainnet-watch.mjs
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=default.target
