@@ -77,7 +77,8 @@ collateral sale. The rule is set from the Lending page and read from chain by th
 | `setPaused(false)` | `0x59b73ca4…182372` |
 | Acceptance rule on the TSLA pair (trigger 0.40%, target 0.30%, limit 1 USDG) and 1 USDG allowance | `0x4cc531b5…a7ea92`, `0x97fd741e…c54d3` |
 | Keeper `executeAutoProtect`: debt 2.000000 → 1.224489 USDG (0.775511 repaid from the borrower's wallet, 0.3014% loan ratio), 201,057 gas | `0x2f7b1873…d89c1` |
-| Rule switched off and allowance set back to 0 | two transactions, same wallet |
+| Second run executed by the VPS service `orion-keeper@testnet` (trigger 0.28%, target 0.25%): debt 1.224489 → 1.020407 USDG, 0.204082 repaid, 201,057 gas | rule `0x09ebb855…5601c`, execution `0x72eeb834…a1b` |
+| Rule switched off and allowance set back to 0 after each run | two transactions each, same wallet |
 
 Limits of this acceptance run: the borrower and the keeper were the same project wallet, so the "keeper pays nothing"
 property is proven by the contract tests (`OrionCore.t.sol`), not on chain. The run used the contract's real price
