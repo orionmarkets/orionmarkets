@@ -545,8 +545,85 @@
   --card-bg: #ff9a5c;
 }
 
+/* Market coverage */
+.cov-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: clamp(12px, 1.2vw, 20px);
+  max-width: 1500px;
+  margin: 0 auto;
+}
+.cov-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: clamp(20px, 2vw, 32px);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.cov-group header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.cov-group h3 {
+  font-family: var(--display);
+  font-stretch: 110%;
+  font-size: clamp(22px, 1.8vw, 30px);
+  letter-spacing: -0.02em;
+}
+.cov-count {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+.cov-group > p {
+  color: var(--text-2);
+  font-size: 15px;
+}
+.cov-group ul {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+.cov-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 12px;
+}
+.cov-row:hover {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.cov-logo {
+  width: 32px;
+  height: 32px;
+  padding: 5px;
+}
+.cov-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.cov-name small {
+  color: var(--muted);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cov-price {
+  font-family: var(--mono);
+  font-size: 15px;
+}
+
 /* Tape */
-.tape-logo {
+.tape-logo,
+.cov-logo {
   width: 22px;
   height: 22px;
   padding: 3px;
