@@ -42,7 +42,8 @@ const BUY_SIZES = {
   micro: { usdgPerMarket: 500000n, stockForShort: 0.001, stockUsdForPool: 0.25 },
   nano: { usdgPerMarket: 100000n, stockForShort: 0.0001, stockUsdForPool: 0.05 },
 };
-const BUY_SIZE = BUY_SIZES[process.env.MAINNET_ENABLE_SIZE ?? "micro"];
+// The shell wins, then the profile (init-mainnet-profile.sh writes the owner's choice there), then micro.
+const BUY_SIZE = BUY_SIZES[process.env.MAINNET_ENABLE_SIZE ?? (existsSync(profile) ? parseEnv(readFileSync(profile, "utf8")).MAINNET_ENABLE_SIZE : undefined) ?? "micro"];
 if (!BUY_SIZE) throw Error("MAINNET_ENABLE_SIZE_MUST_BE_NANO_OR_MICRO");
 const USDG_FOR_MARKETS = BigInt(STOCKS.length) * BUY_SIZE.usdgPerMarket + 50000n;
 const STOCK_USD_FOR_POOL = BUY_SIZE.stockUsdForPool;

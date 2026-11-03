@@ -87,6 +87,9 @@ API listens on `127.0.0.1`). It checks the release in `RELEASE_VERSION` (default
 open, AutoProtect and vault deposits still paused, every market NORMAL with a fresh price, margin routers open and the
 liquidity floors (`MIN_POOL_USDG`, `MIN_PAIR_USDG`, `MIN_OWNER_ETH`). Run it before and after each step.
 
+Steps 1 to 3 run in one go with `bash scripts/ops/open-mainnet-v1.sh` (each stage rehearsed on a fork, typed
+confirmations, resumable).
+
 1. **Seed tokens:** `node scripts/buy-mainnet-market-tokens.mjs --plan`, then with `MAINNET_SWAP_BROADCAST_ENABLED=true`
    in the profile `node scripts/buy-mainnet-market-tokens.mjs --run`, then set it back to `false`.
 2. **Open the markets:** `bash scripts/enable-rh-mainnet-markets.sh` (fork rehearsal, then type `OPEN MARKETS`). Per

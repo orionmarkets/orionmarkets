@@ -65,7 +65,8 @@ const SIZES = {
     },
   },
 };
-const SIZE_NAME = process.env.MAINNET_ENABLE_SIZE ?? "micro";
+// The shell wins, then the profile (init-mainnet-profile.sh writes the owner's choice there), then micro.
+const SIZE_NAME = process.env.MAINNET_ENABLE_SIZE ?? (existsSync(profile) ? parseEnv(readFileSync(profile, "utf8")).MAINNET_ENABLE_SIZE : undefined) ?? "micro";
 const SIZE = SIZES[SIZE_NAME];
 if (!SIZE) throw Error("MAINNET_ENABLE_SIZE_MUST_BE_NANO_MICRO_OR_DEMO");
 const LONG_DEBT_LIQUIDITY = SIZE.longDebtLiquidity;
