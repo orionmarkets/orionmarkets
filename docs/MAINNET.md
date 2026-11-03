@@ -4,9 +4,13 @@ Target: **Robinhood Chain mainnet** (chain id `4663`, explorer <https://robinhoo
 Cost: see [`MAINNET_BUDGET.md`](MAINNET_BUDGET.md) (about $2.49 of gas with buffer, plus about $5.4 of seed tokens at micro size).
 What v1.0 shows and opens: [`RELEASES.md`](RELEASES.md).
 
-**Status (2026-11-03): Phase 1 done.** ORION v1.0 is deployed (58 transactions, 0.000814 ETH, record in
-`packages/contracts/deployments/mainnet-4663.json`, 31 of 31 contracts verified on Sourcify). Every market is still
-PAUSED. Everything below deploys fresh from this repository: every contract (Orion
+**Status (2026-11-03): ORION v1.0 is live on <https://orionmarkets.tech>.** Deployed (58 transactions, 0.000814 ETH,
+31 of 31 contracts verified on Sourcify), the five markets opened at nano size, LeverageRouter and ShortRouter open,
+lending and margin enabled on the website. Fork rehearsals on the live state pass: 60 of 60 user steps
+(`REHEARSE_BORROW_USDG=0.01 REHEARSE_MARGIN_USDG=0.005`) and 5 of 5 liquidation checks. Readiness 36 of 38: the vault
+and AutoProtect must be closed again with `bash scripts/ops/pause-mainnet-unused.sh`. The owner chose to skip the 24 h
+read-only wait. Total spent about 0.00131 ETH (about $3).
+Everything below deploys fresh from this repository: every contract (Orion
 contracts, the Uniswap V2 factory and its pools), every market id (`orion-*` slugs) and the deployment record belong to
 ORIONMARKETS. Nothing from an earlier deployment is reused. Every mainnet transaction is signed by the project owner
 from their own terminal.
