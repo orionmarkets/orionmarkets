@@ -52,6 +52,12 @@ sign-off ([`BRANCHING.md`](BRANCHING.md)).
 | Liquidity | Deeper pools, so 2x/5x/10x (open since v1.0) take real order sizes |
 | AutoProtect | Module plus keeper, vault protection |
 
+Status (2026-11-04): the five markets are deployed, opened (nano size) and verified on mainnet (46 of 46 Orion contracts on
+Sourcify). SPY, QQQ, SGOV, SLV and BABA are `mainnetOnly` in `data/asset-catalog.json`: Robinhood has no testnet token for
+them, so the testnet pair and acceptance run below cannot exist; the fork rehearsal against mainnet state (real tokens and
+feeds, every stage of `add-rh-mainnet-market.sh`) replaces it. Wallet funds do not allow deeper pools or the Auto-Protect
+keeper reserve yet. The website opens when `RELEASE_VERSION=2` is set on the VPS.
+
 Prerequisites, all rehearsed on testnet first:
 - ETF and BABA have only a reference price on testnet today. Each needs a testnet pair, pool and acceptance run before
   mainnet unpause.
