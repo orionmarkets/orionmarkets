@@ -55,8 +55,17 @@ sign-off ([`BRANCHING.md`](BRANCHING.md)).
 Status (2026-11-04): the five markets are deployed, opened (nano size) and verified on mainnet (46 of 46 Orion contracts on
 Sourcify). SPY, QQQ, SGOV, SLV and BABA are `mainnetOnly` in `data/asset-catalog.json`: Robinhood has no testnet token for
 them, so the testnet pair and acceptance run below cannot exist; the fork rehearsal against mainnet state (real tokens and
-feeds, every stage of `add-rh-mainnet-market.sh`) replaces it. Wallet funds do not allow deeper pools or the Auto-Protect
-keeper reserve yet. The website opens when `RELEASE_VERSION=2` is set on the VPS.
+feeds, every stage of `add-rh-mainnet-market.sh`) replaces it. `RELEASE_VERSION=2` is set on the VPS and the site lists the
+five markets.
+
+Auto-Protect is live on mainnet (2026-11-04): keeper wallet `0x20DC528D2eafEfc5A429345957ccA3f02e06985C` (key only on the
+VPS in `/opt/orion/mainnet/keeper.env`, funded with 0.0005 ETH, authorized with `setKeeper`), module unpaused, unit
+`orion-keeper@mainnet` running. Acceptance run on the TSLA long pair with the project wallet as borrower (not the keeper):
+rule trigger 20% / target 10%, debt 0.001500 to 0.000398 USDG, 0.001102 USDG pulled from the borrower's wallet, keeper
+tx gas 287,651. The test position was closed afterwards.
+
+Not done: deeper pools. The project wallet holds about 0.0018 ETH, and no script adds liquidity to a market that is
+already open; pools stay at nano size (about 0.05 USDG each), so orders stay tiny until the owner funds the wallet.
 
 Prerequisites, all rehearsed on testnet first:
 - ETF and BABA have only a reference price on testnet today. Each needs a testnet pair, pool and acceptance run before
