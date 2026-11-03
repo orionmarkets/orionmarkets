@@ -13,6 +13,17 @@ http:
       service: orion-testnet
       tls:
         certResolver: letsencrypt
+    orion-mainnet-http:
+      rule: Host(`orionmarkets.tech`) || Host(`www.orionmarkets.tech`)
+      entryPoints: [http]
+      middlewares: [orion-https]
+      service: orion-mainnet
+    orion-mainnet:
+      rule: Host(`orionmarkets.tech`) || Host(`www.orionmarkets.tech`)
+      entryPoints: [https]
+      service: orion-mainnet
+      tls:
+        certResolver: letsencrypt
   middlewares:
     orion-https:
       redirectScheme:
@@ -23,3 +34,7 @@ http:
       loadBalancer:
         servers:
           - url: http://host.docker.internal:3102
+    orion-mainnet:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:3202

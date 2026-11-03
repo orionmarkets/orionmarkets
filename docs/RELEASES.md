@@ -40,8 +40,9 @@ ORION is launched by the owner on Pons, outside this repository's development, a
 ORION market, pair, pool, price feed, lending or margin. v1.0 ships no Pons contract and no Pons page; the ORION token is a
 contract address and a link, not part of the Orion protocol.
 
-Mainnet gates before v1.0 opens: Phase 0 to 6 of [`MAINNET.md`](MAINNET.md), fork rehearsal of lending and margin, and
-owner sign-off ([`BRANCHING.md`](BRANCHING.md)).
+Mainnet gates before v1.0 opens: Phase 0 to 5 of [`MAINNET.md`](MAINNET.md) (a fresh ORION deployment: no contract,
+pool, market id or record from an earlier deployment is reused), the fork rehearsal of lending and margin, and owner
+sign-off ([`BRANCHING.md`](BRANCHING.md)).
 
 ## v2.0: more markets and leverage
 
@@ -94,14 +95,17 @@ changes the website only, so pause on chain first when funds are at risk.
 
 ## Budget (owner cap: USD 7)
 
-Source: [`MAINNET_BUDGET.md`](MAINNET_BUDGET.md), dry run 2026-10-15 on a mainnet fork, ETH at about USD 2,427.
+Source: [`MAINNET_BUDGET.md`](MAINNET_BUDGET.md), fork rehearsal of the ORION v1.0 deploy on 2026-11-03, ETH at about
+USD 2,266.
 
 | Item | USD |
 | :--- | ---: |
-| Gas: core (4 markets), NVDA, enablement, 25% buffer | 1.65 |
-| Gas incl. keeper reserve (AutoProtect transactions) | 3.17 |
-| Seed liquidity tokens, first market (micro size, not re-measured) | about 4.42 |
-| **v1.0 contracts plus one seeded market** | **about 6.1 to 7.6** |
+| Gas: v1.0 deploy (58 tx) and enablement of five markets, 25% buffer | 2.49 |
+| Seed tokens, five markets at micro size (nano: about 1.0) | about 5.4 |
+| **v1.0 at micro size** | **about 7.9** |
+| **v1.0 at nano size** | **about 3.5** |
 
-The cap covers gas and one micro-seeded market. It does not cover: seed liquidity for the other markets, the ORION launch on Pons, domain, hosting and database. A pool this small limits position size (on testnet, 10x at 26 USDG
-of liquidity allows about 0.06 USDG of margin), so v1.0 at this budget is a working launch, not a deep market.
+Micro size is just over the cap; nano size fits it with room for the keeper reserve of v2.0 (USD 1.13). The project
+wallet holds 0.00466 ETH (about USD 10.6), which covers either. Not covered: the ORION launch on Pons, domain, hosting and
+database. A pool this small limits position size (on testnet, 10x at 26 USDG of liquidity allows about 0.06 USDG of
+margin), so v1.0 at this budget is a working launch, not a deep market.

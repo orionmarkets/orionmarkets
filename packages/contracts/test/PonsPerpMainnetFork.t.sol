@@ -10,20 +10,21 @@ import {PonsV4TwapOracle} from "../src/ponsperp/PonsV4TwapOracle.sol";
 import {PonsLiquidityVault} from "../src/ponsperp/PonsLiquidityVault.sol";
 import {PonsPerpManager} from "../src/ponsperp/PonsPerpManager.sol";
 
-/// @notice Runs against Robinhood Chain mainnet state. Skipped unless PONS_FORK_RPC is set:
+/// @notice Runs against Robinhood Chain mainnet state with ORION contracts deployed on the fork. Skipped unless
+/// PONS_FORK_RPC is set; the ORION token test also needs ORION_PONS_TOKEN (the ORION token's Pons address):
 /// PONS_FORK_RPC=https://rpc.mainnet.chain.robinhood.com forge test --match-contract PonsPerpMainnetFork
 contract PonsPerpMainnetForkTest is Test {
     address constant POOL_MANAGER = 0x8366a39CC670B4001A1121B8F6A443A643e40951;
     address constant PONS_FACTORY = 0x7eD598BcEf8bd9Edd8C97A195C6d13f40801EC7e;
     address constant PONS_HOOK = 0xE5e702641Ea86F4ae6cC3cDaeD2B886f976Be044;
-    address constant FEED_ORACLE = 0x44665e0809d5116d37aB9981046e177b070471d9;
     address constant ETH_USD_FEED = 0x78F3556b67E17Df817D51Ef5a990cDaF09E8d3A9;
     address constant WETH = 0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73;
     address constant USDG = 0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168;
     address constant OWNER = 0xd09D9c87ECfe008B4D6D3cEbeAd25103c16d9a7C;
-    address constant LEGACY_PONS_TOKEN = 0xeC0b618cAdd930791329E834E11DCfD8213249C0;
-    address constant GRADUATED = 0x492F71Fb6CB10F923b0740436F5CD39c7c9a177A; // graduated Pons token
+    address constant GRADUATED = 0x7dbf38976f6D3b9c529e7D9484A71898B409eE6a; // ZZZ, a third-party graduated Pons token
 
+    address orionToken;
+    VerifiedFeedOracle feedOracle;
     PonsV4TwapOracle oracle;
     PonsLiquidityVault vault;
     PonsPerpManager manager;
@@ -36,9 +37,18 @@ contract PonsPerpMainnetForkTest is Test {
         }
         vm.createSelectFork(rpc);
 
-        vm.prank(OWNER);
-        VerifiedFeedOracle(FEED_ORACLE).addFeed(
-            VerifiedFeedOracle.FeedInput(WETH, ETH_USD_FEED, "ETH / USD", 26 hours, 100e18, 100_000e18, false)
+        orionToken = vm.envOr("ORION_PONS_TOKEN", address(0));
+
+        // ORION's own feed oracle on the fork, priced from the Chainlink ETH / USD feed.
+        VerifiedFeedOracle.FeedInput[] memory feeds = new VerifiedFeedOracle.FeedInput[](1);
+        feeds[0] = VerifiedFeedOracle.FeedInput(WETH, ETH_USD_FEED, "ETH / USD", 26 hours, 100e18, 100_000e18, false);
+        feedOracle = VerifiedFeedOracle(
+            address(
+                new ERC1967Proxy(
+                    address(new VerifiedFeedOracle()),
+                    abi.encodeCall(VerifiedFeedOracle.initialize, (OWNER, block.chainid, address(0), 0, feeds))
+                )
+            )
         );
 
         oracle = PonsV4TwapOracle(
@@ -46,7 +56,7 @@ contract PonsPerpMainnetForkTest is Test {
                 new ERC1967Proxy(
                     address(new PonsV4TwapOracle()),
                     abi.encodeCall(
-                        PonsV4TwapOracle.initialize, (OWNER, POOL_MANAGER, PONS_FACTORY, PONS_HOOK, FEED_ORACLE, WETH)
+                        PonsV4TwapOracle.initialize, (OWNER, POOL_MANAGER, PONS_FACTORY, PONS_HOOK, address(feedOracle), WETH)
                     )
                 )
             )
@@ -69,8 +79,8 @@ contract PonsPerpMainnetForkTest is Test {
         );
         vm.startPrank(OWNER);
         vault.setManager(address(manager));
-        oracle.listAsset(LEGACY_PONS_TOKEN);
         oracle.listAsset(GRADUATED);
+        if (orionToken != address(0)) oracle.listAsset(orionToken);
         vm.stopPrank();
     }
 
@@ -80,24 +90,28 @@ contract PonsPerpMainnetForkTest is Test {
             vm.warp(vm.getBlockTimestamp() + 4 minutes);
         }
         (uint256 spot, uint256 twap) = oracle.update(GRADUATED);
-        emit log_named_decimal_uint("LEVERA spot USD", spot, 18);
+        emit log_named_decimal_uint("ZZZ spot USD", spot, 18);
         assertGt(spot, 0);
         assertEq(spot, twap); // the pool did not move on the fork
     }
 
     function testOrionListedButNotOpenUntilGraduation() public {
-        IPonsFactory.LaunchedToken memory launch = IPonsFactory(PONS_FACTORY).getLaunchedToken(LEGACY_PONS_TOKEN);
-        (bytes32 poolId,,,,,) = oracle.assets(LEGACY_PONS_TOKEN);
-        assertEq(poolId, keccak256(abi.encode(address(0), LEGACY_PONS_TOKEN, launch.poolFee, launch.tickSpacing, PONS_HOOK)));
+        if (orionToken == address(0)) {
+            vm.skip(true);
+            return;
+        }
+        IPonsFactory.LaunchedToken memory launch = IPonsFactory(PONS_FACTORY).getLaunchedToken(orionToken);
+        (bytes32 poolId,,,,,) = oracle.assets(orionToken);
+        assertEq(poolId, keccak256(abi.encode(address(0), orionToken, launch.poolFee, launch.tickSpacing, PONS_HOOK)));
         if (launch.phase == 2) return; // graduated since this test was written
         vm.expectRevert(PonsV4TwapOracle.PoolNotInitialized.selector);
-        oracle.poke(LEGACY_PONS_TOKEN);
+        oracle.poke(orionToken);
 
         vm.startPrank(OWNER);
-        manager.setMarket(LEGACY_PONS_TOKEN, 20_000, 1_000, 20e6, 100e6);
+        manager.setMarket(orionToken, 20_000, 1_000, 20e6, 100e6);
         manager.setOpeningPaused(false);
         vm.stopPrank();
         vm.expectRevert(PonsPerpManager.NotGraduated.selector);
-        manager.openPosition(LEGACY_PONS_TOKEN, true, 1e6, 20_000);
+        manager.openPosition(orionToken, true, 1e6, 20_000);
     }
 }

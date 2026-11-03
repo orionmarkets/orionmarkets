@@ -45,10 +45,11 @@ DEPLOYER_ADDRESS=$WALLET
 PROTOCOL_OWNER_ADDRESS=$WALLET
 
 # Gas caps from docs/MAINNET_BUDGET.md (wei). Fee cap 0.04 gwei: above that, wait. Per-tx cap covers the largest
-# deployment (2.5M gas) at the fee cap with the 1.3x limit buffer. Total cap is about 2x the expected deploy cost.
+# deployment (the Uniswap V2 factory, 3.05M gas) at the fee cap with the 1.3x limit buffer. Total cap covers the whole
+# v1.0 deploy (58 transactions, 40.6M gas on the 2026-11-03 fork rehearsal) at the fee cap with a 1.5x margin.
 MAINNET_MAX_FEE_PER_GAS_WEI=40000000
-MAINNET_MAX_TRANSACTION_GAS_WEI=150000000000000
-MAINNET_FULL_MAX_TOTAL_GAS_WEI=1000000000000000
+MAINNET_MAX_TRANSACTION_GAS_WEI=200000000000000
+MAINNET_FULL_MAX_TOTAL_GAS_WEI=2500000000000000
 MAINNET_MINIMUM_GAS_RESERVE_WEI=50000000000000
 MAINNET_GAS_LIMIT_BUFFER_BPS=13000
 MAINNET_RECEIPT_CONFIRMATIONS=2
@@ -65,8 +66,8 @@ MAINNET_FULL_BROADCAST_ENABLED=false
 MAINNET_SWAP_BROADCAST_ENABLED=false
 MAINNET_ENABLE_BROADCAST_ENABLED=false
 MAINNET_ADD_BROADCAST_ENABLED=false
-MAINNET_ENABLE_SIZE=micro
-MAINNET_BUY_MARKETS=TSLA,AMZN,PLTR,AMD
+MAINNET_ENABLE_SIZE=nano
+MAINNET_BUY_MARKETS=TSLA,AMZN,PLTR,AMD,NVDA
 
 # Vault (underlying must equal the USDG token in scripts/mainnet-full-deploy.config.json).
 MAINNET_VAULT_ASSET_ADDRESS=0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168

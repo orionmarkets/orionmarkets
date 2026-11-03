@@ -25,9 +25,9 @@ const WETH = "0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73";
 const USDG = "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168";
 // Fee tier of the deepest Uniswap v3 stock/USDG pool per market.
 const STOCK_FEES = { TSLA: 3000, AMZN: 3000, PLTR: 3000, AMD: 3000, NVDA: 500, SPY: 500, QQQ: 500, SGOV: 500, SLV: 3000, BABA: 3000 };
-// MAINNET_BUY_MARKETS selects the markets (default: the four launch markets), e.g. "NVDA".
+// MAINNET_BUY_MARKETS selects the markets (default: the five v1.0 launch markets), e.g. "NVDA".
 const ALL_MARKETS = JSON.parse(readFileSync("scripts/mainnet-full-deploy.config.json", "utf8")).markets;
-const selected = (process.env.MAINNET_BUY_MARKETS ?? "TSLA,AMZN,PLTR,AMD").split(",").map((x) => x.trim().toUpperCase()).filter(Boolean);
+const selected = (process.env.MAINNET_BUY_MARKETS ?? "TSLA,AMZN,PLTR,AMD,NVDA").split(",").map((x) => x.trim().toUpperCase()).filter(Boolean);
 const STOCKS = selected.map((symbol) => {
   const m = ALL_MARKETS.find((x) => x.symbol === symbol);
   if (!m || !STOCK_FEES[symbol]) throw Error("UNKNOWN_MARKET_IN_MAINNET_BUY_MARKETS");
@@ -42,7 +42,8 @@ const BUY_SIZES = {
   micro: { usdgPerMarket: 500000n, stockForShort: 0.001, stockUsdForPool: 0.25 },
   nano: { usdgPerMarket: 100000n, stockForShort: 0.0001, stockUsdForPool: 0.05 },
 };
-const BUY_SIZE = BUY_SIZES[process.env.MAINNET_ENABLE_SIZE ?? "micro"];
+// The shell wins, then the profile (init-mainnet-profile.sh writes the owner's choice there), then micro.
+const BUY_SIZE = BUY_SIZES[process.env.MAINNET_ENABLE_SIZE ?? (existsSync(profile) ? parseEnv(readFileSync(profile, "utf8")).MAINNET_ENABLE_SIZE : undefined) ?? "micro"];
 if (!BUY_SIZE) throw Error("MAINNET_ENABLE_SIZE_MUST_BE_NANO_OR_MICRO");
 const USDG_FOR_MARKETS = BigInt(STOCKS.length) * BUY_SIZE.usdgPerMarket + 50000n;
 const STOCK_USD_FOR_POOL = BUY_SIZE.stockUsdForPool;
