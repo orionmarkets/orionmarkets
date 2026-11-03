@@ -30,11 +30,11 @@ leverage options in `lib/leverage` and the margin policy.
 | Token | **ORION token**: launched by the owner on Pons. The website only shows the contract address chip (`NEXT_PUBLIC_TOKEN_CA`, no longer "Coming soon") and a link to its Pons page |
 | Markets | TSLA, AMZN, PLTR, NVDA, AMD (isolated pair per equity, USDG) |
 | Lending | Deposit, borrow, repay, withdraw (`LENDING_ENABLED`) |
-| Margin | Long and short, capped at 1.5x (`MARGIN_TRADING_ENABLED`) |
+| Margin | Long and short at 2x, 5x and 10x (`MARGIN_TRADING_ENABLED`). Decided by the owner (2026-11-03): opened in v1.0 on nano liquidity, so the largest 10x margin is about 0.0001 USDG per order (2x and 5x take more) |
 | Vault | USDG ERC-4626 vault |
 | Reporting | Portfolio, analytics, contracts directory (v1.0 contracts only) |
 
-Hidden in v1.0, deployed paused where a contract exists: ETF markets, BABA, 2x/5x/10x leverage, AutoProtect. Pons is not part of the protocol release.
+Hidden in v1.0, deployed paused where a contract exists: ETF markets, BABA, AutoProtect. Pons is not part of the protocol release.
 
 ORION is launched by the owner on Pons, outside this repository's development, and is **not traded on this website**: no
 ORION market, pair, pool, price feed, lending or margin. v1.0 ships no Pons contract and no Pons page; the ORION token is a
@@ -49,14 +49,15 @@ sign-off ([`BRANCHING.md`](BRANCHING.md)).
 | Area | Opens in v2.0 |
 | :--- | :--- |
 | Markets | SPY, QQQ, SGOV, SLV (ETFs) and BABA (China) |
-| Leverage | 2x, 5x and 10x on long and short, per the testnet 10x update in [`TESTNET.md`](TESTNET.md) |
+| Liquidity | Deeper pools, so 2x/5x/10x (open since v1.0) take real order sizes |
 | AutoProtect | Module plus keeper, vault protection |
 
 Prerequisites, all rehearsed on testnet first:
 - ETF and BABA have only a reference price on testnet today. Each needs a testnet pair, pool and acceptance run before
   mainnet unpause.
-- 10x needs the `OrionPair` upgrade (liquidation bonus setter, risk tiers 94% / 97%) on each mainnet pair, and pool depth
-  that fits the largest margin (see the price-impact note in `TESTNET.md`).
+- 10x needs no contract upgrade on mainnet (ORION deployed `OrionPair` with `setLiquidationBonus`); its parameters are
+  set by `scripts/ops/raise-mainnet-leverage.sh`. Order size at 10x scales with pool depth (about 0.06 USDG of margin at
+  26 USDG of liquidity, see the price-impact note in `TESTNET.md`).
 - Keeper and price publisher run unattended and funded.
 - Auto-Protect is **user-funded**: the keeper makes the module pull the repayment from the borrower's wallet (allowance
   to the module); it never spends its own funds and does not sell collateral. It is **live on testnet** (2026-11-03,

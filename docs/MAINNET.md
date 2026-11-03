@@ -107,7 +107,16 @@ confirmations, resumable).
    margin because the mainnet short markets cap LTV at 40%.
 5. Readiness script again, then a supervised deposit, borrow, repay, withdraw, long and short with small amounts per market.
 
-Mainnet markets launch capped at 1.5× leverage. Pons and Earn stay hidden while `PONS_DEPLOYMENT_JSON` is unset
+6. **Leverage 2x/5x/10x:** `bash scripts/ops/raise-mainnet-leverage.sh` (fork rehearsal of the parameters and of every
+   2x/5x/10x open and close, then type `RAISE LEVERAGE`; 20 transactions, about $0.10), then
+   `bash scripts/ops/enable-mainnet-web.sh on` on the VPS. Per pair: liquidation bonus 1%; per market: max LTV 94%,
+   liquidation LTV 97%, max leverage 10x, as on testnet. `generate-mainnet-app-config.mjs` offers 2x/5x/10x on a market
+   only once both its pairs are at 94%, so the website never offers a multiple the chain would reject. On nano pools the
+   largest 10x margin is about 0.0001 USDG (rehearsed: 0.0001 passes, 0.0005 reverts with "Borrow exceeds Max LTV
+   limit"); 2x and 5x pass at 0.0005. A 10x position is liquidated after a move of about 7%: run the liquidator
+   (`mainnet-watch.mjs --liquidate` from a separate hot wallet, Phase 6).
+
+Pons and Earn stay hidden while `PONS_DEPLOYMENT_JSON` is unset
 (`apps/web/src/lib/pons-visible.ts`, `earn-visible.ts`).
 
 ### Phase 6: Monitoring
