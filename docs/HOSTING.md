@@ -26,6 +26,7 @@ everything else binds to `127.0.0.1`.
 - Env files: `ORION_COMPOSE=… ORION_JWT_SECRET=… ORION_SUPABASE_URL=… node scripts/localnet/write-env.mjs` (same generator as localhost)
 - Apps: systemd units `deploy/orion-web@.service`, `deploy/orion-api@.service` (instance = network)
 - Deploy: `bash /opt/orion/<network>/repo/deploy/deploy.sh <network>`
+- Mainnet, first time: `deploy/mainnet-init.sh` (as root) creates `/opt/orion/mainnet` the same way, with a MAINNET profile that holds no private key, and starts the site read-only
 
 ## DNS (Hostinger)
 
