@@ -84,7 +84,7 @@
     "rh:prices:runtime": "node --import tsx scripts/check-reference-prices.mjs --runtime",
     "testnet:verify": "node scripts/check-testnet-verified.mjs",
     "testnet:verify:publish": "node scripts/verify-testnet-sources.mjs",
-    "mainnet:verify": "node scripts/check-mainnet-verified.mjs"
+    "mainnet:verify": "node scripts/orion-verify-demo.mjs"
   },
   "devDependencies": {
     "concurrently": "^10.0.5",

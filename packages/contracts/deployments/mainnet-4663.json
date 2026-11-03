@@ -41,7 +41,27 @@
     "margin-amzn": "0x6Bb27696f6A292D3364556434427d20064b4CbE3",
     "margin-pltr": "0x5e3E4392f45Fef1256EFB913d4a0Ae7BDEdE6375",
     "margin-amd": "0x5A0388486BDF8B1C7723A2B46754383A715d0525",
-    "margin-nvda": "0x1b0b7C30cF7857e3999faF9E15D95f455d3C1D84"
+    "margin-nvda": "0x1b0b7C30cF7857e3999faF9E15D95f455d3C1D84",
+    "long-spy": "0x9bd41DA1944479D1D1D41C23F7402d8234cfC285",
+    "short-spy": "0x7B26ed2f6bB84FbB97E377B8aB4632A9Ab393476",
+    "pool-spy": "0xE8fd6dDB8408f6F8d7aFA72cAbB6E7c76568C868",
+    "margin-spy": "0x4B92732761B1573F64e5741A93ABF12F2694312c",
+    "long-qqq": "0x5A589F7742a17d104b07137f8fa2F06DfF5024f4",
+    "short-qqq": "0xD9dfAc0654B222dA240DEf4BFAaD634d65b490E5",
+    "pool-qqq": "0x27F63065C2722707EB096F1F6224C8E6d92325cB",
+    "margin-qqq": "0xE44Bb2cBffF16F19fB57aA328Dd246Bc24AAdb72",
+    "long-sgov": "0x57AcA5B4c6Ab9Fd161e831680E6Ce7c6CA06129d",
+    "short-sgov": "0xE4E4185fD01572405a343B85A9C5621ddf22eA99",
+    "pool-sgov": "0x0b3cE4C4ea500Bd1Ebea4727B6eB1c4b95dBE5d1",
+    "margin-sgov": "0x8300482D3159c32FC62880ff04C88Eb864Ac10ED",
+    "long-slv": "0x1B104c60d8a9406b6D4b634019917eD7d524D5E4",
+    "short-slv": "0x503A48586C3509B2734A414c886b149d56b1ecb3",
+    "pool-slv": "0xC1734F529344Aac158367dBd5A04a3e15396dAC8",
+    "margin-slv": "0xEe61b02FD7deC766418947A65627de86bE3379fa",
+    "long-baba": "0x4F06C53c71130D49Bc83b60ed02399faCEA0361E",
+    "short-baba": "0x63201BA52Cec33967C664Cf9451dF7fF2aDb4528",
+    "pool-baba": "0xdc6dd11486e3E8A35F6e2C8AAeBc51D10dadc333",
+    "margin-baba": "0x77219a51b55F55eE1830026697225C7d94d91A08"
   },
   "markets": {
     "TSLA": {
@@ -78,6 +98,41 @@
       "longMarketId": "0xd733d00011d6fcaac83550acd1adb3b0f46799b41d11068abb997a1c2eaf297e",
       "shortMarketId": "0x12a2a71c0f2583c6097f693add9deefd63adf1f57586dd4746057621efbed0d2",
       "status": "PAUSED"
+    },
+    "SPY": {
+      "token": "0x117cc2133c37B721F49dE2A7a74833232B3B4C0C",
+      "feed": "0x319724394D3A0e3669269846abE664Cd621f9f6A",
+      "longMarketId": "0x48d5027b02ab1431177077e40d7a0471418d0222d314a1b29d182b1eedf545b5",
+      "shortMarketId": "0x283841fe65fc61e45180dc38a1b914552b95a13492d204c9ebcd9cd7b9b3dda3",
+      "status": "PAUSED"
+    },
+    "QQQ": {
+      "token": "0xD5f3879160bc7c32ebb4dC785F8a4F505888de68",
+      "feed": "0x80901d846d5D7B030F26B480776EE3b29374C2ae",
+      "longMarketId": "0xa229f4cc3c2a403358a1728884f152b9561203f9362f97accb79fde820027883",
+      "shortMarketId": "0xbea61c51dbd841746631e34c31ca7a52ba9dc32dbe5848d973952246222d61ce",
+      "status": "PAUSED"
+    },
+    "SGOV": {
+      "token": "0x92FD66527192E3e61d4DDd13322Aa222DE86F9B5",
+      "feed": "0xa0DF4ee0fFf975306345875E3548Fcc519577A11",
+      "longMarketId": "0x6d801d83647e7924510e57cd4e9df7dae421a7fb56c39af5fdb001b8693fb0e5",
+      "shortMarketId": "0x3c21a620730413f56cfa2dd7f3925c7fd3fb7f3ee2de3eca6a7de3d08b0c2079",
+      "status": "PAUSED"
+    },
+    "SLV": {
+      "token": "0x411eFb0E7f985935DAec3D4C3ebaEa0d0AD7D89f",
+      "feed": "0x209b73908e92Ae021826eD79609845451Ecba2ce",
+      "longMarketId": "0xa24ba434844662d0c39d0c1e0a6d6c373d8578fb375f72c26d7fe6aa4796d1a4",
+      "shortMarketId": "0xfa0cf6392ccf65808ad32b4d335548171e7037d6678db01d4c5b7bbbf0cb4fb8",
+      "status": "PAUSED"
+    },
+    "BABA": {
+      "token": "0xad25Ac6C84D497db898fa1E8387bf6Af3532a1c4",
+      "feed": "0x62Cc8F9b5f56a33c9C8A60c8B92779f523c4E984",
+      "longMarketId": "0x3f175b7762e7d5f649c3dddb9dc2ad4a47cbfe6d3fbb2fcfc30595b5a047aa69",
+      "shortMarketId": "0xb665f52655423f78a80e2d0af24b68e6fe8c487fdf127a98d7a610f5794a8f52",
+      "status": "PAUSED"
     }
   },
   "usdg": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168",
@@ -87,7 +142,12 @@
     "AMZN": "245770078300000000000",
     "PLTR": "165410000000000000000",
     "AMD": "480223250000000000000",
-    "NVDA": "205550210710000000000"
+    "NVDA": "205550210710000000000",
+    "SPY": "756011493540000000000",
+    "QQQ": "687376369990000000000",
+    "SGOV": "101386160790000000000",
+    "SLV": "44804500000000000000",
+    "BABA": "100060675000000000000"
   },
   "transactions": {
     "deploy-impl-OrionMarketRegistry": "0x28a3b656ac7a2262a4d41333602df0adbedad2ccb4e90901f5541ee310c3b763",
@@ -147,7 +207,52 @@
     "deploy-margin-pltr": "0x87936eab6e0d775c0b0a87c85157e10839a35e01d7a7590506332ed97f7f5b84",
     "deploy-margin-amd": "0xaad18aa72af2f83858d57f5e333832056e38d5b4c1f8bc499fe554b01e1ffaac",
     "deploy-margin-nvda": "0x053457e32773f2af82c3c3a1eb69a451a2ef653a5d2c8757b282372e9de65284",
-    "authorize-lending-router": "0x919484f24f5b92000ec50d92380b73365c8696512609cfc2f6835104e512fa52"
+    "authorize-lending-router": "0x919484f24f5b92000ec50d92380b73365c8696512609cfc2f6835104e512fa52",
+    "add-feed-spy": "0x7c54e77cd7d59901c6df7666ff7b118b74ec0401f47aa53bec5e9bc32e1118dc",
+    "create-pool-spy": "0xfd8bfe3209a762ea99ce60e5e7947dc0d7c91a354b9f8096f3715fe3ecfce1f7",
+    "deploy-long-spy": "0x100b9b2ccd05850ba5c62d23cbfae87562a21b44c4e762c374c01d615dd5c41f",
+    "register-long-spy": "0xa83e6ee1c3b24975586dc16db0d4ea06a6788455f78d157c8f47f41861a26cbe",
+    "pause-long-spy": "0x491869dc4ac055d182316e5f4a0da4e190606873eb60c490eb65370b01a26054",
+    "deploy-short-spy": "0xa3ad65a5404741fe1b0eb12b4bd2cff192137bcf7a335aea123958a61f0a937d",
+    "register-short-spy": "0xd46e06d910c6f7454140833fd49c461509cb870cd665da724cc11e467abdfdf7",
+    "pause-short-spy": "0x20ba48bc8ce4deed3ea0e7c7cd4b064ffbb2a8a3b7e14387b0b5aeb44242b808",
+    "deploy-margin-spy": "0xb1375b049753e688420617d0c48bbd8c179ff79e6b9cedfa862770d1e37e2412",
+    "add-feed-qqq": "0xb2a60578d80431460c6fed700d568d8219be00f55a238398e546516db0a1149e",
+    "create-pool-qqq": "0xc1524f394981d84884daa2355cbfee6a34c45e08502c4bbb7f9af9f3ef4e7f90",
+    "deploy-long-qqq": "0xf2c7c4118265d945930f926a81525245eb9ae524269c46194aee5eaad33a5cc5",
+    "register-long-qqq": "0xc2cf2b853b2b81e057751456dc87921c255adcd2fcac7abb7da6e7544c431cde",
+    "pause-long-qqq": "0xc3d3a6289437a9c1b8af7fe36139987ab0c925d5c49fb4b256fa8880384c6900",
+    "deploy-short-qqq": "0x21bd5b71a68462199c29f1499021987aeb890cf427db369abb265709da6a88af",
+    "register-short-qqq": "0x5c86de9f07dbb59d3e955b1148c560cf5d604baf712781dffd3ae62e19b2aee0",
+    "pause-short-qqq": "0xb60e7ec6dcdb0df2531471ced83f2df3b907346e73097cce558dfa0cd476bce4",
+    "deploy-margin-qqq": "0xe059ebe74df0324a910d3264422f2c6682b58a91572cf6d3907456d2e9794699",
+    "add-feed-sgov": "0x8e8e49dd56b7ecfb22216e96c8d4ed717eb80732d5f801e158e481aa1f646156",
+    "create-pool-sgov": "0xd8256a03267fd2866ec54d5091e60abf19e326f9db3e578bc70fc546f3986eba",
+    "deploy-long-sgov": "0x3001822d05b389d47c87ea291676e33814d3c83a653d2840549b07680aab8d2e",
+    "register-long-sgov": "0xe757fcd4a5395371f73b37b7304c633c7fecfaeaf0edab336fc728616b3cc23a",
+    "pause-long-sgov": "0x275ac5d0f8f91e7e8bea4476c224892b8f69249cfa57cbeee274c639de5d3e1d",
+    "deploy-short-sgov": "0x600728e195bb0669817e3c5740ec420f875533a40ff364b56840eb0dc9a1e1e9",
+    "register-short-sgov": "0x5e71f0cdb99b0b478c54f990b2107cb0756e158c885310f73df3ab1a410f289f",
+    "pause-short-sgov": "0x25b0b349c55a0266d01982ef8febe8c366b6101029ef5b9fe940d6ddd3443cec",
+    "deploy-margin-sgov": "0x9ad8a9ea9930e663f72bc09c94712beb27117c804c451e29dc2838469b901b91",
+    "add-feed-slv": "0xf17b7549d00bf344d641a663a06a127929aaf8b4a8949e09ad801ca5d83b8096",
+    "create-pool-slv": "0x5527de5e567af99013b53830f249f0a9732afec7d2979723b0b7f4014457d556",
+    "deploy-long-slv": "0x4950cf7d730bf2cf01a21bae70a3698b6702bb05a337655b98105123de4b611d",
+    "register-long-slv": "0xedb7675f5914a05b5c99d8d6b183e69f1b8ad3d3d0d9791e42c5c6fd81089d67",
+    "pause-long-slv": "0xf00aa354a12bfaf7e7b5a912811b1879932d82daee6a846fbf64b196d832c14a",
+    "deploy-short-slv": "0x34f3b6188cf375627e1b247ed627f930d70cf8ea8f7a47d854ed93ede58fb025",
+    "register-short-slv": "0xd5667d8699d1688be1418bf973531ef23f0f4f8505124afd66fe70b3d8532051",
+    "pause-short-slv": "0x551e3b7828ef79c1935651dec24c802280610f992c058b3bdcc4cb1af029f589",
+    "deploy-margin-slv": "0xf5e5f4c240a269afc6c93caea7844fc2ca29d7811e9728b172735ab5181b8d5a",
+    "add-feed-baba": "0x1b1cd9d532dcc16b3cb5fa944f945f66b53f59ccbeef6173ec12a1ac8d5dc0b7",
+    "create-pool-baba": "0xf3a2c6295fb82d00ead582c5fe270eb21f23b395ecca911e72282587f301104f",
+    "deploy-long-baba": "0xe542587779099e99cd624219582fdee34cf0231903a7ab1b6327136b57499c5c",
+    "register-long-baba": "0x12581089c9fff82924cfb226c1588d95b95a1c00f569dd6b8196dc97251c0378",
+    "pause-long-baba": "0xe422fea6c0a0a771dec4a822d9b96bb7efa20ff6ccb82e6b6be361eca3f84763",
+    "deploy-short-baba": "0x9d02a452a0c00fad3396c9957d3734a0477b22f97b7314abb95dd339caf64e7a",
+    "register-short-baba": "0x5e1f6f9f3c5f86797bd93e8a44356fdec3c422295adf438ef4eb7f17e7e8d25f",
+    "pause-short-baba": "0x0c94d6995cab9ffae9d44ee009803ab6f6cb3aa5410f379722e6713fe853a08d",
+    "deploy-margin-baba": "0x8108a49ac12bafbfdf4dcfab9172fe1e7bff5fb654ddb1a2f4ded51cb9a68832"
   },
   "spentEth": "0.000813649682482"
 }
