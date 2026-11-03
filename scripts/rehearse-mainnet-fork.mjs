@@ -11,14 +11,18 @@ import { executeMarginAction } from "../apps/web/src/lib/margin-client.ts";
 // project wallet, or, when it holds too little (nano launch), from the public Uniswap v3 pool of that token
 // (impersonated on the fork only). Collateral is half of each market's supply cap.
 //   REHEARSE_BORROW_USDG (default 0.03) and REHEARSE_MARGIN_USDG (default 0.03): use 0.01 / 0.005 at nano size.
+//   REHEARSE_FORK_URL: use an anvil fork that is already running (raise-mainnet-leverage.mjs passes its own) instead
+//   of starting one; the market policy is then read from that fork.
 //   node --import tsx scripts/rehearse-mainnet-fork.mjs [SYMBOL ...]
 const require = createRequire(new URL("../apps/keeper/package.json", import.meta.url));
 const v = require("viem");
 
 const PORT = 8546;
 const RPC = "https://rpc.mainnet.chain.robinhood.com";
+const FORK = process.env.REHEARSE_FORK_URL;
+const LOCAL = FORK || `http://127.0.0.1:${PORT}`;
 const record = JSON.parse(readFileSync("packages/contracts/deployments/mainnet-4663.json", "utf8"));
-const launch = JSON.parse(execFileSync("node", ["scripts/generate-mainnet-app-config.mjs", "--launch"], { encoding: "utf8" }));
+const launch = JSON.parse(execFileSync("node", ["scripts/generate-mainnet-app-config.mjs", "--launch"], { encoding: "utf8", env: { ...process.env, MAINNET_RPC_URL: FORK ?? "" } }));
 const rows = JSON.parse(launch.MARKET_DEPLOYMENTS_JSON);
 const wanted = process.argv.slice(2);
 const BORROW = process.env.REHEARSE_BORROW_USDG ?? "0.03";
@@ -28,10 +32,10 @@ const V3_FACTORY = "0x1f7d7550B1b028f7571E69A784071F0205FD2EfA";
 const WETH = "0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73";
 const STOCK_FEES = { TSLA: 3000, AMZN: 3000, PLTR: 3000, AMD: 3000, NVDA: 500, SPY: 500, QQQ: 500, SGOV: 500, SLV: 3000, BABA: 3000 };
 
-const anvil = spawn("anvil", ["--fork-url", RPC, "--port", String(PORT), "--silent", "--no-rate-limit"], { stdio: "ignore" });
-const stop = () => anvil.kill("SIGTERM");
+const anvil = FORK ? null : spawn("anvil", ["--fork-url", RPC, "--port", String(PORT), "--silent", "--no-rate-limit"], { stdio: "ignore" });
+const stop = () => anvil?.kill("SIGTERM");
 process.on("exit", stop);
-const chain = { id: 4663, name: "Robinhood Chain", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 }, rpcUrls: { default: { http: [`http://127.0.0.1:${PORT}`] } } };
+const chain = { id: 4663, name: "Robinhood Chain", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 }, rpcUrls: { default: { http: [LOCAL] } } };
 const client = v.createPublicClient({ chain, transport: v.http(undefined, { timeout: 180000 }) });
 const rpc = (method, params) => client.request({ method, params });
 
