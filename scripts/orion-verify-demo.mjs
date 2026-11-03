@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// ORION V1.0: interactive mainnet contract verification, made for screen recording.
+// ORION V2.0: interactive mainnet contract verification, made for screen recording.
 //
 // Read-only. For every ORION mainnet contract it shows the name, the address and the explorer link, then
 // checks live: code on chain (Robinhood Chain RPC) + exact-match source on Sourcify (what the explorer reads).
@@ -39,7 +39,7 @@ const out = (s = "") => console.log(s);
 const fatal = (e) => { process.stderr.write(`\nStopped: ${scrub(e?.message ?? e)}\n`); process.exit(1); };
 process.on("uncaughtException", fatal);
 process.on("unhandledRejection", fatal);
-if (TTY && !args.includes("--no-clear")) process.stdout.write("\x1b[2J\x1b[3J\x1b[H\x1b]0;ORION V1.0 · contract verification\x07");
+if (TTY && !args.includes("--no-clear")) process.stdout.write("\x1b[2J\x1b[3J\x1b[H\x1b]0;ORION V2.0 · contract verification\x07");
 
 const RPC_URL = "https://rpc.mainnet.chain.robinhood.com";
 const EXPLORER = "https://robinhoodchain.blockscout.com";
@@ -246,8 +246,8 @@ async function verifyAddress(k, a) {
 }
 
 // ---- interactive flow ----------------------------------------------------------------------------
-const rl = createInterface({ input: process.stdin, output: process.stdout });
-rl.on("close", () => process.exit(0));
+const rl = TTY ? createInterface({ input: process.stdin, output: process.stdout }) : null; // no prompts without a terminal
+rl?.on("close", () => process.exit(0));
 const ask = (q) => new Promise((res) => rl.question(q, (v) => res(v.trim().toLowerCase())));
 
 async function run(contracts, { step }) {
@@ -293,7 +293,7 @@ const addrCount = list.reduce((n, k) => n + k.addresses.length, 0);
 out();
 await showLogo();
 out();
-out(`  ${lime("ORION")} ${blue("PROTOCOL")} ${bold(white("V1.0"))}  ${dim("·")}  ${bold("Smart contract verification")}`);
+out(`  ${lime("ORION")} ${blue("PROTOCOL")} ${bold(white("V2.0"))}  ${dim("·")}  ${bold("Smart contract verification")}`);
 out(dim("  " + LINE));
 out(`  ${dim("Network")}   Robinhood Chain mainnet ${dim(`(chain id ${CHAIN_ID})`)}`);
 out(`  ${dim("Explorer")}  ${link(EXPLORER)}`);
@@ -321,5 +321,5 @@ for (;;) {
   if (!subset) { out(yellow("\n  Type 1, 2, 3 or q.")); continue; }
   await run(subset, { step: choice === "1" });
 }
-out(`\n  ${lime("ORION")} ${blue("V1.0")}  ${dim("·")}  Don't trust, verify.\n`);
+out(`\n  ${lime("ORION")} ${blue("V2.0")}  ${dim("·")}  Don't trust, verify.\n`);
 process.exit(0);
