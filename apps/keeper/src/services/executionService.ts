@@ -2,7 +2,6 @@ import {
   publicClient,
   walletClient,
   keeperAccount,
-  supabase,
   AutoProtectABI,
   OrionPairABI,
   ERC20ABI,
@@ -10,6 +9,10 @@ import {
 import { config } from "../config.js";
 import { BreachCandidate } from "./positionMonitor.js";
 import { formatGwei, formatUnits, parseUnits, Address } from "viem";
+
+// One warning per borrower and pair every ten minutes, so a borrower without balance or allowance does not fill the log.
+const lastWarned = new Map<string, number>();
+const WARN_EVERY_MS = 10 * 60 * 1000;
 
 export async function executeCandidateProtection(
   candidate: BreachCandidate,
@@ -68,12 +71,19 @@ export async function executeCandidateProtection(
       functionName: "debtToken",
     });
 
-    // 4. Calculate exact repayment amount to restore to targetLtv
-    const targetLtvBps = BigInt(Math.round(candidate.targetLtvPercent * 100));
-    const targetDebt = (candidate.collateralValueUsd * targetLtvBps) / 10_000n;
+    const decimals = await publicClient.readContract({
+      address: debtTokenAddress,
+      abi: ERC20ABI,
+      functionName: "decimals",
+    });
+
+    // 4. Debt scales linearly with the loan ratio, so repaying (current - target) / current of it restores the target.
+    //    Rounded up; the module caps the repayment at what the target needs.
+    const currentBps = BigInt(Math.round(candidate.currentLtvPercent * 100));
+    const targetBps = BigInt(Math.round(candidate.targetLtvPercent * 100));
     let repayAmount =
-      candidate.debtAmount > targetDebt
-        ? candidate.debtAmount - targetDebt
+      currentBps > targetBps
+        ? (candidate.debtAmount * (currentBps - targetBps) + currentBps - 1n) / currentBps
         : 0n;
 
     if (repayAmount > candidate.maxDeleverage && candidate.maxDeleverage > 0n) {
@@ -87,29 +97,38 @@ export async function executeCandidateProtection(
       return false;
     }
 
-    // 5. Check Allowance and Approve USDG if needed
-    const currentAllowance = await publicClient.readContract({
-      address: debtTokenAddress,
-      abi: ERC20ABI,
-      functionName: "allowance",
-      args: [keeperAccount.address, config.AUTO_PROTECT_ADDRESS as Address],
-    });
-
-    if (currentAllowance < repayAmount) {
-      console.log(`[KEEPER] Approving USDG allowance for AutoProtectModule...`);
-      const approveHash = await walletClient.writeContract({
+    // 5. The borrower pays: cap the repayment to what their wallet holds and has approved to the module.
+    const [balance, allowance] = await Promise.all([
+      publicClient.readContract({
         address: debtTokenAddress,
         abi: ERC20ABI,
-        functionName: "approve",
-        args: [config.AUTO_PROTECT_ADDRESS as Address, repayAmount * 10n],
-      });
-      await publicClient.waitForTransactionReceipt({ hash: approveHash });
+        functionName: "balanceOf",
+        args: [candidate.userAddress],
+      }),
+      publicClient.readContract({
+        address: debtTokenAddress,
+        abi: ERC20ABI,
+        functionName: "allowance",
+        args: [candidate.userAddress, config.AUTO_PROTECT_ADDRESS as Address],
+      }),
+    ]);
+    const payable = balance < allowance ? balance : allowance;
+    if (payable < repayAmount) repayAmount = payable;
+    if (repayAmount <= 0n) {
+      const key = `${candidate.userAddress}:${candidate.pairAddress}`.toLowerCase();
+      if (Date.now() - (lastWarned.get(key) ?? 0) >= WARN_EVERY_MS) {
+        lastWarned.set(key, Date.now());
+        console.warn(
+          `[KEEPER] ${candidate.userAddress} has no balance or allowance to repay ${candidate.pairAddress} with; skipping (next notice in 10 min).`,
+        );
+      }
+      return false;
     }
 
     // 6. Submit executeAutoProtect on-chain
     console.log(
-      `[KEEPER EXECUTE] Deleveraging ${candidate.userAddress} on ${candidate.assetSymbol}: ` +
-        `Repaying ${formatUnits(repayAmount, 18)} USDG...`,
+      `[KEEPER EXECUTE] Deleveraging ${candidate.userAddress} on ${candidate.pairAddress}: ` +
+        `Repaying ${formatUnits(repayAmount, decimals)} USDG...`,
     );
 
     const txHash = await walletClient.writeContract({
@@ -134,51 +153,6 @@ export async function executeCandidateProtection(
     console.log(
       `[KEEPER SUCCESS] Tx confirmed in block ${receipt.blockNumber}! Gas used: ${gasUsed.toString()} (${gasCostEth.toFixed(6)} ETH / ~$${gasCostUsd.toFixed(2)})`,
     );
-
-    // 7. Record Audit Log in Supabase activity_logs
-    await supabase.from("activity_logs").insert({
-      network: config.NETWORK_MODE,
-      action_type: "AUTO_PROTECT_EXECUTION",
-      user_address: candidate.userAddress,
-      tx_hash: txHash,
-      details: {
-        pairAddress: candidate.pairAddress,
-        assetSymbol: candidate.assetSymbol,
-        initialLtvPercent: candidate.currentLtvPercent,
-        restoredTargetLtvPercent: candidate.targetLtvPercent,
-        repaidAmountUsd: parseFloat(formatUnits(repayAmount, 18)),
-        gasUsed: Number(gasUsed),
-        gasCostEth,
-        gasCostUsd,
-        blockNumber: Number(receipt.blockNumber),
-        keeperAddress: keeperAccount.address,
-      },
-    });
-
-    // 8. Update Position in Supabase positions table
-    const remainingDebt = candidate.debtAmount - repayAmount;
-    const remainingDebtUsd = parseFloat(formatUnits(remainingDebt, 18));
-    const newHealthFactor =
-      remainingDebtUsd > 0
-        ? parseFloat(
-            (
-              (parseFloat(formatUnits(candidate.collateralValueUsd, 18)) *
-                0.8) /
-              remainingDebtUsd
-            ).toFixed(2),
-          )
-        : 3.0;
-
-    await supabase
-      .from("user_positions")
-      .update({
-        exposure_usd:
-          remainingDebtUsd +
-          parseFloat(formatUnits(candidate.collateralValueUsd, 18)),
-        health_factor: newHealthFactor,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", candidate.positionId);
 
     return true;
   } catch (err: any) {

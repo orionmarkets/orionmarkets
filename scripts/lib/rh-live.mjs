@@ -464,5 +464,13 @@ export function safeFailure(error) {
       ? error.message
       : "LIVE_OPERATION_FAILED_DETAILS_REDACTED";
   console.error(message);
+  // Opt-in for operators: viem's shortMessage names the revert or RPC failure without request bodies or keys.
+  if (process.env.ORION_DEBUG === "1")
+    console.error(
+      String(error?.shortMessage ?? `${error?.name}: ${error?.message}`)
+        .split("\n")[0]
+        .replace(/0x[0-9a-fA-F]{64,}/g, "0x<redacted>")
+        .slice(0, 300),
+    );
   process.exitCode = 1;
 }

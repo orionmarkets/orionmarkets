@@ -5,8 +5,8 @@ import { parseEnv } from "node:util";
 import { createRequire } from "node:module";
 import { acquireLock } from "./lib/process-lock.mjs";
 
-// Adds one market (long + short pair, Uniswap V2 pool, MarginRouter) to the live v2 mainnet
-// deployment without touching the four launch markets. The market comes from
+// Adds one market (long + short pair, Uniswap V2 pool, MarginRouter) to the live ORION mainnet
+// deployment without touching the markets already deployed. The market comes from
 // scripts/mainnet-full-deploy.config.json (MAINNET_ADD_MARKET=<symbol>). Operations:
 //   - if the oracle proxy still runs the launch implementation: deploy the current
 //     VerifiedFeedOracle implementation and upgrade the proxy (adds owner-only addFeed)

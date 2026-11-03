@@ -160,7 +160,7 @@ export function useLeverageTrade(networkMode: NetworkMode) {
             txHash: orderHash,
           });
         } catch (syncErr) {
-          console.warn("Could not sync position via Levera API:", syncErr);
+          console.warn("Could not sync position via the ORION API:", syncErr);
         }
 
         setStep("SUCCESS");

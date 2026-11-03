@@ -1,6 +1,7 @@
 import { env } from "../env.mjs";
 import type { ProtocolAddresses } from "../contracts/addresses";
 import { marketDeployments } from "./market-deployments";
+import { AUTOPROTECT_VISIBLE, marketVisible, releaseAtLeast } from "./release";
 
 export interface ContractEntry {
   name: string;
@@ -58,7 +59,7 @@ export function buildContractDirectory(): ContractGroup[] {
         ["Orion router", protocol.orionRouter],
         ["Leverage router", protocol.leverageRouter],
         ["Short router", protocol.shortRouter],
-        ["Auto-Protect module", protocol.autoProtect],
+        ["Auto-Protect module", AUTOPROTECT_VISIBLE ? protocol.autoProtect : undefined],
         ["Orion vault (ERC-4626)", protocol.orionVault],
         ["Swap pool factory", marketDeployments[0]?.margin.factory],
       ]),
@@ -72,7 +73,7 @@ export function buildContractDirectory(): ContractGroup[] {
       ...Object.keys(protocol.tokens),
       ...Object.keys(protocol.pairs),
     ]),
-  ];
+  ].filter(marketVisible);
   for (const symbol of symbols) {
     const row = marketDeployments.find((r) => r.symbol === symbol);
     groups.push({
@@ -90,7 +91,7 @@ export function buildContractDirectory(): ContractGroup[] {
     });
   }
 
-  if (pons) {
+  if (pons && releaseAtLeast(3)) {
     groups.push({
       id: "pons",
       title: "Pons",

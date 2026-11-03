@@ -1,0 +1,14 @@
+# Express API for one network (%i = testnet | mainnet). It reads /opt/orion/%i/repo/.env (written by the deploy).
+[Unit]
+Description=ORIONMARKETS API (%i)
+After=network-online.target docker.service
+
+[Service]
+WorkingDirectory=/opt/orion/%i/repo/apps/api
+ExecStart=/usr/bin/env node dist/index.js
+Restart=always
+RestartSec=5
+User=orion
+
+[Install]
+WantedBy=multi-user.target

@@ -12,9 +12,9 @@ import { parseEnv } from "node:util";
 import { createRequire } from "node:module";
 import { acquireLock } from "./lib/process-lock.mjs";
 
-// Opens the four mainnet markets (TSLA, AMZN, PLTR, AMD) at the minimum demo size:
-//   per market: lower caps, 5 USDG into the long pair, 0.01 stock into the short pair,
-//   seed the margin pool with 5 USDG + $5 of stock, authorize and unpause the MarginRouter,
+// Opens the deployed mainnet markets (the v1.0 launch: TSLA, AMZN, PLTR, AMD, NVDA) at the chosen size:
+//   per market: lower caps, USDG into the long pair, stock into the short pair (amounts from MAINNET_ENABLE_SIZE),
+//   seed the empty margin pool with USDG and the same USD value of stock, authorize and unpause the MarginRouter,
 //   then set both markets to NORMAL. LeverageRouter, ShortRouter, AutoProtect and the vault
 //   stay paused. Funds sent to the pairs cannot be withdrawn; the pool LP tokens can.
 //
@@ -65,7 +65,8 @@ const SIZES = {
     },
   },
 };
-const SIZE_NAME = process.env.MAINNET_ENABLE_SIZE ?? "micro";
+// The shell wins, then the profile (init-mainnet-profile.sh writes the owner's choice there), then micro.
+const SIZE_NAME = process.env.MAINNET_ENABLE_SIZE ?? (existsSync(profile) ? parseEnv(readFileSync(profile, "utf8")).MAINNET_ENABLE_SIZE : undefined) ?? "micro";
 const SIZE = SIZES[SIZE_NAME];
 if (!SIZE) throw Error("MAINNET_ENABLE_SIZE_MUST_BE_NANO_MICRO_OR_DEMO");
 const LONG_DEBT_LIQUIDITY = SIZE.longDebtLiquidity;
@@ -134,7 +135,7 @@ function buildOperations(record, config, poolStock, deadline) {
     call(`${s}-caps-short`, a.registry, registryAbi, "updateCaps", [ids.shortMarketId, CAPS.short.supply, CAPS.short.borrow]);
     call(`${s}-fund-long`, usdg, v.erc20Abi, "transfer", [a[`long-${s}`], LONG_DEBT_LIQUIDITY]);
     call(`${s}-fund-short`, m.token, v.erc20Abi, "transfer", [a[`short-${s}`], SHORT_STOCK_LIQUIDITY]);
-    // poolStock is 0 when the reused Uniswap V2 pool already holds liquidity: seedLiquidity only accepts an empty pool.
+    // poolStock is 0 when the pool already holds liquidity: seedLiquidity only accepts an empty pool.
     if (poolStock[m.symbol] > 0n) {
       call(`${s}-approve-stock`, m.token, v.erc20Abi, "approve", [router, poolStock[m.symbol]]);
       call(`${s}-approve-usdg`, usdg, v.erc20Abi, "approve", [router, POOL_USDG]);
@@ -247,6 +248,8 @@ try {
   const { env, account } = loadProfile();
   const record = JSON.parse(readFileSync("packages/contracts/deployments/mainnet-4663.json", "utf8"));
   const config = JSON.parse(readFileSync("scripts/mainnet-full-deploy.config.json", "utf8"));
+  // Only markets that are deployed (in the record); later-release markets in the config are added by add-rh-mainnet-market.
+  config.markets = config.markets.filter((m) => record.markets[m.symbol]);
   const only = (process.env.MAINNET_ENABLE_MARKETS ?? "").split(",").map((x) => x.trim().toUpperCase()).filter(Boolean);
   if (only.length) {
     check(only.every((x) => config.markets.some((m) => m.symbol === x)), "UNKNOWN_MARKET_IN_MAINNET_ENABLE_MARKETS");
@@ -269,7 +272,7 @@ try {
     for (const m of config.markets) {
       const price = await main.client.readContract({ address: record.addresses.oracle, abi: oracleAbi, functionName: "getPrice", args: [m.token] });
       prices[m.symbol] = price;
-      // A pool that already holds liquidity (the reused v1 pools do) cannot be seeded again and needs no seed.
+      // A pool that already holds liquidity cannot be seeded again and needs no seed.
       const [seededStock, seededUsdg] = await main.client.readContract({ address: record.addresses[`margin-${m.symbol.toLowerCase()}`], abi: marginAbi, functionName: "reserves" });
       // Otherwise: same USD value as POOL_USDG (6 decimals), converted at the oracle price (18 decimals).
       poolStock[m.symbol] = seededStock > 0n || seededUsdg > 0n ? 0n : (POOL_USDG * 10n ** 12n * 10n ** BigInt(m.decimals)) / price;

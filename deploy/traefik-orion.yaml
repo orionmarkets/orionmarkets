@@ -1,0 +1,40 @@
+# Copied to /data/coolify/proxy/dynamic/orion.yaml on the VPS. The Coolify Traefik proxy owns ports 80/443 and issues
+# Let's Encrypt certificates; it reaches the host-side Next.js server through host.docker.internal (docker0).
+http:
+  routers:
+    orion-testnet-http:
+      rule: Host(`testnet.orionmarkets.tech`)
+      entryPoints: [http]
+      middlewares: [orion-https]
+      service: orion-testnet
+    orion-testnet:
+      rule: Host(`testnet.orionmarkets.tech`)
+      entryPoints: [https]
+      service: orion-testnet
+      tls:
+        certResolver: letsencrypt
+    orion-mainnet-http:
+      rule: Host(`orionmarkets.tech`) || Host(`www.orionmarkets.tech`)
+      entryPoints: [http]
+      middlewares: [orion-https]
+      service: orion-mainnet
+    orion-mainnet:
+      rule: Host(`orionmarkets.tech`) || Host(`www.orionmarkets.tech`)
+      entryPoints: [https]
+      service: orion-mainnet
+      tls:
+        certResolver: letsencrypt
+  middlewares:
+    orion-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+  services:
+    orion-testnet:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:3102
+    orion-mainnet:
+      loadBalancer:
+        servers:
+          - url: http://host.docker.internal:3202

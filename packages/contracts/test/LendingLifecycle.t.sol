@@ -197,6 +197,7 @@ contract LendingLifecycleTest is Test {
         module.setPaused(false);
         vm.prank(alice);
         module.setConfig(address(pair), true, 3900, 2000, 1000e6);
+        vm.prank(alice);
         dollar.approve(address(module), 1000e6);
         module.executeAutoProtect(address(pair), alice, 1000e6);
         (, uint256 debt) = pair.accounts(alice);

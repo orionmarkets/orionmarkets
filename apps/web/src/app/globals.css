@@ -16,7 +16,8 @@
    Palette from the logo: signal lime #b0e135 and edge blue #4178ff on night #070b0a.
    Dark is the default (layout.tsx). .theme-inverse marks regions that stay dark in both themes (footer, hero plates). */
 :root,
-:root[data-theme="light"] {
+:root[data-theme="light"],
+.theme-light {
   color-scheme: light;
   --bg: #f2f4ec;
   --bg-raised: #f7f9f2;
@@ -146,6 +147,10 @@
   background: var(--bg);
   color: var(--text);
 }
+/* Light region inside any theme (landing cards): same tokens as the light theme. */
+.theme-light {
+  color: var(--text);
+}
 
 @layer base {
   * {
@@ -245,11 +250,13 @@
   top: 12px;
 }
 
-/* ── Site chrome: the newt.foundation layout (1440px container, 24px gutter, 80px header) ─────────────── */
+/* ── Site chrome: near full-width container (capped for ultra-wide screens), fluid gutter, 80px header ───── */
 :root {
   --header-h: 72px;
-  --page-max: 1440px;
-  --gutter: 24px;
+  --page-max: 2400px;
+  --gutter: clamp(16px, 3vw, 64px);
+  /* Edge gap of full-bleed landing cards, as on solflare.com. */
+  --edge: clamp(8px, 0.75vw, 16px);
   --ease-newton: cubic-bezier(0.22, 1, 0.36, 1);
 }
 @media (min-width: 768px) {
@@ -1799,7 +1806,7 @@ button:hover .arrow-chip {
   }}
 /* Shared application surfaces follow the landing-page design tokens. */
 .app-page {
-  max-width: 1440px;
+  max-width: var(--page-max);
   margin: 0 auto;
   padding: 54px var(--gutter) 96px;
 }

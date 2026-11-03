@@ -1,0 +1,172 @@
+{
+  "capturedAt": "2026-11-02T13:40:17.648Z",
+  "descriptor": {
+    "chainId": 46630,
+    "owner": "0xd09D9c87ECfe008B4D6D3cEbeAd25103c16d9a7C",
+    "router": "0x7cfe40aca7d4c20cf04063960e757ecc23654f5b",
+    "factory": "0x7d302e518b927f694160b767849a7accab43210f",
+    "pool": "0x4b6CdC36732889d5688B30C83e40c41443E4D9E3",
+    "longPair": "0x945c89d82dfa799bd57b2ffd48670fc4121df567",
+    "short": {
+      "chainId": 46630,
+      "marketId": "0x774e6e71cf4faeb36bd1411ed0f3b6b81860adc0dc298335bba11322f97a1856",
+      "pair": "0xc0db4c227f88bc00c623e7edabd2cf875b7295f7",
+      "registry": "0xa9e6ad391f357c6d55f87c39a4def6f6b5e4d1af",
+      "oracle": "0x0538c74341fdfb7423dc4a11af481da66f358309",
+      "collateral": "0x7E955252E15c84f5768B83c41a71F9eba181802F",
+      "debt": "0xC9f9c86933092BbbfFF3CCb4b105A4A94bf3Bd4E",
+      "collateralSymbol": "USDG",
+      "debtSymbol": "TSLA",
+      "collateralDecimals": 6,
+      "debtDecimals": 18,
+      "codeHashes": {
+        "pair": "0x64eff212c99f8e752c66c0dbdc4c8bda90965700ea4721143577e5e7f7d7bd59",
+        "registry": "0x64eff212c99f8e752c66c0dbdc4c8bda90965700ea4721143577e5e7f7d7bd59",
+        "oracle": "0x7fe0ae887b80f1d19aa28fdbeb7ee22ebf79a56b7bab825dd287ca5dc6f6d816",
+        "collateral": "0x864cc9ad53b338b82da1f7cab85ab0b3d5c8861acb422b6fec63cf36234f36a6",
+        "debt": "0x2f367e6a678e7b30ab613d5963e541e6f4d3ca586de76e2f441fbfeb1a27c440"
+      }
+    },
+    "codeHashes": {
+      "router": "0x64eff212c99f8e752c66c0dbdc4c8bda90965700ea4721143577e5e7f7d7bd59",
+      "factory": "0xbab145d02e7005f0d84c6c1639d39b799b0ea16df99ebbdaf5a14d9da820b4e0",
+      "pool": "0x5b83bdbcc56b2e630f2807bbadd2b0c21619108066b92a58de081261089e9ce5"
+    },
+    "policy": {
+      "maxMarginRaw": "1000000",
+      "slippageBps": 50,
+      "deadlineSeconds": 120,
+      "gasBufferBps": 13000,
+      "maxGasLimit": "1500000",
+      "longLeveragesBps": [
+        20000,
+        50000,
+        100000
+      ],
+      "shortExposureBps": [
+        20000,
+        50000,
+        100000
+      ]
+    }
+  },
+  "seed": {
+    "stockRaw": "28822513011519202",
+    "stableRaw": "11684935"
+  },
+  "lpBalance": "580335411564",
+  "transactions": [
+    {
+      "id": "margin-v1-deploy-factory",
+      "hash": "0x11d96229118e01c7ebeae7615e3b904f7eb20523076a63944614cdae0cd859de",
+      "block": "147073997",
+      "status": "success",
+      "gasWei": "30514990000000"
+    },
+    {
+      "id": "margin-v1-create-pool",
+      "hash": "0xa9c7a33a8d5f3b08765828cfd13c010f931d526bf42520c6c442ba882e564276",
+      "block": "147074035",
+      "status": "success",
+      "gasWei": "25241140000000"
+    },
+    {
+      "id": "margin-v1-deploy-shortOracle",
+      "hash": "0xdfa8cde448bdaac8a8c466f623454adee6e4ff56bfe40ddef9faa1c954a33d47",
+      "block": "147074078",
+      "status": "success",
+      "gasWei": "3596030000000"
+    },
+    {
+      "id": "margin-v1-deploy-shortPair-implementation",
+      "hash": "0xe2f93695ca0ce07fd824bbcaf3daa949cb4317c38de0cb21a5027fc8bf0e6827",
+      "block": "147074125",
+      "status": "success",
+      "gasWei": "22376570000000"
+    },
+    {
+      "id": "margin-v1-deploy-shortPair",
+      "hash": "0x4cf16857905ac1d387e1ccb3272142c732b1690362351aeea146c938137a54f8",
+      "block": "147074159",
+      "status": "success",
+      "gasWei": "3720490000000"
+    },
+    {
+      "id": "margin-v1-register-short",
+      "hash": "0xaf0d0a5b99ba7f85bec3bc3f98779b207d3e70eaf2aa01b17abcb0020c16b9cd",
+      "block": "147074204",
+      "status": "success",
+      "gasWei": "3160360000000"
+    },
+    {
+      "id": "margin-v1-pause-short",
+      "hash": "0x0d03fedd355d7ce3c64cd41b02cac7f0f46cd1e755428f65cf956e83c08386df",
+      "block": "147074246",
+      "status": "success",
+      "gasWei": "377590000000"
+    },
+    {
+      "id": "margin-v1-risk-short",
+      "hash": "0x0f6bfec155a13fb5fd4b866e1e7a7a75fea60c0d75e0b16544417a719fe980e2",
+      "block": "147074285",
+      "status": "success",
+      "gasWei": "631130000000"
+    },
+    {
+      "id": "margin-v1-deploy-router-implementation",
+      "hash": "0xd5f0f9e4f6382f1fc6b121d8709bba7227858d5c6a9edad95964078a9d372442",
+      "block": "147074326",
+      "status": "success",
+      "gasWei": "24932020000000"
+    },
+    {
+      "id": "margin-v1-deploy-router",
+      "hash": "0x1549dbaf024c2f7baadf2951db29ef994d4332853b9d50ab2e3dfdcfbbd379e1",
+      "block": "147074374",
+      "status": "success",
+      "gasWei": "3312100000000"
+    },
+    {
+      "id": "margin-v1-approve-seed-stock",
+      "hash": "0x7542dce860cada4faf709d8fb657385435604ffd36efb9ab909d5f9ab9fd1543",
+      "block": "147074429",
+      "status": "success",
+      "gasWei": "606000000000"
+    },
+    {
+      "id": "margin-v1-approve-seed-stable",
+      "hash": "0xe7fcd309fdb2d7f92a3642e4c7eef4d01e4c0e19e96c084f06f0372110ae016c",
+      "block": "147074471",
+      "status": "success",
+      "gasWei": "579760000000"
+    },
+    {
+      "id": "margin-v1-seed-pool",
+      "hash": "0xc93b165736e1ca1cd819b21abbef0f4a7c96de95087fa24e41b9150234edecc4",
+      "block": "147074511",
+      "status": "success",
+      "gasWei": "2831770000000"
+    },
+    {
+      "id": "margin-v1-fund-short",
+      "hash": "0x464bd4e1b61dda26ab6ad813aed424029c902ebbdf40e5e7980c64db16601e52",
+      "block": "147074557",
+      "status": "success",
+      "gasWei": "776590000000"
+    },
+    {
+      "id": "margin-v1-authorize-router",
+      "hash": "0x8a50f86a52441f001efad0dfbe3d294dbf3978ce3bf8a087b176ba7b9da1d74c",
+      "block": "147074603",
+      "status": "success",
+      "gasWei": "553050000000"
+    },
+    {
+      "id": "margin-v1-unpause-router",
+      "hash": "0x1023a3ed1731b8947209b0cbef6fbb491ad6345a0edacb44edc415606e3ccca9",
+      "block": "147074649",
+      "status": "success",
+      "gasWei": "344940000000"
+    }
+  ]
+}

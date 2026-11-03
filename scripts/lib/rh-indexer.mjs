@@ -56,18 +56,32 @@ export async function verifyIndexerIdentity(client, d, start) {
       throw Error("INDEXER_CODE_MISMATCH");
   }
   if (start <= 0n || start > head) throw Error("INDEXER_START_INVALID");
-  const before = await client.getCode({
-    address: d.pair,
-    blockNumber: start - 1n,
-  });
-  const at = await client.getCode({ address: d.pair, blockNumber: start });
-  if (
-    (before && before !== "0x") ||
-    !at ||
-    at === "0x" ||
-    !same(v.keccak256(at), d.codeHashes.pair)
-  )
-    throw Error("INDEXER_START_NOT_DEPLOYMENT");
+  try {
+    const before = await client.getCode({
+      address: d.pair,
+      blockNumber: start - 1n,
+    });
+    const at = await client.getCode({ address: d.pair, blockNumber: start });
+    if (
+      (before && before !== "0x") ||
+      !at ||
+      at === "0x" ||
+      !same(v.keccak256(at), d.codeHashes.pair)
+    )
+      throw Error("INDEXER_START_NOT_DEPLOYMENT");
+  } catch (error) {
+    if (!/historical state .* not available|missing trie node/.test(String(error?.details))) throw error;
+    // Pruned node: logs outlive state. An ERC1967 proxy emits Upgraded in its creation transaction, so the start
+    // block must hold the pair's Upgraded log.
+    const upgraded = await client.getLogs({
+      address: d.pair,
+      event: v.parseAbiItem("event Upgraded(address indexed implementation)"),
+      fromBlock: start,
+      toBlock: start,
+    });
+    if (!upgraded.length)
+      throw Error("INDEXER_START_NOT_DEPLOYMENT");
+  }
   const m = await client.readContract({
     address: d.registry,
     abi: OrionMarketRegistryABI,

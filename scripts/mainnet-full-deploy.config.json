@@ -132,7 +132,6 @@
       "maxAge": 93600,
       "minPrice18": "23000000000000000000",
       "maxPrice18": "2400000000000000000000",
-      "addedAfterLaunch": true,
       "long": {
         "slug": "orion-nvda-usdg-mainnet",
         "maxLtvBps": 5000,

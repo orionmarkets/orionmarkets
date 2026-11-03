@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
 import { useReferencePrices } from '../../hooks/useReferencePrices';
+import { AUTOPROTECT_LIVE, AUTOPROTECT_VISIBLE } from '../../lib/release';
 import { assetCatalog } from '../../lib/asset-catalog';
-import { Constellation } from '../orion/Constellation';
-import { entryLtv, liquidationRatio, LIQ_LTV } from '../../lib/position-math';
+import { entryLtv, liquidationRatio, LEVERAGES, LIQ_LTV } from '../../lib/position-math';
 
 const FEATURED = assetCatalog.filter((a) => a.featured);
 
@@ -26,13 +26,13 @@ function ObserveVisual() {
 }
 
 function AimVisual() {
-  const [lev, setLev] = useState(1.5);
+  const [lev, setLev] = useState(LEVERAGES.long[LEVERAGES.long.length - 1]);
   const ltv = entryLtv('long', lev) * 100;
   const move = (1 - liquidationRatio('long', lev)) * 100;
   return (
     <div className="hunt-aim">
       <div className="hunt-aim-chips" role="radiogroup" aria-label="Long leverage">
-        {[1.25, 1.5].map((x) => (
+        {LEVERAGES.long.map((x) => (
           <button key={x} type="button" role="radio" aria-checked={lev === x} onClick={() => setLev(x)} className="chip">
             {x}× long
           </button>
@@ -81,6 +81,8 @@ function TakeVisual({ active }: { active: boolean }) {
   );
 }
 
+const TONES = ['lime', 'blue', 'mist'];
+
 const STEPS = [
   {
     n: '01',
@@ -94,14 +96,14 @@ const STEPS = [
     title: 'Aim',
     line: 'Pick your line.',
     body: 'Choose a direction and size. Longs multiply exposure with borrowed USDG; shorts borrow the stock and sell it. Entry LTV and the liquidation price are on screen before you sign.',
-    specs: ['1.25× · 1.5× long', '1.0× · 1.25× short'],
+    specs: [`${LEVERAGES.long.join('× · ')}× long`, `${LEVERAGES.short.join('× · ')}× short`],
   },
   {
     n: '03',
     title: 'Take position',
     line: 'Commit in one transaction.',
-    body: 'The router borrows, swaps and posts collateral atomically inside an isolated pair. Auto-Protect watches health and trims exposure before a liquidation line is reached.',
-    specs: ['Atomic router call', 'Keeper-driven Auto-Protect'],
+    body: 'The router borrows, swaps and posts collateral atomically inside an isolated pair.' + (AUTOPROTECT_VISIBLE && AUTOPROTECT_LIVE ? ' Auto-Protect watches health and trims exposure before a liquidation line is reached.' : ''),
+    specs: ['Atomic router call', AUTOPROTECT_VISIBLE && AUTOPROTECT_LIVE ? 'Keeper-driven Auto-Protect' : 'Isolated pair per equity'],
   },
 ];
 
@@ -118,9 +120,9 @@ export function Hunt() {
   }, []);
 
   return (
-    <section ref={ref} id="how-it-works" className="landing-section" aria-labelledby="hunt-title">
-      <header className="section-head section-head-split">
-        <span className="kicker">The hunt</span>
+    <section ref={ref} id="how-it-works" className="sf-section" aria-labelledby="hunt-title">
+      <header className="sf-intro">
+        <span className="sf-eyebrow">The hunt</span>
         <h2 id="hunt-title" className="display-lg">
           Observe. Aim. <span className="hl">Take position.</span>
         </h2>
@@ -128,42 +130,28 @@ export function Hunt() {
           A hunter reads the sky before the shot. ORIONMARKETS runs on the same sequence: clean prices, a defined line,
           a single committed transaction.
         </p>
-        <dl className="head-specs">
-          <div>
-            <dt>Price source</dt>
-            <dd>Robinhood stock reference</dd>
-          </div>
-          <div>
-            <dt>Oracle guard</dt>
-            <dd>Max age · spread bound</dd>
-          </div>
-          <div>
-            <dt>Execution</dt>
-            <dd>1 transaction · atomic</dd>
-          </div>
-          <div>
-            <dt>Protection</dt>
-            <dd>Auto-Protect keeper</dd>
-          </div>
-        </dl>
       </header>
-      <div className="hunt-grid">
+      <div className="sf-rows">
         {STEPS.map((s, i) => (
-          <article key={s.n} className="hunt-card fx-card">
-            <Constellation seed={s.title} className="hunt-stars" stars={6} dense={30} />
-            <div className="hunt-card-head">
-              <span className="hunt-n">{s.n}</span>
-              <h3>{s.title}</h3>
+          <div key={s.n} className="sf-split" data-flip={i % 2 === 1 || undefined}>
+            <div className={`sf-card sf-visual sf-tone-${TONES[i]}`}>
+              <div className="sf-device theme-inverse">
+                {i === 0 ? <ObserveVisual /> : i === 1 ? <AimVisual /> : <TakeVisual active={seen} />}
+              </div>
             </div>
-            <p className="hunt-line">{s.line}</p>
-            <div className="hunt-visual">{i === 0 ? <ObserveVisual /> : i === 1 ? <AimVisual /> : <TakeVisual active={seen} />}</div>
-            <p className="hunt-body">{s.body}</p>
-            <ul className="spec-list">
-              {s.specs.map((x) => (
-                <li key={x}>{x}</li>
-              ))}
-            </ul>
-          </article>
+            <article className="sf-card sf-copy theme-light">
+              <span className="sf-eyebrow">
+                {s.n} · {s.line}
+              </span>
+              <h3 className="sf-title">{s.title}</h3>
+              <p>{s.body}</p>
+              <ul className="spec-list">
+                {s.specs.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            </article>
+          </div>
         ))}
       </div>
     </section>

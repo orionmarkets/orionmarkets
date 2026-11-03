@@ -4,9 +4,9 @@
  */
 export type Side = 'long' | 'short';
 
-/** Testnet TSLA policy: long pair liquidates at 65% LTV, short pair at 80% (scripts/rh-live.mjs, testnet-glue.mjs). */
-export const LIQ_LTV: Record<Side, number> = { long: 0.65, short: 0.8 };
-export const LEVERAGES: Record<Side, number[]> = { long: [1.25, 1.5], short: [1, 1.25] };
+/** Testnet TSLA policy: both pairs liquidate at 97% LTV (packages/contracts/deployments, scripts/testnet-glue.mjs). */
+export const LIQ_LTV: Record<Side, number> = { long: 0.97, short: 0.97 };
+export const LEVERAGES: Record<Side, number[]> = { long: [2, 5, 10], short: [2, 5, 10] };
 
 export function entryLtv(side: Side, lev: number): number {
   return side === 'long' ? (lev - 1) / lev : lev / (1 + lev);

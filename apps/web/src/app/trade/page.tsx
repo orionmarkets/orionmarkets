@@ -172,24 +172,14 @@ function PonsTradeWorkspace() {
   if (!market) {
     return (
       <div className="trade-page flex flex-col items-center justify-center min-h-[40vh] text-center">
-        <p className="text-ink text-base font-bold mb-2">Market not found</p>
-        <p className="text-[var(--muted)] text-sm mb-4">No active market found for {assetQuery || "requested asset"}.</p>
-        <a href="/trade" className="px-4 py-2 btn-silver rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
-          Return to Trade
+        <p className="text-ink text-base font-bold mb-2">Pick your market</p>
+        <p className="text-[var(--muted)] text-sm mb-4">Choose a tokenized equity to go long or short with USDG margin.</p>
+        <a href="/markets" className="app-button">
+          Browse markets ↗
         </a>
       </div>
     );
   }
-
-  const activeOracleStatus = oracleStatus || {
-    asset: market.symbol,
-    primaryPrice: market.price,
-    twapPrice: market.price,
-    isSafe: true,
-    deviationBps: 0,
-    lastUpdate: Date.now(),
-    status: "HEALTHY",
-  };
 
   return (
     <div className="trade-page">
@@ -237,7 +227,7 @@ function PonsTradeWorkspace() {
               </div>
             </div>
           </div>
-          <OracleHealthIndicator status={activeOracleStatus as any} />
+          <OracleHealthIndicator status={oracleStatus} />
         </div>
       </div>
 

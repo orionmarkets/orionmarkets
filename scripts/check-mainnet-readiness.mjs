@@ -6,17 +6,21 @@ import { createRequire } from "node:module";
 //   MIN_POOL_USDG   minimum USDG on each swap pool side (default 100)
 //   MIN_PAIR_USDG   minimum USDG held by each long pair (default 100)
 //   MIN_OWNER_ETH   minimum ETH on the project wallet (default 0.002)
+//   RELEASE_VERSION release being opened (default 1, docs/RELEASES.md): AutoProtect is checked from 2, the vault and
+//                   the Earn catalog from 3; below that they must stay paused.
 const require = createRequire(new URL("../apps/keeper/package.json", import.meta.url));
 const v = require("viem");
 
 const RPC = "https://rpc.mainnet.chain.robinhood.com";
-const WEB = "https://www.orionmarkets.live";
-const API = "https://orion-protocol-mainnet-api.vercel.app/api/v1";
+const WEB = process.env.ORION_WEB_URL ?? "https://orionmarkets.tech";
+// The API listens on 127.0.0.1 of the VPS (docs/HOSTING.md): run this there, or point ORION_API_URL at a tunnel.
+const API = process.env.ORION_API_URL ?? "http://127.0.0.1:3201/api/v1";
 const record = JSON.parse(readFileSync("packages/contracts/deployments/mainnet-4663.json", "utf8"));
 const a = record.addresses;
 const minPool = BigInt(Math.round(Number(process.env.MIN_POOL_USDG ?? 100) * 1e6));
 const minPair = BigInt(Math.round(Number(process.env.MIN_PAIR_USDG ?? 100) * 1e6));
 const minEth = v.parseEther(process.env.MIN_OWNER_ETH ?? "0.002");
+const release = Number(process.env.RELEASE_VERSION ?? 1);
 
 const client = v.createPublicClient({ transport: v.http(RPC) });
 const abi = v.parseAbi([
@@ -48,16 +52,18 @@ await attempt("wallet", "project wallet gas", async () => {
   return [balance >= minEth, `${v.formatEther(balance)} ETH`];
 });
 
-for (const [name, key, fn] of [
-  ["LeverageRouter unpaused", "leverageRouter", "isPaused"],
-  ["ShortRouter unpaused", "shortRouter", "isPaused"],
-  ["AutoProtect unpaused", "autoProtect", "isPaused"],
-  ["Vault deposits open", "vault", "depositsPaused"],
-])
-  await attempt("contracts", name, async () => {
+for (const [name, key, fn, from] of [
+  ["LeverageRouter", "leverageRouter", "isPaused", 1],
+  ["ShortRouter", "shortRouter", "isPaused", 1],
+  ["AutoProtect", "autoProtect", "isPaused", 2],
+  ["Vault deposits", "vault", "depositsPaused", 3],
+]) {
+  const open = release >= from;
+  await attempt("contracts", `${name} ${open ? "open" : "paused (later release)"}`, async () => {
     const paused = await read(a[key], fn);
-    return [!paused, paused ? "paused" : "open"];
+    return [paused !== open, paused ? "paused" : "open"];
   });
+}
 
 for (const [symbol, market] of Object.entries(record.markets)) {
   const s = symbol.toLowerCase();
@@ -95,7 +101,7 @@ await attempt("backend", "API /markets has rows", async () => {
   const { status, body } = await json(`${API}/markets`);
   return [status === 200 && body?.count > 0, `HTTP ${status}, count ${body?.count}`];
 });
-await attempt("backend", "API /vaults has rows", async () => {
+if (release >= 3) await attempt("backend", "API /vaults has rows", async () => {
   const { status, body } = await json(`${API}/vaults`);
   return [status === 200 && body?.count > 0, `HTTP ${status}, count ${body?.count}`];
 });

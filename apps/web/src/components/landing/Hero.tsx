@@ -8,14 +8,15 @@ import { useReferencePrices } from '../../hooks/useReferencePrices';
 import { assetCatalog } from '../../lib/asset-catalog';
 import { MAX_LEVERAGE_LABEL } from '../../lib/leverage';
 import { env } from '../../env.mjs';
+import { AUTOPROTECT_LIVE, AUTOPROTECT_VISIBLE } from '../../lib/release';
 
 // WebGL only on the client, after the copy has painted.
 const OrionSky = dynamic(() => import('../orion/OrionSky').then((m) => m.OrionSky), { ssr: false });
 
 const FACTS = [
+  ...(AUTOPROTECT_VISIBLE ? [AUTOPROTECT_LIVE ? 'Auto-Protect keeper' : 'Auto-Protect · in validation'] : []),
   'Isolated pair per equity',
   'USDG debt · ERC-4626 vault',
-  'Auto-Protect keeper',
   'UUPS proxies · ERC-1967',
   'Freshness-guarded oracle',
   'One-transaction long & short',
@@ -27,13 +28,14 @@ function Tape() {
   const items = [
     ...assetCatalog
       .filter((a) => a.category !== 'China')
-      .map((a) => ({ key: a.ticker, label: a.ticker, value: refs.last(a.ticker) ?? a.name })),
-    ...FACTS.map((f) => ({ key: f, label: '◆', value: f })),
+      .map((a) => ({ key: a.ticker, label: a.ticker, value: refs.last(a.ticker) ?? a.name, logo: a.image })),
+    ...FACTS.map((f) => ({ key: f, label: '◆', value: f, logo: undefined })),
   ];
   const row = (hidden: boolean) => (
     <div className="tape-row" aria-hidden={hidden || undefined}>
       {items.map((item) => (
         <span className="tape-item" key={item.key}>
+          {item.logo && <img className="tape-logo" src={item.logo} alt="" draggable={false} />}
           <b>{item.label}</b>
           <span>{item.value}</span>
         </span>

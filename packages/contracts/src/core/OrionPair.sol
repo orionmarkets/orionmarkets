@@ -42,8 +42,12 @@ contract OrionPair is Initializable, ReentrancyGuardTransient, OwnableUpgradeabl
     uint256 public totalSupplyCollateral;
     uint256 public totalBorrowedDebt;
 
-    // Liquidation bonus: 5% (500 bps)
+    // Liquidation bonus in bps: 500 (5%) at initialization, owner-adjustable within [MIN, MAX]_LIQUIDATION_BONUS_BPS.
     uint256 public liquidationBonusBps;
+    uint256 public constant MIN_LIQUIDATION_BONUS_BPS = 50;
+    uint256 public constant MAX_LIQUIDATION_BONUS_BPS = 1000;
+
+    event LiquidationBonusUpdated(uint256 bonusBps);
 
     event CollateralDeposited(address indexed user, uint256 amount);
     event CollateralWithdrawn(address indexed user, uint256 amount);
@@ -84,6 +88,21 @@ contract OrionPair is Initializable, ReentrancyGuardTransient, OwnableUpgradeabl
         debtToken = IERC20(_debtToken);
         oracle = CompositeSanityOracle(_oracle);
         registry = OrionMarketRegistry(_registry);
+    }
+
+    /**
+     * @notice Sets the liquidation bonus. High-leverage markets need a small bonus: a liquidation only covers its debt
+     *         while LTV * (1 + bonus) <= 100%, so the bonus must fit inside the market's liquidation LTV headroom.
+     */
+    function setLiquidationBonus(uint256 bonusBps) external onlyOwner {
+        require(
+            bonusBps >= MIN_LIQUIDATION_BONUS_BPS && bonusBps <= MAX_LIQUIDATION_BONUS_BPS,
+            "Pair: Invalid liquidation bonus"
+        );
+        OrionMarketRegistry.MarketConfig memory m = registry.getMarket(marketId);
+        require(m.liquidationLtvBps * (10_000 + bonusBps) <= 10_000 * 10_000, "Pair: Bonus exceeds LTV headroom");
+        liquidationBonusBps = bonusBps;
+        emit LiquidationBonusUpdated(bonusBps);
     }
 
     function setOperator(address operator, bool approved) external {

@@ -1,0 +1,57 @@
+{
+  "capturedAt": "2026-11-02T13:53:11.463Z",
+  "markets": [
+    {
+      "symbol": "TSLA",
+      "side": "long",
+      "capturedAt": "2026-11-02T13:53:10.058Z",
+      "chainId": 46630,
+      "pair": "0x945c89d82dfa799bd57b2ffd48670fc4121df567",
+      "headAtStart": "147080217",
+      "targetBlock": "147080216",
+      "head": "147080228",
+      "safeHead": "147080227",
+      "lagBlocks": "11",
+      "checkpoint": "147080216",
+      "reconciled": true,
+      "committedBatches": 1,
+      "newEvents": 0,
+      "totalEvents": 8,
+      "accounts": {
+        "0xd09d9c87ecfe008b4d6d3cebead25103c16d9a7c": {
+          "collateral": "0",
+          "debt": "0"
+        }
+      },
+      "targetReached": true,
+      "caughtUp": false
+    },
+    {
+      "symbol": "TSLA",
+      "side": "short",
+      "capturedAt": "2026-11-02T13:53:11.463Z",
+      "chainId": 46630,
+      "pair": "0xc0db4c227f88bc00c623e7edabd2cf875b7295f7",
+      "headAtStart": "147080228",
+      "targetBlock": "147080227",
+      "head": "147080236",
+      "safeHead": "147080235",
+      "lagBlocks": "8",
+      "checkpoint": "147080227",
+      "reconciled": true,
+      "committedBatches": 1,
+      "newEvents": 0,
+      "totalEvents": 4,
+      "accounts": {
+        "0xd09d9c87ecfe008b4d6d3cebead25103c16d9a7c": {
+          "collateral": "0",
+          "debt": "0"
+        }
+      },
+      "targetReached": true,
+      "caughtUp": false
+    }
+  ],
+  "configuredPairs": 2,
+  "caughtUp": false
+}
