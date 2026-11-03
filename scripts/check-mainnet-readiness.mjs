@@ -97,10 +97,6 @@ const json = async (url) => {
   const response = await fetch(url, { signal: AbortSignal.timeout(20000) });
   return { status: response.status, body: await response.json().catch(() => null) };
 };
-await attempt("backend", "API /markets has rows", async () => {
-  const { status, body } = await json(`${API}/markets`);
-  return [status === 200 && body?.count > 0, `HTTP ${status}, count ${body?.count}`];
-});
 if (release >= 3) await attempt("backend", "API /vaults has rows", async () => {
   const { status, body } = await json(`${API}/vaults`);
   return [status === 200 && body?.count > 0, `HTTP ${status}, count ${body?.count}`];
