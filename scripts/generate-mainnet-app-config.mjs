@@ -24,8 +24,9 @@ const record = JSON.parse(
 const config = JSON.parse(
   readFileSync("scripts/mainnet-full-deploy.config.json", "utf8"),
 );
+// MAINNET_RPC_URL lets a fork rehearsal (scripts/raise-mainnet-leverage.mjs) read its own chain state.
 const client = v.createPublicClient({
-  transport: v.http("https://rpc.mainnet.chain.robinhood.com"),
+  transport: v.http(process.env.MAINNET_RPC_URL || "https://rpc.mainnet.chain.robinhood.com"),
 });
 const codeHash = async (address) => {
   const code = await client.getCode({ address });
@@ -43,17 +44,25 @@ const [registryHash, oracleHash, usdgHash, factoryHash] = await Promise.all([
   codeHash(a.v2Factory),
 ]);
 // Same execution limits as the accepted testnet margin plan, within each market's caps.
-const policy = {
+const basePolicy = {
   maxMarginRaw: "10000000",
   slippageBps: 50,
   deadlineSeconds: 120,
   gasBufferBps: 13000,
   maxGasLimit: "1500000",
   longLeveragesBps: [12500, 15000],
-  // The mainnet short markets cap LTV at 40% (maxLtvBps 4000). A short of exposure e (debt value over margin) opens at
+  // The launch short markets cap LTV at 40% (maxLtvBps 4000). A short of exposure e (debt value over margin) opens at
   // about e / (1 + e) LTV, so 100% and 125% exposure (testnet values, 60% cap there) revert with "Max LTV limit".
   shortExposureBps: [5000, 6000],
 };
+// After raise-mainnet-leverage.mjs (both pairs at 94% max LTV) a market offers 2x, 5x and 10x on both sides, like testnet.
+// The policy follows the chain, so the website never offers a multiple the market would reject.
+const HIGH_LEVERAGE_LTV_BPS = 9400n;
+const highPolicy = { ...basePolicy, longLeveragesBps: [20000, 50000, 100000], shortExposureBps: [20000, 50000, 100000] };
+const registryAbi = v.parseAbi([
+  "function getMarket(bytes32) view returns ((bytes32 marketId,string slug,address collateralToken,address debtToken,address pairAddress,address oracle,uint8 riskTier,uint8 status,uint256 maxLtvBps,uint256 liquidationLtvBps,uint256 maxLeverageBps,uint256 supplyCap,uint256 borrowCap))",
+]);
+const maxLtv = async (id) => (await client.readContract({ address: a.registry, abi: registryAbi, functionName: "getMarket", args: [id] })).maxLtvBps;
 
 const tokens = { USDG: usdg };
 const pairs = {};
@@ -74,6 +83,8 @@ for (const m of config.markets.filter((x) => record.markets?.[x.symbol] && x.web
       codeHash(a[`pool-${s}`]),
     ]);
   const market = record.markets[m.symbol];
+  const [longLtv, shortLtv] = await Promise.all([maxLtv(market.longMarketId), maxLtv(market.shortMarketId)]);
+  const policy = longLtv >= HIGH_LEVERAGE_LTV_BPS && shortLtv >= HIGH_LEVERAGE_LTV_BPS ? highPolicy : basePolicy;
   const long = {
     chainId: CHAIN_ID,
     marketId: market.longMarketId,
