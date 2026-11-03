@@ -9,6 +9,7 @@ import { CaChip } from './CaChip';
 import { PONS_VISIBLE } from '../lib/pons-visible';
 import { EARN_VISIBLE } from '../lib/earn-visible';
 import { CHINA_VISIBLE } from '../lib/china-visible';
+import { env } from '../env.mjs';
 
 const COLUMNS: Array<{ label: string; links: Array<{ name: string; href: string }> }> = [
     {
@@ -99,6 +100,7 @@ export function Footer() {
                 <div className="site-footer-bottom">
                     <div className="site-footer-legal">
                         <span>© 2026 ORIONMARKETS</span>
+                        <span>ORION v{env.RELEASE_VERSION}.0</span>
                         <a href="#main" onClick={scrollToTop}>
                             Back to top ↑
                         </a>
