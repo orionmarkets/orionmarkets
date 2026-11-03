@@ -268,6 +268,7 @@ try {
   const { env, account } = loadProfile();
   const record = JSON.parse(readFileSync(recordPath, "utf8"));
   const config = JSON.parse(readFileSync(configPath, "utf8"));
+  check(/^0x[0-9a-fA-F]{40}$/.test(config.market?.token ?? ""), "PONS_MARKET_TOKEN_REQUIRED");
   check(same(record.owner, account.address), "SIGNER_IS_NOT_PROTOCOL_OWNER");
   mkdirSync(directory, { recursive: true, mode: 0o700 });
   privateUntracked(directory);

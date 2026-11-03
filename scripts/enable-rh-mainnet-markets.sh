@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Interactive opening of the four Robinhood Chain MAINNET markets at minimum demo size.
+# Interactive opening of the deployed Robinhood Chain MAINNET markets (v1.0: TSLA, AMZN, PLTR, AMD, NVDA).
 # Needs, in the deployer wallet, the USDG and stock amounts printed by the plan (size: MAINNET_ENABLE_SIZE).
 # Resumable: every transaction is journaled in .secrets/rh-mainnet-enable.
 set -euo pipefail

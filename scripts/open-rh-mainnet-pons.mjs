@@ -7,7 +7,7 @@ import { acquireLock } from "./lib/process-lock.mjs";
 
 // Opens Pons leverage for one graduated token (MAINNET_PONS_OPEN=<symbol> from
 // scripts/mainnet-pons-deploy.config.json "openMarkets"). Operations, all from the deployer (owner):
-//   - oracle.listAsset + manager.setMarket for the token (2x, same caps as LEVIER)
+//   - oracle.listAsset + manager.setMarket for the token (2x, same caps as the main Pons market)
 //   - swap ETH to USDG on Uniswap v3 (USDG/WETH 0.01%), open vault deposits, deposit the seed
 //   - poke the oracle every 4 minutes until the 30-minute TWAP is ready, then unpause opening
 //   - optional smoke trade (--test): open a tiny 2x long, wait out the hold time, close it

@@ -18,7 +18,7 @@ import { acquireLock } from "./lib/process-lock.mjs";
 // initialized in its creation transaction, so the proxy address stays fixed across upgrades:
 // registry, lending router, AutoProtect, ShortRouter, LeverageRouter, vault, VerifiedFeedOracle,
 // a long and a short OrionPair per market (one shared implementation) and one MarginRouter per
-// market. The v1 Uniswap V2 factory and its empty pools are reused. Every market is registered
+// market, plus ORION's own Uniswap V2 factory and one pool per market. Every market is registered
 // PAUSED, every module starts paused, and only the lending router is authorized.
 //
 //   --plan    rehearses the whole sequence on a local anvil fork of mainnet (no mainnet tx)
@@ -33,7 +33,6 @@ const { privateKeyToAccount } = require("viem/accounts");
 const profile = ".env.mainnet.core.local";
 const configPath = "scripts/mainnet-full-deploy.config.json";
 const directory = ".secrets/rh-mainnet-proxies";
-const v1RecordPath = "packages/contracts/deployments/mainnet-4663-v1.json";
 const recordPath = "packages/contracts/deployments/mainnet-4663.json";
 const CHAIN_ID = 4663;
 const STATUS_PAUSED = 2;
@@ -320,12 +319,21 @@ function buildOperations(env, c, deployer, startNonce) {
     };
   }
 
-  // Reuse the v1 Uniswap V2 factory and its pools: standard, verified and still empty.
-  const v1 = JSON.parse(readFileSync(v1RecordPath, "utf8"));
-  addr.v2Factory = v.getAddress(v1.addresses.v2Factory);
+  // ORION's own Uniswap V2 factory (vendored bytecode, fee setter = owner) and one empty pool per market.
+  // createPair uses CREATE2, so each pool address follows from the factory and the sorted token pair.
+  const factory = vendor("UniswapV2Factory");
+  const pairInitCodeHash = v.keccak256(vendor("UniswapV2Pair").bytecode);
+  deploy("v2Factory", factory, [deployer]);
   for (const m of c.markets) {
     const s = m.symbol.toLowerCase();
-    addr[`pool-${s}`] = v.getAddress(v1.addresses[`pool-${s}`]);
+    const [token0, token1] = [m.token, usdg].sort((a, b) => (BigInt(a) < BigInt(b) ? -1 : 1));
+    call(`create-pool-${s}`, addr.v2Factory, factory.abi, "createPair", [m.token, usdg]);
+    addr[`pool-${s}`] = v.getContractAddress({
+      opcode: "CREATE2",
+      from: addr.v2Factory,
+      salt: v.keccak256(v.encodePacked(["address", "address"], [token0, token1])),
+      bytecodeHash: pairInitCodeHash,
+    });
   }
   for (const m of c.markets) {
     const s = m.symbol.toLowerCase();
@@ -587,7 +595,6 @@ try {
     check(!existsSync(statePath), "JOURNAL_EXISTS_RESUME_WITH_DEPLOY");
     const built = buildOperations(env, c, account.address, latest);
     for (const [role, address] of Object.entries(built.addr)) {
-      if (role === "v2Factory" || role.startsWith("pool-")) continue;
       const code = await main.client.getCode({ address });
       check(!code || code === "0x", `PREDICTED_ADDRESS_HAS_CODE_${role}`);
     }

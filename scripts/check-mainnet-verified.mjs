@@ -101,7 +101,7 @@ const ABOUT = {
 // proxy check: the proxy must be an ERC1967Proxy that Sourcify resolves to the listed implementation.
 function buildList(rec) {
   const a = rec.addresses;
-  const markets = Object.keys(rec.markets).sort((x, y) => ["TSLA", "AMZN", "PLTR", "AMD"].indexOf(x) - ["TSLA", "AMZN", "PLTR", "AMD"].indexOf(y));
+  const markets = Object.keys(rec.markets); // deployment order
   const proxy = (title, name, address, implAddress, about) => ({
     title, about: about ?? ABOUT[name], kind: "orion", addresses: [
       { label: "proxy", address, expect: "ERC1967Proxy", pointsTo: { address: implAddress, name } },
@@ -130,9 +130,9 @@ function buildList(rec) {
   }
   list.push(impl("MarginRouter implementation", "MarginRouter", a["impl-MarginRouter"], "Shared logic behind every margin router below"));
   for (const m of markets) list.push(proxy(`MarginRouter · ${m}`, "MarginRouter", a[`margin-${m.toLowerCase()}`], a["impl-MarginRouter"], `Margin trading for ${m}`));
-  // Reused third-party infrastructure (not deployed by this release)
-  const infra = [{ title: "Uniswap V2 Factory", about: "Swap-pool factory the margin routers use (Uniswap V2, reused)", kind: "uniswap", addresses: [{ label: "contract", address: a.v2Factory, build: "UniswapV2Factory" }] }];
-  for (const m of markets) infra.push({ title: `Uniswap V2 Pool · ${m}/USDG`, about: "Swap pool behind the margin router (Uniswap V2, reused)", kind: "uniswap", addresses: [{ label: "contract", address: a[`pool-${m.toLowerCase()}`], build: "UniswapV2Pair" }] });
+  // Uniswap V2 (standard third-party code, deployed by ORION for its margin pools)
+  const infra = [{ title: "Uniswap V2 Factory", about: "Swap-pool factory the margin routers use (Uniswap V2, deployed by ORION)", kind: "uniswap", addresses: [{ label: "contract", address: a.v2Factory, build: "UniswapV2Factory" }] }];
+  for (const m of markets) infra.push({ title: `Uniswap V2 Pool · ${m}/USDG`, about: "Swap pool behind the margin router (Uniswap V2, created by ORION)", kind: "uniswap", addresses: [{ label: "contract", address: a[`pool-${m.toLowerCase()}`], build: "UniswapV2Pair" }] });
   return [...list, ...infra];
 }
 
@@ -227,7 +227,7 @@ for (const k of contracts) {
   if (k.kind === "uniswap" && !printedInfra) {
     printedInfra = true;
     out(dim("  " + LINE));
-    out(bold(cyan("  REUSED INFRASTRUCTURE")) + dim("  Uniswap V2, standard code that this release reuses. Checked against the Uniswap V2 source in the repo."));
+    out(bold(cyan("  UNISWAP V2")) + dim("  Standard Uniswap V2 code, deployed by ORION for its margin pools. Checked against the Uniswap V2 source in the repo."));
     out();
     await pause(900);
   }

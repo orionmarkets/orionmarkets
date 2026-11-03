@@ -7,6 +7,32 @@ export const OrionPairABI = [
   },
   {
     "type": "function",
+    "name": "MAX_LIQUIDATION_BONUS_BPS",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "MIN_LIQUIDATION_BONUS_BPS",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "UPGRADE_INTERFACE_VERSION",
     "inputs": [],
     "outputs": [
@@ -431,6 +457,19 @@ export const OrionPairABI = [
   },
   {
     "type": "function",
+    "name": "setLiquidationBonus",
+    "inputs": [
+      {
+        "name": "bonusBps",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "setOperator",
     "inputs": [
       {
@@ -625,6 +664,19 @@ export const OrionPairABI = [
         "type": "uint64",
         "indexed": false,
         "internalType": "uint64"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "LiquidationBonusUpdated",
+    "inputs": [
+      {
+        "name": "bonusBps",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
     "anonymous": false

@@ -1,7 +1,10 @@
 {
   "version": 2,
-  "note": "Inputs for scripts/estimate-mainnet-budget.mjs. Gas units come from the read-only `deploy-rh-mainnet-full.mjs --plan` rehearsal on a mainnet fork (45 transactions, 22,905,462 gas, 2026-10-15), plus per-market figures from the same run. Re-measure with `pnpm rh:mainnet:full:plan` before broadcasting.",
-  "targetBandUsd": { "min": 6, "max": 7 },
+  "note": "Inputs for scripts/estimate-mainnet-budget.mjs. Gas units come from the read-only `deploy-rh-mainnet-full.mjs --plan` rehearsal of the ORION v1.0 deploy on a mainnet fork (58 transactions, 40,571,609 gas, 2026-11-03). Re-measure with `pnpm rh:mainnet:full:plan` before broadcasting.",
+  "targetBandUsd": {
+    "min": 6,
+    "max": 7
+  },
   "chainId": 4663,
   "rpcUrl": "https://rpc.mainnet.chain.robinhood.com",
   "ethUsdFeed": "0x78F3556b67E17Df817D51Ef5a990cDaF09E8d3A9",
@@ -12,16 +15,27 @@
   },
   "safetyBufferPct": 25,
   "gasLineItems": [
-    { "name": "Core deploy: registry, router, vault, oracle, 4 markets long+short, 4 margin routers (45 tx)", "gas": 22905462 },
-    { "name": "NVDA market added after launch (2 pairs, 2 registers, 2 pauses, margin router)", "gas": 1837000 },
-    { "name": "Enablement: unpause markets, routers, vault, AutoProtect (about 15 tx, estimated)", "gas": 675000 },
-    { "name": "Pons perp stack + market listing (optional, 10 tx, earlier fork figure)", "gas": 6700000 }
+    {
+      "name": "ORION v1.0 deploy: registry, routers, vault, oracle, AutoProtect, 5 markets long+short, 5 margin routers, Uniswap V2 factory and 5 pools (58 tx)",
+      "gas": 40571609
+    },
+    {
+      "name": "Enablement: caps, pair funding, pool seeding, router authorization and unpause, market opening for 5 markets (about 55 tx, estimated)",
+      "gas": 2750000
+    },
+    {
+      "name": "Pons perp stack + market listing (v3.0, optional, 10 tx, earlier fork figure)",
+      "gas": 6700000
+    }
   ],
   "fixedEthLineItems": [
-    { "name": "Operating reserve for keeper / Auto-Protect transactions (same wallet)", "eth": 0.0005 }
+    {
+      "name": "Operating reserve for keeper / Auto-Protect transactions (v2.0)",
+      "eth": 0.0005
+    }
   ],
   "excluded": [
-    "Seed liquidity tokens for the first market (token cost, about $4.42 for a micro-sized market in an earlier rehearsal; not re-measured)",
+    "Seed liquidity tokens for the five v1.0 markets at micro size (about $5.4 of USDG and stock, bought with ETH by buy-mainnet-market-tokens.mjs; estimated, not rehearsed)",
     "Domain, hosting and database subscriptions"
   ]
 }

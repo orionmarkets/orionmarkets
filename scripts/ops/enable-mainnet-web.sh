@@ -1,46 +1,50 @@
 #!/usr/bin/env bash
-# Turns Lending, Trade and the market pages on (or off) for the mainnet website, then redeploys it.
-#   enable-mainnet-web.sh on    sets the schema-validated launch variables from
-#                               `generate-mainnet-app-config.mjs --launch` in the orion-protocol-mainnet
-#                               Vercel project (Production) and redeploys the latest production build.
-#   enable-mainnet-web.sh off   emergency switch: LENDING_ENABLED and MARGIN_TRADING_ENABLED back to false.
-# Run it only after `scripts/ops/unpause-mainnet.sh` succeeded. TRADING_ENABLED stays false (the web schema
-# rejects it together with lending or margin).
-set -uo pipefail
+# Runs ON the VPS as root, inside /opt/orion/mainnet/repo (docs/HOSTING.md). Writes the mainnet website's deployment
+# values into apps/web/.env, then rebuilds and restarts orionmarkets.tech with deploy/deploy.sh.
+#   enable-mainnet-web.sh addresses   read-only phase: PROTOCOL_ADDRESSES, USDG_ADDRESS and MARKET_DEPLOYMENTS_JSON
+#                                     (every market disabled) from generate-mainnet-app-config.mjs
+#   enable-mainnet-web.sh on          launch: the schema-validated values from generate-mainnet-app-config.mjs --launch
+#                                     (every market enabled, LENDING_ENABLED and MARGIN_TRADING_ENABLED true)
+#   enable-mainnet-web.sh off         emergency switch: LENDING_ENABLED and MARGIN_TRADING_ENABLED back to false
+# Run `on` only after `scripts/ops/unpause-mainnet.sh` succeeded. TRADING_ENABLED stays false (the web schema
+# rejects it together with lending or margin). The values come from packages/contracts/deployments/mainnet-4663.json
+# on the mainnet branch, so commit and promote the ORION deployment record first.
+set -euo pipefail
 cd "$(dirname "$0")/../.."
 
 MODE="${1:-}"
-PROJECT=orion-protocol-mainnet
-SCOPE=rubencahyadi504-9120s-projects
-vc() { vercel "$@" --project "$PROJECT" --scope "$SCOPE"; }
+ENV_FILE=apps/web/.env
+[ -f "$ENV_FILE" ] || { echo "Missing $ENV_FILE: copy apps/web/.env.mainnet.example and fill it in (docs/MAINNET.md, Phase 4)."; exit 1; }
+grep -qE "^NETWORK_MODE='?MAINNET'?$" "$ENV_FILE" || { echo "$ENV_FILE is not a MAINNET profile; refusing to change it."; exit 1; }
+[ "$(git rev-parse --abbrev-ref HEAD)" = "mainnet" ] || { echo "Run this in the mainnet checkout (branch mainnet)."; exit 1; }
 
-set_env() { # name value
-  printf '%s' "$2" | vc env add "$1" production --force >/dev/null || { echo "FAILED to set $1"; exit 1; }
-  echo "set $1"
+# Replaces KEY=... in place (or appends it) as the file's owner, keeping the value literal in single quotes.
+set_env() { sudo -u "$(stat -c %U "$ENV_FILE")" node scripts/ops/set-env-key.mjs "$ENV_FILE" "$1" "$2"; }
+apply() { # "" or --launch, then the keys to copy
+  local values
+  # shellcheck disable=SC2086
+  values="$(node scripts/generate-mainnet-app-config.mjs $1)" || { echo "Config did not validate"; exit 1; }
+  shift
+  for key in "$@"; do set_env "$key" "$(printf '%s' "$values" | jq -j --arg k "$key" '.[$k]')"; done
 }
 
 case "$MODE" in
+  addresses)
+    apply "" USDG_ADDRESS PROTOCOL_ADDRESSES MARKET_DEPLOYMENTS_JSON
+    ;;
   on)
-    LAUNCH="$(node scripts/generate-mainnet-app-config.mjs --launch)" || { echo "Config did not validate"; exit 1; }
-    for key in LENDING_ENABLED MARGIN_TRADING_ENABLED PROTOCOL_ADDRESSES LENDING_DEPLOYMENT_JSON MARGIN_DEPLOYMENT_JSON MARKET_DEPLOYMENTS_JSON; do
-      set_env "$key" "$(printf '%s' "$LAUNCH" | jq -j --arg k "$key" '.[$k]')"
-    done
+    apply --launch USDG_ADDRESS PROTOCOL_ADDRESSES MARKET_DEPLOYMENTS_JSON LENDING_DEPLOYMENT_JSON MARGIN_DEPLOYMENT_JSON LENDING_ENABLED MARGIN_TRADING_ENABLED
     ;;
   off)
     set_env LENDING_ENABLED false
     set_env MARGIN_TRADING_ENABLED false
     ;;
   *)
-    echo "Usage: $0 on|off"
+    echo "Usage: $0 addresses|on|off"
     exit 1
     ;;
 esac
 
-URL="$(vercel ls "$PROJECT" --scope "$SCOPE" 2>&1 | grep -m1 -E 'Ready +Production' | grep -oE 'https://[^ ]+')"
-[ -n "$URL" ] || { echo "No ready production deployment found"; exit 1; }
-echo "Redeploying $URL"
-vercel redeploy "$URL" --scope "$SCOPE" || exit 1
-
+bash deploy/deploy.sh mainnet
 echo
-echo "Wait for the build (about 1 to 10 minutes), then run:"
-echo "  node scripts/check-mainnet-readiness.mjs"
+echo "Then run: node scripts/check-mainnet-readiness.mjs"
