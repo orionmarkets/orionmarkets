@@ -272,7 +272,7 @@ for (const k of contracts) {
 out(dim("  " + LINE));
 const allOk = orionOk === orionTotal && uniOk === uniTotal;
 out(allOk
-  ? `  ${green(bold(`${OK} ALL VERIFIED`))}   ${bold(`${orionOk} of ${orionTotal}`)} Orion addresses match their published source; ${bold(`${uniOk} of ${uniTotal}`)} reused Uniswap V2 addresses are the standard bytecode.`
+  ? `  ${green(bold(`${OK} ALL VERIFIED`))}   ${bold(`${orionOk} of ${orionTotal}`)} Orion addresses match their published source; ${bold(`${uniOk} of ${uniTotal}`)} ORION Uniswap V2 addresses are the standard bytecode.`
   : `  ${red(bold(`${NO} NOT ALL VERIFIED`))}   Orion ${bold(`${orionOk} of ${orionTotal}`)}, Uniswap ${bold(`${uniOk} of ${uniTotal}`)}; ${problems.length} need attention.`);
 out(dim("  " + LINE));
 await pause(1500);
