@@ -49,12 +49,25 @@ async function as(address, fn) {
   const hash = await fn(wallet);
   await client.waitForTransactionReceipt({ hash });
 }
-const transfer = (token, to, amount) => as(record.owner, (w) => w.writeContract({ address: token, abi: v.erc20Abi, functionName: "transfer", args: [to, amount] }));
+// Funds from the project wallet, or (nano launch, fork only) from the public Uniswap v3 pool of the token.
+const balanceOf = (token, who) => client.readContract({ address: token, abi: v.erc20Abi, functionName: "balanceOf", args: [who] });
+const getPool = v.parseAbi(["function getPool(address,address,uint24) view returns (address)"]);
+const V3_FACTORY = "0x1f7d7550B1b028f7571E69A784071F0205FD2EfA";
+const WETH = "0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73";
+async function transfer(token, to, amount) {
+  let from = record.owner;
+  if ((await balanceOf(token, from)) < amount) {
+    const [other, fee] = v.isAddressEqual(token, record.usdg) ? [WETH, 100] : [record.usdg, 3000];
+    from = await client.readContract({ address: V3_FACTORY, abi: getPool, functionName: "getPool", args: [token, other, fee] });
+  }
+  await as(from, (w) => w.writeContract({ address: token, abi: v.erc20Abi, functionName: "transfer", args: [to, amount] }));
+}
 
 const borrower = v.getAddress("0x0000000000000000000000000000000000002001");
 const liquidatorKey = generatePrivateKey();
 const liquidator = privateKeyToAccount(liquidatorKey).address;
-const stock = ((await client.readContract({ address: tsla, abi: v.erc20Abi, functionName: "balanceOf", args: [record.owner] })) * 6n) / 10n;
+// 0.0003 TSLA (about $0.12): a 0.05 USDG borrow stays under the 50% LTV, and the 0.13 USDG debt below is liquidatable.
+const stock = 3n * 10n ** 14n;
 await transfer(tsla, borrower, stock);
 await transfer(record.usdg, liquidator, 200_000n);
 await rpc("anvil_setBalance", [liquidator, v.toHex(v.parseEther("1"))]);
