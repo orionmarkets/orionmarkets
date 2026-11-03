@@ -64,6 +64,13 @@ VPS in `/opt/orion/mainnet/keeper.env`, funded with 0.0005 ETH, authorized with 
 rule trigger 20% / target 10%, debt 0.001500 to 0.000398 USDG, 0.001102 USDG pulled from the borrower's wallet, keeper
 tx gas 287,651. The test position was closed afterwards.
 
+Leverage (2026-11-04): the five v2.0 markets were added with the launch risk parameters (1.5x long, 1.25x short) and were
+raised afterwards with `raise-mainnet-leverage.mjs` (20 transactions: 1% liquidation bonus, max LTV 94%, liquidation LTV
+97%, max leverage 10x), so all ten markets offer 2x/5x/10x. The fork rehearsal before the raise passed 132 of 144 steps at
+0.0001 USDG of margin. The failures are nano-liquidity effects: BABA long 5x/10x (dust left by the 2x close) and BABA
+short 2x (slippage), and short 10x on AMZN, PLTR and AMD ("Borrow exceeds Max LTV limit"), which are v1.0 markets that
+were already at 10x. Owner decision: raise anyway. Deeper pools fix these.
+
 Not done: deeper pools. The project wallet holds about 0.0018 ETH, and no script adds liquidity to a market that is
 already open; pools stay at nano size (about 0.05 USDG each), so orders stay tiny until the owner funds the wallet.
 
